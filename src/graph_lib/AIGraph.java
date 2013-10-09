@@ -151,6 +151,57 @@ public class AIGraph {
 		return null;
 	}
 	
+	public int getValE(Edge e1, String attr) {
+		// TODO: getValE implementieren --> ermittelt den Attributwert Kante
+		// RETURN MAXINT BEI FEHLER
+		return -1;
+	}
+	
+	public int getValV(Vertex v1, String attr) {
+		// TODO: getValV implementieren --> ermittelt den Attributwert von der Ecke
+		// RETURN MAXINT BEI FEHLER
+		return -1;
+	}
+	
+	public String getStrE(Edge e1, String attr) {
+		// TODO: getStrE implementieren --> ermittelt den Attributwert von der Kante
+		// RETURN LEEREN STRING BEI FEHLER
+		return null;
+	}
+	
+	public String getStrV(Vertex v1, String attr) {
+		// TODO: getStrV implementieren --> ermittelt den Attributwert von der Ecke
+		return null;
+	}
+	
+	public List<?> getAttrV(Vertex v1) {
+		// TODO: getAttrV implementieren
+		return null;
+	}
+	
+	public List<?> getAttrE(Edge e1) {
+		// TODO: getAttrE implementieren
+		return null;
+	}
+	
+	//************************************ MUTATOR ********************************************
+	
+	public void setValE(Edge e1, String attr, int val) {
+		// TODO
+	}
+	
+	public void setValV(Vertex v1, String attr, int val) {
+		// TODO
+	}
+	
+	public void setStrE(Edge e1, String attr, String val) {
+		// TODO
+	}
+	
+	public void setStrV(Vertex v1, String attr, String val) {
+		// TODO
+	}
+	
 	//******************************** PRIVATE KLASSEN ****************************************
 	
 	private class Vertex {
