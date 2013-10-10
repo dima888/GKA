@@ -1,6 +1,8 @@
 //TODO: Wichtig, wir brauchen eine ToString z.B. in Enge, wo die ID des jewaligen Objekt zurueck gegeben wird
 //      Oder wir entscheiden uns anders und returnen z.B. bei addEdgeU -> einen Integer wert als seine eindeutige ID: 
 
+//TODO: Duerfen wir die ALGraph mit unseren privaten Methoden versehen?????????????????????????
+
 package graph_lib;
 
 import java.util.ArrayList;
@@ -9,8 +11,9 @@ import java.util.List;
 public class AIGraph {
 	
 	private List<Vertex> verticesList = new ArrayList<>();
-	private List<Edge> edgesList = new ArrayList<>();
-	//private List<Edge[]> edgesListD = new ArrayList<>(); für gerichtete Kanten
+	private List<Edge> edgesListU = new ArrayList<>();
+	private List<Vertex[]> edgesListD = new ArrayList<>();//[0] von Knotten[0] zu Knotten[1]
+	//private List<Map<Edge, Vertex[]>> edgesListD = new ArrayList<>(); //[0] von Knotten[0] zu Knotten[1]
 	
 	
 	//********************************* KONSTRUKTOREN *********************************************
@@ -33,46 +36,39 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Wenn Vertex(Knotten) erfolgreich geloescht wurde, dann gibt die Mehotde true zurueck, sonst false. 
+	 * Hier wird ein Vertex(Knotten) geloescht 
 	 * 
 	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
 	 * 
 	 * @return boolean true, bei erfolgreichem löschen, sonst false
 	 */
-	public boolean deleteVertex(Vertex v_id) {
+	public void deleteVertex(Vertex v_id) {
+		//TODO: Hier muss  noch aus der LIste edgesLIstD geloescht werden
 		verticesList.remove(v_id); //Löschen des Knotens		
-		for(Edge edge : edgesList) { //Ueber die interne endgesLIst iterieren
+		for(Edge edge : edgesListU) { //Ueber die interne endgesLIst iterieren
 			if((edge.verticesFromEdge[0] == v_id) || (edge.verticesFromEdge[1] == v_id)) { //Wenn eine der beiden Kantenseiten auf den Knoten, wird die Kante gelöscht
-				edgesList.remove(edge); //Alle Inzidenten Kanten löschen
-				return true;
+				edgesListU.remove(edge); //Alle Inzidenten Kanten löschen
 			}
 		}
-		return false;
 	}
 	
 	/**
-	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein Verticle(Knotten) an
+	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein vertices(Knotten) an
 	 * 
 	 * @param v1 ein Vertex
 	 * @param v2 ein Vertex
 	 * 
 	 * @return Edge gibt die Referenz auf die hinzugefügte Edge zurück
 	 */
-	public Edge addEdgeU(Vertex v1, Vertex v2) {		
-		//TODO: Wir wissen, ob eine gerichtete oder ungerichtete Kante hinzugefügt wird --> es gibt dafür ja unterschiedliche Methoden
-		// addEdgeU und addEdgeD  Die Frage ist, wie möchten wir es verwalten ?
-		
-		//Precondition // TODO: Das hier macht doch keinen Sinn, da wir ja hier eine Kante hinzufügen wollen und nicht gucken wollen, ob schon eine vorhanden ist
+	public Edge addEdgeU(Vertex v1, Vertex v2) {			
 		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
-			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante kann nicht hinzugefuegt werden, da vermutlich da zwischen keine Verticle(Knotten exestieren) ");
+			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
 		}
-		Edge edge = new Edge(v1, v2); //Edge mit zwei oder einem Verticle verbunden. 
-		//Hier muss nichts weiter gemacht werden, da die Klasse intern das jetzt an die Kante(Edge) an den (Verticle)Knotten zufuegt v1.addEdge(this); v2.addEdge(this);
-		return edge;
+		Edge edge = new Edge(v1, v2); //Edge mit zwei oder einem vertices verbunden. 										
+		edgesListU.add(edge);
+		return edge;				  //Hier muss nichts weiter gemacht werden, da die Klasse intern das jetzt an die Kante(Edge) an den (vertices)Knotten zufuegt v1.addEdge(this); v2.addEdge(this);
 	}
 
-	// TODO: Ich glaube, wir dürfen keine Methoden zum AIGraphen hinzufügen, das verletzt irgendeinen Shit
-	// Außerdem brauchen wir diese Methode doch auch gar nicht
 	/**
 	 * Die Hilfsmethode prueft, ob ein Vertex(Knotten) in einer Liste vorhanden ist
 	 * 
@@ -83,66 +79,59 @@ public class AIGraph {
 	 */
 	private boolean include(List<Vertex> verticesList, Vertex v) {
 		for(Vertex vertex : verticesList) {
-			if(v == vertex) { //Hierfür brauchen wir kein compareTo, da hier die ObjektIDs verglichen werden --> Identitätsprüfung
-				return true;  //Sie haben schon von Haus aus eindeutige IDS und zwar die ObjektID 
+			if(v == vertex) { 
+				return true;   
 			}
 		}
 		return false;
 	}
 
 	
-	public Edge addEdgeD(Vertex v1, Vertex v2) {
-		// TODO: addEdgeD implementieren --> für gerichtete Kanten
-		return null;
+	public Edge addEdgeD(Vertex v1, Vertex v2) {	
+		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
+			throw new IllegalArgumentException("EdgeD (Gerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
+		}
+		Edge edge = new Edge(v1, v2); //Edge mit zwei oder einem vertices verbunden. 	
+		Vertex[] edgeD = new Vertex[2];
+		edgeD[0] = v1;
+		edgeD[1] = v2;		
+		this.edgesListD.add(edgeD);
+		return edge;
 	}
 	
 	/**
-	 * Wenn die Methode true zurueck lierft, dann wurde die gerichtete Edge(Kante) geloescht, sonst nicht (false) 
+	 * Die Methode loescht eine Kante(Edge)
 	 * 
 	 * @param v1 erwartet ein Vertex-Objekt
 	 * @param v2 erwartet ein Vertex-Objekt
 	 * 
 	 * @return boolean true wenn die Edge gelöscht wurde, false wenn nicht
 	 */
-	public boolean deleteEdge(Vertex v1, Vertex v2) {
-		// TODO: deleteEdge --> für gerichtete und ungerichtete
-		if(gerichteterGraph(v1, v2)) {
-			
-			// Warum werden hier die Vertex gelöscht, wenn doch nur die Edge gelöscht werden sollte ?
-			for(Vertex vertex : verticesList) {
-				if(vertex == v1) {
-					verticesList.remove(v1);
-				}
-				if(vertex == v2) {
-					verticesList.remove(v2);
-				}
+	public void deleteEdge(Vertex v1, Vertex v2) {
+		for(Edge edge : edgesListU) { //FALL Ungerichtet
+			if(edge.verticesFromEdge[0] == v1 && edge.verticesFromEdge[1] == v2) {
+				edgesListU.remove(edge);
 			}
-			
-		}		
-		return false;
-	}
-	
-	/**
-	 * Es ist eine Hilfsmethode, wenn der Graph gerichtet ist, dann wird true zurueck gegeben, sonst false
-	 * 
-	 * @param v1 Erwartet ein Vertex-Objekt
-	 * @param v2 Erwartet ein Vertex-Objekt
-	 * 
-	 * @return boolean
-	 */
-	private boolean gerichteterGraph(Vertex v1, Vertex v2) {
-		// TODO Auto-generated method stub
-		return false;
+		}
+		
+		for(Vertex[] vertexL : edgesListD) { //FALL Gerichtet
+			if(vertexL[0] == v1 && vertexL[1] == v2) {
+				edgesListD.remove(vertexL);
+			}
+		}
 	}
 	
 	//********************************* SELEKTOREN *********************************************
 
 	public boolean isEmpty() {
-		// TODO: isEmpty implementieren
+		if(verticesList.isEmpty()) {
+			return true;
+		}
 		return false;
 	}
 	
-	public Edge getSource(Edge e1) {
+	// return Wert ver Edge auf Vertex geaendert
+	public Vertex getSource(Edge e1) {
 		// TODO: getSource implementieren --> ermittelt im gerichteten Fall die Quelle der
 		// Kante e1 (gegeben als ID) im ungerichteten Fall die linke / erste Ecke
 		return null;
@@ -166,9 +155,13 @@ public class AIGraph {
 		return null;
 	}
 	
+	/**
+	 * Gibt die Liste Aller Vertexes(Knotten) zurueck
+	 * 
+	 * @return
+	 */
 	public List<Vertex> getVertexes() {
-		// TODO: getVertexes implementieren --> ermittelt alle Ecken des Graphen
-		return null;
+		return this.verticesList;
 	}
 	
 	public List<Edge> getEdges() {
@@ -234,7 +227,7 @@ public class AIGraph {
 		
 		private int vertexValue;
 		private List<Edge> incidents = new ArrayList<>();
-		//private List<Edge[]> adjacents = new ArrayList<>(); Hier könnten wir als Paare die adjazenten Kanten speichern
+		private List<Edge[]> adjacents = new ArrayList<>(); //Hier könnten wir als Paare die adjazenten Kanten speichern
 		
 		public Vertex(int vertexValue) {
 			this.vertexValue = vertexValue;
@@ -252,9 +245,6 @@ public class AIGraph {
 	
 	private class Edge {
 		
-		//TODO: Hier muessen wir noch eine Fallunterscheidung implementieren, ob es ein gerichteter oder ungerichteter Graph ist. 
-	    //		Z.B. gerichtet zeigt nur auf einen Verticle(Knotte) und ungerichteter auf zwei Verticle
-		//		Moeechte das nicht alleine implementieren, brauche eine Absprache mit dir Flahchik
 		
 		private Vertex[] verticesFromEdge = new Vertex[2];
 		private String edgeName = "";
