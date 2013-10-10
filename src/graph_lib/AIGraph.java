@@ -10,6 +10,8 @@ public class AIGraph {
 	
 	private List<Vertex> verticesList = new ArrayList<>();
 	private List<Edge> edgesList = new ArrayList<>();
+	//private List<Edge[]> edgesListD = new ArrayList<>(); für gerichtete Kanten
+	
 	
 	//********************************* KONSTRUKTOREN *********************************************
 	
@@ -17,6 +19,13 @@ public class AIGraph {
 		//NULL Graph
 	}
 	
+	/**
+	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
+	 * 
+	 * @param newItem Wert, der im Vertex gespeichert werden soll
+	 * 
+	 * @return Vertex gibt die Referenz auf die hinzugefügte Vertex zurück
+	 */
 	public Vertex addVertex(int newItem) {
 		Vertex vertex = new Vertex(newItem);
 		verticesList.add(vertex);
@@ -25,8 +34,10 @@ public class AIGraph {
 	
 	/**
 	 * Wenn Vertex(Knotten) erfolgreich geloescht wurde, dann gibt die Mehotde true zurueck, sonst false. 
-	 * @param v_id: Ein Vertex(Knoten) Objekt wird hier erwartet. 
-	 * @return true v flase
+	 * 
+	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
+	 * 
+	 * @return boolean true, bei erfolgreichem löschen, sonst false
 	 */
 	public boolean deleteVertex(Vertex v_id) {
 		verticesList.remove(v_id); //Löschen des Knotens		
@@ -41,13 +52,18 @@ public class AIGraph {
 	
 	/**
 	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein Verticle(Knotten) an
-	 * @param v1 Object muss von typ Vertex sein
-	 * @param v2 Object muss von typ Vertex sein
-	 * @return ID dieser Kante
+	 * 
+	 * @param v1 ein Vertex
+	 * @param v2 ein Vertex
+	 * 
+	 * @return Edge gibt die Referenz auf die hinzugefügte Edge zurück
 	 */
 	public Edge addEdgeU(Vertex v1, Vertex v2) {		
-		//TODO: Wir wollen wir unterscheiden, ob es ein gerichtet oder ungerichtete Edge(Kante) ist?
-		if(!(inclcude(verticesList, v1)) && !(inclcude(verticesList, v2))) { //Precondition
+		//TODO: Wir wissen, ob eine gerichtete oder ungerichtete Kante hinzugefügt wird --> es gibt dafür ja unterschiedliche Methoden
+		// addEdgeU und addEdgeD  Die Frage ist, wie möchten wir es verwalten ?
+		
+		//Precondition // TODO: Das hier macht doch keinen Sinn, da wir ja hier eine Kante hinzufügen wollen und nicht gucken wollen, ob schon eine vorhanden ist
+		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
 			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante kann nicht hinzugefuegt werden, da vermutlich da zwischen keine Verticle(Knotten exestieren) ");
 		}
 		Edge edge = new Edge(v1, v2); //Edge mit zwei oder einem Verticle verbunden. 
@@ -55,16 +71,20 @@ public class AIGraph {
 		return edge;
 	}
 
+	// TODO: Ich glaube, wir dürfen keine Methoden zum AIGraphen hinzufügen, das verletzt irgendeinen Shit
+	// Außerdem brauchen wir diese Methode doch auch gar nicht
 	/**
 	 * Die Hilfsmethode prueft, ob ein Vertex(Knotten) in einer Liste vorhanden ist
+	 * 
 	 * @param verticesList erwartet eine Liste von Vertex(Knotten)
 	 * @param v erwaratet ein Vertex Object
-	 * @return true v false
+	 * 
+	 * @return boolean true, wenn ein Vertex sich im Graphen befindet, sonst false
 	 */
-	private boolean inclcude(List<Vertex> verticesList, Vertex v) {
+	private boolean include(List<Vertex> verticesList, Vertex v) {
 		for(Vertex vertex : verticesList) {
-			if(v == vertex) { //Bin mir hier nicht sicher Flahchik ob ich auf == pruefen darf, da wir dafuer ja kein ComperTo geschrieben haben. TODO: Check Pls the Comments
-				return true;  //Sonst Koennten wir denen(Verticle) eine eindeutige Indifikation Nummer verpassen und danach == pruefen. 
+			if(v == vertex) { //Hierfür brauchen wir kein compareTo, da hier die ObjektIDs verglichen werden --> Identitätsprüfung
+				return true;  //Sie haben schon von Haus aus eindeutige IDS und zwar die ObjektID 
 			}
 		}
 		return false;
@@ -78,14 +98,17 @@ public class AIGraph {
 	
 	/**
 	 * Wenn die Methode true zurueck lierft, dann wurde die gerichtete Edge(Kante) geloescht, sonst nicht (false) 
-	 * @param v1 Erwartet ein Objekt von Vertex
-	 * @param v2 Erwartet ein Objekt von Vertex
-	 * @return true v false
+	 * 
+	 * @param v1 erwartet ein Vertex-Objekt
+	 * @param v2 erwartet ein Vertex-Objekt
+	 * 
+	 * @return boolean true wenn die Edge gelöscht wurde, false wenn nicht
 	 */
 	public boolean deleteEdge(Vertex v1, Vertex v2) {
 		// TODO: deleteEdge --> für gerichtete und ungerichtete
 		if(gerichteterGraph(v1, v2)) {
 			
+			// Warum werden hier die Vertex gelöscht, wenn doch nur die Edge gelöscht werden sollte ?
 			for(Vertex vertex : verticesList) {
 				if(vertex == v1) {
 					verticesList.remove(v1);
@@ -101,9 +124,11 @@ public class AIGraph {
 	
 	/**
 	 * Es ist eine Hilfsmethode, wenn der Graph gerichtet ist, dann wird true zurueck gegeben, sonst false
-	 * @param v1 Erwartet ein Objekt von Vertex
-	 * @param v2 Erwartet ein Objekt von Vertex
-	 * @return true v false
+	 * 
+	 * @param v1 Erwartet ein Vertex-Objekt
+	 * @param v2 Erwartet ein Vertex-Objekt
+	 * 
+	 * @return boolean
 	 */
 	private boolean gerichteterGraph(Vertex v1, Vertex v2) {
 		// TODO Auto-generated method stub
@@ -208,7 +233,8 @@ public class AIGraph {
 			
 		
 		private int vertexValue;
-		private List<Edge> incidents = new ArrayList<>();		
+		private List<Edge> incidents = new ArrayList<>();
+		//private List<Edge[]> adjacents = new ArrayList<>(); Hier könnten wir als Paare die adjazenten Kanten speichern
 		
 		public Vertex(int vertexValue) {
 			this.vertexValue = vertexValue;
