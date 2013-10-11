@@ -10,7 +10,7 @@ public class AIGraph {
 	
 	private List<Vertex> verticesList = new ArrayList<>();
 	private List<Edge> edgesList = new ArrayList<>();
-	//private List<Edge[]> edgesListD = new ArrayList<>(); für gerichtete Kanten
+	//private List<Edge[]> edgesListD = new ArrayList<>(); für gerichtete Kanten   
 	
 	
 	//********************************* KONSTRUKTOREN *********************************************
@@ -97,7 +97,7 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Wenn die Methode true zurueck lierft, dann wurde die gerichtete Edge(Kante) geloescht, sonst nicht (false) 
+	 * Soll eine Kante aus dem Graphen löschen --> gerichtet oder ungerichtet
 	 * 
 	 * @param v1 erwartet ein Vertex-Objekt
 	 * @param v2 erwartet ein Vertex-Objekt
