@@ -12,5 +12,6 @@ interface Edge {
 	String getName();
 	void setName(String newName);
 	List<String> getAttrList();
+	boolean setValE(String attr, int val);
 }
 

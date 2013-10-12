@@ -311,20 +311,34 @@ public class AIGraph {
 		return v1.getAttrStr(attr);
 	}
 
-	
+	/**
+	 * Ermittelt alle Attribute des Vertex(Ecke) v1
+	 * @param v1
+	 * @return
+	 */
 	public List<String> getAttrV(Vertex v1) {
 		return v1.getAttrList();
 	}
-	
+	 /**
+	  * Ermittelt alle Attribute des Edge(Kante) e1
+	  * @param e1
+	  * @return
+	  */
 	public List<?> getAttrE(Edge e1) {
-		// TODO: getAttrE implementieren
-		return null;
+		return e1.getAttrList();
 	}
 	
 	//************************************ MUTATOR ********************************************
 	
-	public void setValE(Edge e1, String attr, int val) {
-		// TODO
+	/**
+	 * Setzt den Attributwert von attr der Kante e1 auf val
+	 * Wenn true ? erfolgreich gesetzt : false
+	 * @param e1
+	 * @param attr
+	 * @param val
+	 */
+	public boolean setValE(Edge e1, String attr, int val) {
+		return e1.setValE(attr, val);
 	}
 	
 	public void setValV(Vertex v1, String attr, int val) {

@@ -60,6 +60,12 @@ class UndirectedEdge implements Edge {
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
 	
 	@Override
+	public boolean setValE(String attr, int val) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
 	public String toString() {
 		String result = "";
 		result = "Vertex v1: (" + verticesFromEdge[0] + "), Vertex v2: (" + verticesFromEdge[1] + ")";

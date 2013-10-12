@@ -1,8 +1,11 @@
 package graph_lib;
 
+import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //Package-Privat
 class DirectedEdge implements Edge {
@@ -10,6 +13,8 @@ class DirectedEdge implements Edge {
 	private Vertex[] verticesFromEdge = new Vertex[2];
 	private List<String> attrList = new ArrayList<>();
 	private static int count = 0; //Hilfszaehler
+	
+	private Map<String, Object> attrMap = new HashMap();
 	
 	// *********ATTRIBUTE********
 	private String name;
@@ -31,6 +36,9 @@ class DirectedEdge implements Edge {
 		v2.addIncident(this);
 		
 		secondaryId = count++; //Auto increment
+		
+		attrMap.put(attrName, name);
+		attrMap.put(attrSecondaryId, secondaryId);
 		attrList.addAll(Arrays.asList(attrName, attrSecondaryId));	
 	}
 	
@@ -62,6 +70,14 @@ class DirectedEdge implements Edge {
 	}
 	
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
+
+	@Override
+	public boolean setValE(String attr, int val) {
+		if(attr == attrSecondaryId) {
+			//this.secondaryId = val;
+		}
+		return false;
+	}
 	
 	@Override
 	public String toString() {
@@ -96,7 +112,7 @@ class DirectedEdge implements Edge {
 
 	@Override
 	public int getAttr(String attr) {
-		if(attr == "secondaryId") {
+		if(attr == this.attrSecondaryId) {
 			return this.secondaryId;
 		}
 		return Integer.MAX_VALUE;
@@ -106,7 +122,7 @@ class DirectedEdge implements Edge {
 	@Override
 	public String getAttrStr(String attr) {
 		String result = "";
-		if(attr == "name") {
+		if(attr == this.attrName) {
 			result = this.name;
 		}
 		return result;

@@ -160,7 +160,7 @@ public class TestAIGraph {
 	public void testGetValV() {
 		Vertex v1 = graph.addVertex(10);
 		assertEquals(graph.getValV(v1, "secondaryId"), v1.getSecondaryId());
-		assertEquals(graph.getValV(v1, "Hund"), Integer.MAX_VALUE);
+		assertEquals(graph.getValV(v1, "Katze"), Integer.MAX_VALUE);
 	}
 	
 	@Test
