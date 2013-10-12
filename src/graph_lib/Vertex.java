@@ -7,24 +7,15 @@ import java.util.List;
 class Vertex {
 	
 	private int vertexValue;
-	private final int ID;
-	
-	private static int objCounter = 0;
-	//private List<Edge> incidents = new ArrayList<>();
-	//private List<Edge> outgoingEdge = new ArrayList<>(); //Ausgehende Kanten
-	//private List<Edge> ingoingEdge = new ArrayList<>(); //Eingehende Kanten 	
+	private List<Edge> incidents = new ArrayList<>();
+	private List<Edge> outgoingEdge = new ArrayList<>(); //Ausgehende Kanten
+	private List<Edge> ingoingEdge = new ArrayList<>(); //Eingehende Kanten 	
 	
 	
 	public Vertex(int vertexValue) {
 		this.vertexValue = vertexValue;
-		ID = objCounter;
-		objCounter++;
 	}
-	
-	public int getID() {
-		return ID;
-	}
-	
+
 	public int getVertexValue() {
 		return vertexValue;
 	}
@@ -33,13 +24,34 @@ class Vertex {
 //		incidents.add(edge);
 //	}
 //	
-//	public void addOutgoingEdge(Edge edge) {
-//		outgoingEdge.add(edge);
-//	}
-//	
-//	public void addIngoingEdge(Edge edge) {
-//		ingoingEdge.add(edge);
-//	}
+	public void addOutgoingEdge(Edge edge) {
+		outgoingEdge.add(edge);
+	}
+	
+	public void addIngoingEdge(Edge edge) {
+		ingoingEdge.add(edge);
+	}
+	
+	public List<Edge> getOutgoingEdge() {
+		return this.outgoingEdge;
+	}
+	
+	public List<Edge> getIngoingEdge() {
+		return this.ingoingEdge;
+	}
+	
+	public void addIncident(Edge edge) {
+		incidents.add(edge);
+	}
+	
+	public List<Edge> getIncidents() {
+		return this.incidents;
+	}
+	
+	 @Override
+	 public String toString() {
+		 return "" + vertexValue;
+	 }
 //	
 //	public int getGrad() {
 //		return incidents.size();

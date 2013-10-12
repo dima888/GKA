@@ -4,16 +4,13 @@ package graph_lib;
 class UndirectedEdge implements Edge {
 	
 	private Vertex[] verticesFromEdge = new Vertex[2];
-	private final int ID;
-	
-	private static int objCounter = 0;
 	
 	public UndirectedEdge(Vertex v1, Vertex v2) {
 		verticesFromEdge[0] = v1;
 		verticesFromEdge[1] = v2;
 		
-		ID = objCounter;
-		objCounter++;
+		v1.addIncident(this);
+		v2.addIncident(this);
 	}
 
 	@Override
@@ -21,8 +18,10 @@ class UndirectedEdge implements Edge {
 		return verticesFromEdge;
 	}
 	
-	public int getID() {
-		return ID;
+	@Override
+	public String toString() {
+		String result = "";
+		result = "Vertex v1: (" + verticesFromEdge[0] + "), Vertex v2: (" + verticesFromEdge[1] + ")";
+		return result;
 	}
-
 }
