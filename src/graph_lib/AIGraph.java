@@ -163,6 +163,10 @@ public class AIGraph {
 	
 	//********************************* SELEKTOREN *********************************************
 
+	/**
+	 * Prueft ob der Graph leer ist. 
+	 * @return boolean
+	 */
 	public boolean isEmpty() {
 		if(verticesList.isEmpty()) {
 			return true;
@@ -183,7 +187,7 @@ public class AIGraph {
 	 */
 	public Vertex getSource(Edge e1) {
 		//Precondition
-		//Gehört die übergebene Kante überhaupt zu diesem Graphen ? Beide Listen durchsuchen
+		//Gehört die übergebene Kante überhaupt zu diesem Graphen? Beide Listen durchsuchen
 		if(! (edgesListU.contains(e1) || (edgesListD.contains(e1)))) {
 			throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
 		}
@@ -267,32 +271,49 @@ public class AIGraph {
 		return result;
 	}
 	
+	/**
+	 * Ermittelt den Attributwert von attr der Kante e1
+	 * @param e1 Edge(Kante) 
+	 * @param attr String 
+	 * @return int
+	 */
 	public int getValE(Edge e1, String attr) {
-		// TODO: getValE implementieren --> ermittelt den Attributwert Kante
-		// RETURN MAXINT BEI FEHLER
-		return -1;
+		return e1.getAttr(attr);
 	}
 	
+	/**
+	 * Ermittelt den Attributwert von attr der Ecke v1
+	 * @param v1
+	 * @param attr
+	 * @return int
+	 */
 	public int getValV(Vertex v1, String attr) {
-		// TODO: getValV implementieren --> ermittelt den Attributwert von der Ecke
-		// RETURN MAXINT BEI FEHLER
-		return -1;
+		return v1.getAttr(attr);
 	}
 	
+	/**
+	 * Ermittelt den Attributwert von attr der Kante e1
+	 * @param e1
+	 * @param attr
+	 * @return String
+	 */
 	public String getStrE(Edge e1, String attr) {
-		// TODO: getStrE implementieren --> ermittelt den Attributwert von der Kante
-		// RETURN LEEREN STRING BEI FEHLER
-		return null;
+		return e1.getAttrStr(attr);
 	}
 	
+	/**
+	 * Ermittelt den Attributwert von attr der Ecke v1
+	 * @param v1
+	 * @param attr
+	 * @return String
+	 */
 	public String getStrV(Vertex v1, String attr) {
-		// TODO: getStrV implementieren --> ermittelt den Attributwert von der Ecke
-		return null;
+		return v1.getAttrStr(attr);
 	}
+
 	
-	public List<?> getAttrV(Vertex v1) {
-		// TODO: getAttrV implementieren
-		return null;
+	public List<String> getAttrV(Vertex v1) {
+		return v1.getAttrList();
 	}
 	
 	public List<?> getAttrE(Edge e1) {

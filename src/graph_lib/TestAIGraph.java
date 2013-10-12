@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
 
 public class TestAIGraph {
 	
-	AIGraph graph = new AIGraph();
+	AIGraph graph;
 	
 	@Before
 	public void init() {
-		
+		graph = new AIGraph();
 	}
 	
 	@Test
@@ -113,6 +113,7 @@ public class TestAIGraph {
 		assertEquals(vertex1, result);
 	}
 	
+	//TODO: Hier stimmt noch was nicht
 	@Test //(expected = IllegalArgumentException.class)
 	public void testGetSourceNeg() {
 		Vertex vertex1 = graph.addVertex(1);
@@ -143,5 +144,56 @@ public class TestAIGraph {
 		
 		assertEquals(vertex2, result);
 	}
+	
+	@Test
+	public void testGetValE() {
+		Vertex v1 = graph.addVertex(1);
+		Vertex v2 = graph.addVertex(2);	
+
+		Edge e1 = graph.addEdgeD(v1, v2);
+					
+		assertEquals(graph.getValE(e1, "al"), Integer.MAX_VALUE);
+		assertEquals(graph.getValE(e1, "secondaryId"), e1.getSecondaryId());				
+	}
+	
+	@Test
+	public void testGetValV() {
+		Vertex v1 = graph.addVertex(10);
+		assertEquals(graph.getValV(v1, "secondaryId"), v1.getSecondaryId());
+		assertEquals(graph.getValV(v1, "Hund"), Integer.MAX_VALUE);
+	}
+	
+	@Test
+	public void testGetStrE() {
+		Vertex v1 = graph.addVertex(1);
+		Vertex v2 = graph.addVertex(2);	
+
+		Edge e1 = graph.addEdgeD(v1, v2);
+		e1.setName("e1");
+		String emptyString = "";
+		
+		assertEquals(graph.getStrE(e1, "name"), e1.getName());
+		assertEquals(graph.getStrE(e1, "Hund"), emptyString);
+	}
+	
+	@Test
+	public void testGetStrV() {
+		Vertex v1 = graph.addVertex(1);
+		v1.setName("v1");
+		String emptyString = "";
+		assertEquals(graph.getStrV(v1, "name"), v1.getName());
+		assertEquals(graph.getStrV(v1, "Banane"), emptyString);
+	}
+	
+	//Unnoetig hier zu testen, bei jeder erweiterung, muss der Test auch erweitert werden
+	//Das gleiche gielt auch fuer testGetAttrE
+	@Test
+	public void testGetAttrVANDE() {
+		Vertex v1 = graph.addVertex(1);
+		Edge e1 = graph.addEdgeU(v1, v1);
+		System.out.println("AttrListV = " + v1.getAttrList());
+		System.out.println("AttrListE = " + e1.getAttrList());
+	}
+	
 	
 }
