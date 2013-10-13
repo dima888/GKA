@@ -20,5 +20,6 @@ interface Edge {
 	String getAttrStr(String attr);
 	int getAttr(String attr);
 	boolean setValE(String attr, int val);
+	boolean setStrE(String attr, String val);
 }
 

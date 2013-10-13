@@ -1,5 +1,7 @@
 package graph_lib;
 
+//****************************TODO: WICHTIG: Die IMPLEMENTIERUNGS METHODEN muessen erweitert werden, wenn ein neues Attribut dazu kommt****************************
+
 import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +82,15 @@ class DirectedEdge implements Edge {
 	}
 	
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
-
+	@Override
+	public boolean setStrE(String attr, String val) {
+		if(attr == attrName) {
+			this.name = val;
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean setValE(String attr, int val) {
 		if(attr == attrSecondaryId) {
@@ -93,6 +103,7 @@ class DirectedEdge implements Edge {
 		}
 		return false;
 	}
+	//*********************************************************************************************************
 	
 	@Override
 	public String toString() {

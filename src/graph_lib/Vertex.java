@@ -6,8 +6,7 @@ import java.util.List;
 
 //Package-Private
 class Vertex {
-	
-	private int vertexValue;
+		
 	private List<Edge> incidents = new ArrayList<>();
 	private List<Edge> outgoingEdge = new ArrayList<>(); //Ausgehende Kanten
 	private List<Edge> ingoingEdge = new ArrayList<>(); //Eingehende Kanten
@@ -18,17 +17,19 @@ class Vertex {
 	private String name; 
 	private final int secondaryId;  
 	private int whatever = 25;
+	private int vertexValue;
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	
 	String attrName = "name";
 	String attrSecondaryId = "secondaryId";
 	String attrWhatever = "whatever";
+	String attrVertexValue = "vertexValue";
 	
 	public Vertex(int vertexValue) {		
 		this.vertexValue = vertexValue;
 		secondaryId = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever, attrVertexValue)); 	//ATTRIBUTENLISTE	
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -76,17 +77,53 @@ class Vertex {
 	
 	
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************	
-	public boolean setValV(String attr, int val) {
-		if(attr == attrSecondaryId) {
-			//this.secondaryId = val;
-			return true;
-		}
-		if(attr == attrWhatever) {
-			this.whatever = val;
+	public boolean setStrV(String attr, String val) {
+		if (attr == attrName) {
+			this.name = val;
 			return true;
 		}
 		return false;
 	}
+	
+	public boolean setValV(String attr, int val) {
+		if (attr == attrSecondaryId) {
+			//this.secondaryId = val;
+			return true;
+		}
+		if (attr == attrWhatever) {
+			this.whatever = val;
+			return true;
+		}
+		if (attr == attrVertexValue) {
+			this.vertexValue = val;
+			return true;
+		}
+		return false;
+	}
+	
+	public int getAttr(String attr) {
+		if (attr == this.attrSecondaryId) {
+			return this.secondaryId;
+		}
+		if(attr == attrVertexValue) {
+			return this.vertexValue;
+		}
+		if(attr == attrWhatever) {
+			return this.whatever;
+		}
+		return Integer.MAX_VALUE;
+	}	
+	 
+	public String getAttrStr(String attr) {
+		String result = "";
+		if (attr == this.attrName) {
+			result = this.name;
+		}
+		return result;
+	}	
+	//*********************************************************************************************************
+	
+	
 //	public void addEdge(Edge edge) {
 //		incidents.add(edge);
 //	}
@@ -104,22 +141,6 @@ class Vertex {
 	 @Override
 	public String toString() {
 		return "" + vertexValue;
-	}
-	 
-	 //beliebig erweiterbar, unter Umstaenden koennte man es in einer Map<String, Attribute> verwalten
-	public int getAttr(String attr) {
-		if (attr == this.attrSecondaryId) {
-			return this.secondaryId;
-		}
-		return Integer.MAX_VALUE;
-	}	
-	 
-	public String getAttrStr(String attr) {
-		String result = "";
-		if (attr == this.attrName) {
-			result = this.name;
-		}
-		return result;
 	}
 	 
 //	

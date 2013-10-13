@@ -1,5 +1,7 @@
 package graph_lib;
 
+//****************************TODO: WICHTIG: Die IMPLEMENTIERUNGS METHODEN muessen erweitert werden, wenn ein neues Attribut dazu kommt****************************
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -75,6 +77,15 @@ class UndirectedEdge implements Edge {
 	
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
 	@Override
+	public boolean setStrE(String attr, String val) {
+		if(attr == attrName) {
+			this.name = val;
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean setValE(String attr, int val) {
 		if(attr == attrSecondaryId) {
 			//this.secondaryId = val;
@@ -86,6 +97,7 @@ class UndirectedEdge implements Edge {
 		}
 		return false;
 	}
+	//*********************************************************************************************************
 	
 	@Override
 	public String toString() {

@@ -199,18 +199,40 @@ public class TestAIGraph {
 	public void testSetValE() {
 		Vertex v1 = graph.addVertex(1);
 		Vertex v2 = graph.addVertex(2);	
-
 		Edge e1 = graph.addEdgeD(v1, v2);
-		graph.setValE(e1, "whatever", 1500);
 		
-		assertEquals(e1.getWhatever(), 1500);
+		assertTrue(graph.setValE(e1, "whatever", 1500));
+		assertEquals(e1.getWhatever(), 1500);				
+		assertFalse(graph.setValE(e1, "Gnom", 1500));
 	}
 	
 	@Test 
 	public void testSetValV() {
-		Vertex v1 = graph.addVertex(1);;
-		graph.setValV(v1, "whatever", 7000);		
-		assertEquals(v1.getWhatever(), 7000);
+		Vertex v1 = graph.addVertex(1);
+		
+		assertTrue(graph.setValV(v1, "whatever", 7000));
+		assertEquals(v1.getWhatever(), 7000);				
+		assertFalse(graph.setValV(v1, "Gnom", 7000));
+	}
+	
+	@Test
+	public void testSetStrE() {
+		Vertex v1 = graph.addVertex(1);
+		Vertex v2 = graph.addVertex(2);	
+
+		Edge e1 = graph.addEdgeD(v1, v2);
+		assertTrue(graph.setStrE(e1, "name", "e100"));
+		assertEquals(e1.getName(), "e100");
+		assertFalse(graph.setStrE(e1, "Pumukel", "e100"));
+	}
+	
+	@Test
+	public void testSetStrV() {
+		Vertex v1 = graph.addVertex(25);
+		assertTrue(graph.setStrV(v1, "name", "Hura"));
+		assertEquals(v1.getName(), "Hura");
+		assertFalse(graph.setStrV(v1, "name123", "Hura"));
+		
 	}
 	
 }

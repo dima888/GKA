@@ -352,12 +352,26 @@ public class AIGraph {
 		return v1.setValV(attr, val);
 	}
 	
-	public void setStrE(Edge e1, String attr, String val) {
-		// TODO
+	/**
+	 * Setzt den Attributwert von attr der Kante e1 auf val
+	 * @param e1
+	 * @param attr
+	 * @param val
+	 * @return bool
+	 */
+	public boolean setStrE(Edge e1, String attr, String val) {
+		return e1.setStrE(attr, val);
 	}
 	
-	public void setStrV(Vertex v1, String attr, String val) {
-		// TODO
+	/**
+	 * Setzt den Attributwert von attr der Ecke v1 auf val
+	 * @param v1
+	 * @param attr
+	 * @param val
+	 * @return bool
+	 */
+	public boolean setStrV(Vertex v1, String attr, String val) {
+		return v1.setStrV(attr, val);
 	}
 	
 	@Override
