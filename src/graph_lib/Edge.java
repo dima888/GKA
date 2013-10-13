@@ -5,13 +5,20 @@ import java.util.List;
 //Package-Private
 interface Edge {
 	
-	Vertex[] getVertices();
-	int getAttr(String attr);
-	String getAttrStr(String attr);
-	int getSecondaryId();
+	
+	//GETTER
+	int getWhatever();
 	String getName();
-	void setName(String newName);
+	int getSecondaryId();
 	List<String> getAttrList();
+	Vertex[] getVertices();
+	
+	//SETTER
+	void setName(String newName);
+	
+	//IMPLE
+	String getAttrStr(String attr);
+	int getAttr(String attr);
 	boolean setValE(String attr, int val);
 }
 

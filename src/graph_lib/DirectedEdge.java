@@ -19,10 +19,12 @@ class DirectedEdge implements Edge {
 	// *********ATTRIBUTE********
 	private String name;
 	private final int secondaryId;
+	private int whatever = 100;
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
 	String attrSecondaryId = "secondaryId";
+	String attrWhatever = "whatever";
 		
 	
 	public DirectedEdge(Vertex v1, Vertex v2) {
@@ -37,9 +39,12 @@ class DirectedEdge implements Edge {
 		
 		secondaryId = count++; //Auto increment
 		
+		//****MAP*****
 		attrMap.put(attrName, name);
 		attrMap.put(attrSecondaryId, secondaryId);
-		attrList.addAll(Arrays.asList(attrName, attrSecondaryId));	
+		attrMap.put(attrWhatever, whatever);
+
+		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever)); 	//ATTRIBUTENLISTE
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -63,6 +68,11 @@ class DirectedEdge implements Edge {
 		return this.attrList;
 	}
 	
+	@Override
+	public int getWhatever() {
+		return this.whatever;
+	}
+	
 	//********************************************** SETTER METHODEN **********************************************
 	@Override
 	public void setName(String newName) {
@@ -75,6 +85,11 @@ class DirectedEdge implements Edge {
 	public boolean setValE(String attr, int val) {
 		if(attr == attrSecondaryId) {
 			//this.secondaryId = val;
+			return true;
+		}
+		if(attr == attrWhatever) {
+			this.whatever = val;
+			return true;
 		}
 		return false;
 	}

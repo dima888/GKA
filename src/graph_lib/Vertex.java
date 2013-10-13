@@ -17,16 +17,18 @@ class Vertex {
 	//*********ATTRIBUTE********	
 	private String name; 
 	private final int secondaryId;  
+	private int whatever = 25;
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	
 	String attrName = "name";
 	String attrSecondaryId = "secondaryId";
+	String attrWhatever = "whatever";
 	
 	public Vertex(int vertexValue) {		
 		this.vertexValue = vertexValue;
 		secondaryId = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrSecondaryId));	
+		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever)); 	//ATTRIBUTENLISTE	
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -62,6 +64,10 @@ class Vertex {
 		return this.attrList;
 	}
 	
+	public int getWhatever() {
+		return this.whatever;
+	}
+	
 	//********************************************** SETTER METHODEN **********************************************
 	
 	public void setName(String newName) {
@@ -69,7 +75,18 @@ class Vertex {
 	}
 	
 	
-	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
+	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************	
+	public boolean setValV(String attr, int val) {
+		if(attr == attrSecondaryId) {
+			//this.secondaryId = val;
+			return true;
+		}
+		if(attr == attrWhatever) {
+			this.whatever = val;
+			return true;
+		}
+		return false;
+	}
 //	public void addEdge(Edge edge) {
 //		incidents.add(edge);
 //	}

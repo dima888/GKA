@@ -2,7 +2,9 @@ package graph_lib;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //Package-Privat
 class UndirectedEdge implements Edge {
@@ -11,13 +13,17 @@ class UndirectedEdge implements Edge {
 	private static int count = 0; //Hilfszaehler
 	private List<String> attrList = new ArrayList<>();
 	
+	private Map<String, Object> attrMap = new HashMap();
+	
 	// *********ATTRIBUTE********
 	private String name;
 	private final int secondaryId;
+	private int whatever = 100;
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
 	String attrSecondaryId = "secondaryId";
+	String attrWhatever = "whatever";
 	
 	public UndirectedEdge(Vertex v1, Vertex v2) {
 		verticesFromEdge[0] = v1;
@@ -26,8 +32,13 @@ class UndirectedEdge implements Edge {
 		v1.addIncident(this);
 		v2.addIncident(this);
 		
+		//****MAP*****
+		attrMap.put(attrName, name);
+//		attrMap.put(attrSecondaryId, secondaryId);
+		attrMap.put(attrWhatever, whatever);
+		
 		secondaryId = count++; //Auto increment
-		attrList.addAll(Arrays.asList(attrName, attrSecondaryId));	
+		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever)); 	//ATTRIBUTENLISTE	
 	}
 
 	//********************************************** GETTER METHODEN **********************************************
@@ -51,6 +62,11 @@ class UndirectedEdge implements Edge {
 		return this.attrList;
 	}
 	
+	@Override
+	public int getWhatever() {
+		return this.whatever;
+	}
+	
 	//********************************************** SETTER METHODEN **********************************************
 	@Override
 	public void setName(String newName) {
@@ -58,10 +74,16 @@ class UndirectedEdge implements Edge {
 	}
 	
 	//********************************************** IMPLEMENTIERUNGS METHODEN **********************************************
-	
 	@Override
 	public boolean setValE(String attr, int val) {
-		// TODO Auto-generated method stub
+		if(attr == attrSecondaryId) {
+			//this.secondaryId = val;
+			return true;
+		}
+		if(attr == attrWhatever) {
+			this.whatever = val;
+			return true;
+		}
 		return false;
 	}
 	
@@ -74,7 +96,7 @@ class UndirectedEdge implements Edge {
 
 	@Override
 	public int getAttr(String attr) {
-		if(attr == "secondaryId") {
+		if(attr == attrSecondaryId) {
 			return this.secondaryId;
 		}
 		return Integer.MAX_VALUE;
@@ -84,9 +106,10 @@ class UndirectedEdge implements Edge {
 	@Override
 	public String getAttrStr(String attr) {
 		String result = "";
-		if(attr == "name") {
+		if(attr == attrName) {
 			result = this.name;
 		}
 		return result;
 	}
+
 }

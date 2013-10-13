@@ -195,5 +195,22 @@ public class TestAIGraph {
 		System.out.println("AttrListE = " + e1.getAttrList());
 	}
 	
+	@Test 
+	public void testSetValE() {
+		Vertex v1 = graph.addVertex(1);
+		Vertex v2 = graph.addVertex(2);	
+
+		Edge e1 = graph.addEdgeD(v1, v2);
+		graph.setValE(e1, "whatever", 1500);
+		
+		assertEquals(e1.getWhatever(), 1500);
+	}
+	
+	@Test 
+	public void testSetValV() {
+		Vertex v1 = graph.addVertex(1);;
+		graph.setValV(v1, "whatever", 7000);		
+		assertEquals(v1.getWhatever(), 7000);
+	}
 	
 }
