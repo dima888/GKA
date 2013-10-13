@@ -1,9 +1,10 @@
 //TODO: Wichtig, wir brauchen eine ToString z.B. in Enge, wo die ID des jewaligen Objekt zurueck gegeben wird
-//      Oder wir entscheiden uns anders und returnen z.B. bei addEdgeU -> einen Integer wert als seine eindeutige ID: 
+//      Oder wir entscheiden uns anders und returnen z.B. bei addEdgeU -> einen Integer wert als seine eindeutige ID:
 
-//********************** WICHTIG, WIR SOLLEN KEINE MEHRFACHKANTEN ZULASSEN --> ÜBERLADENE METHODE INCLUDE IMPLEMENTIERT *********************************
-//************************* ES MÜSSEN NOCH ÜBERALL PRECONDITIONS EINGEFÜGT WERDEN, DIE AUF NULL PRÜFEN **************************************************
-// ES GIBT EIN PROBLEM BEIM TESTEN UND ZWAR, WIR KÖNNEN KEINEN VERTEX ERSTELLEN DA ES PRIVATE IST ALSO MÜSSEN WIR DOCH MIT ID ARBEITEN
+
+//********************** WICHTIG, WIR SOLLEN KEINE MEHRFACHKANTEN ZULASSEN --> ÃœBERLADENE METHODE INCLUDE IMPLEMENTIERT *********************************
+//************************* ES MÃœSSEN NOCH ÃœBERALL PRECONDITIONS EINGEFÃœGT WERDEN, DIE AUF NULL PRÃœFEN **************************************************
+// ES GIBT EIN PROBLEM BEIM TESTEN UND ZWAR, WIR KÃ–NNEN KEINEN VERTEX ERSTELLEN DA ES PRIVATE IST ALSO MÃœSSEN WIR DOCH MIT ID ARBEITEN ðŸ˜ˆ
 
 package graph_lib;
 
@@ -25,11 +26,11 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
+	 * Zum hinzufÃ¼gen eines Vertex(Knoten)- Objekts zum Graphen
 	 * 
 	 * @param newItem Wert, der im Vertex gespeichert werden soll
 	 * 
-	 * @return Vertex gibt die Referenz auf die hinzugefügte Vertex zurück
+	 * @return Vertex gibt die Referenz auf die hinzugefÃ¼gte Vertex zurÃ¼ck
 	 */
 	public Vertex addVertex(int newItem) {
 		Vertex vertex = new Vertex(newItem);
@@ -42,16 +43,16 @@ public class AIGraph {
 	 * 
 	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
 	 * 
-	 * @return boolean true, bei erfolgreichem löschen, sonst false
+	 * @return boolean true, bei erfolgreichem lÃ¶schen, sonst false
 	 */
 	public void deleteVertex(Vertex v_id) {
 		//Precondtion
-		//Prüfen ob sich der übergebene Knoten überhaupt im Graphen befindet
+		//PrÃ¼fen ob sich der Ã¼bergebene Knoten Ã¼berhaupt im Graphen befindet
 		if(! (verticesList.contains(v_id))) {
 			throw new IllegalArgumentException("Dieser Knoten befindet sich nicht im Graphen");
 		}
 		
-		//löscht man einen Knoten, so auch seine anliegenden Kanten
+		//lÃ¶scht man einen Knoten, so auch seine anliegenden Kanten
 		for(Edge edge : edgesListU) {
 			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
 			if((verticesFromEdge[0] == v_id) || (verticesFromEdge[1] == v_id)) {
@@ -75,16 +76,16 @@ public class AIGraph {
 	 * @param v1 ein Vertex
 	 * @param v2 ein Vertex
 	 * 
-	 * @return Edge gibt die Referenz auf die hinzugefügte Edge zurück
+	 * @return Edge gibt die Referenz auf die hinzugefÃ¼gte Edge zurÃ¼ck
 	 */
 	public Edge addEdgeU(Vertex v1, Vertex v2) {		
 		//Precondition		
-		//Beide Vertices müssen zu einem Grpahen gehören
+		//Beide Vertices mÃ¼ssen zu einem Grpahen gehÃ¶ren
 		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
 			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
 		}
 		
-		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
+		//Man darf nur dann eine Kante einfÃ¼gen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
 		if(includeEdge(v1, v2)) {
 			throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
 		}
@@ -96,12 +97,12 @@ public class AIGraph {
 	
 	public Edge addEdgeD(Vertex v1, Vertex v2) {	
 		//Precondition
-		//Beide Vertices müssen zu einem Grpahen gehören
+		//Beide Vertices mÃ¼ssen zu einem Grpahen gehÃ¶ren
 		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
 			throw new IllegalArgumentException("EdgeD (Gerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
 		}
 		
-		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
+		//Man darf nur dann eine Kante einfÃ¼gen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
 		if(includeEdge(v1, v2)) {
 			throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
 		}
@@ -113,12 +114,12 @@ public class AIGraph {
 	
 	/**
 	 * Die Methode loescht eine Kante(Edge)
-	 * Es Kann nur höchstens eine Kante zwischen 2 Ecken geben
+	 * Es Kann nur hÃ¶chstens eine Kante zwischen 2 Ecken geben
 	 * 
 	 * @param v1 erwartet ein Vertex-Objekt
 	 * @param v2 erwartet ein Vertex-Objekt
 	 * 
-	 * @return boolean true wenn die Edge gelöscht wurde, false wenn nicht
+	 * @return boolean true wenn die Edge gelÃ¶scht wurde, false wenn nicht
 	 */
 	public void deleteEdge(Vertex v1, Vertex v2) {
 		//Zuerst alle ungerichteten Kanten durchsuchen
@@ -128,11 +129,11 @@ public class AIGraph {
 			boolean temp1 = false;
 			boolean temp2 = false;
 			
-			if((verticesFromEdge[0] == v1) || (verticesFromEdge[1] == v1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == v1) || (verticesFromEdge[1] == v1)) { //Da keine Reihenfolge besteht mÃ¼ssen beide Stellen Ã¼berprÃ¼ft werden
 				temp1 = true;
 			}
 			
-			if((verticesFromEdge[0] == v2) || (verticesFromEdge[1] == v2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == v2) || (verticesFromEdge[1] == v2)) { //Da keine Reihenfolge besteht mÃ¼ssen beide Stellen Ã¼berprÃ¼ft werden
 				temp2 = true;
 			}
 			
@@ -142,7 +143,7 @@ public class AIGraph {
 			}
 		}
 		
-		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fündig wurden
+		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fÃ¼ndig wurden
 		for(Edge edge : edgesListD) {
 			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
 			
@@ -157,8 +158,8 @@ public class AIGraph {
 			}
 		}
 		
-		//Postcondition für Effizienz um nicht zwei mal die Liste zu durchlaufen
-		throw new IllegalArgumentException("Es existiert keine Kante zwischen den übergebenen Knoten");
+		//Postcondition fÃ¼r Effizienz um nicht zwei mal die Liste zu durchlaufen
+		throw new IllegalArgumentException("Es existiert keine Kante zwischen den Ã¼bergebenen Knoten");
 	}
 	
 	//********************************* SELEKTOREN *********************************************
@@ -175,6 +176,7 @@ public class AIGraph {
 	}
 	
 	/**
+	 * TODO: ANGUCKEN; TEST LAEUFT NICHT RICHTIG DURCH
 	 *	getSource implementieren --> ermittelt im gerichteten Fall die Quelle der
 	 *	Kante e1 (gegeben als ID) im ungerichteten Fall die linke / erste Ecke
 	 *  return Wert ver Edge auf Vertex geaendert
@@ -187,9 +189,9 @@ public class AIGraph {
 	 */
 	public Vertex getSource(Edge e1) {
 		//Precondition
-		//Gehört die übergebene Kante überhaupt zu diesem Graphen? Beide Listen durchsuchen
+		//GehÃ¶rt die Ã¼bergebene Kante Ã¼berhaupt zu diesem Graphen? Beide Listen durchsuchen
 		if(! (edgesListU.contains(e1) || (edgesListD.contains(e1)))) {
-			throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
+			throw new IllegalArgumentException("Die Ã¼bergebene Kante gehÃ¶rt nicht zu diesem Graphen");
 		}
 		
 		Vertex vertex = null;
@@ -211,9 +213,9 @@ public class AIGraph {
 	
 	public Vertex getTarget(Edge e1) {
 		//Precondition
-		//Gehört die übergebene Kante überhaupt zu diesem Graphen ? Beide Listen durchsuchen
+		//GehÃ¶rt die Ã¼bergebene Kante Ã¼berhaupt zu diesem Graphen ? Beide Listen durchsuchen
 		if(! (edgesListU.contains(e1) || (edgesListD.contains(e1)))) {
-			throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
+			throw new IllegalArgumentException("Die Ã¼bergebene Kante gehÃ¶rt nicht zu diesem Graphen");
 		}
 		
 		Vertex vertex = null;
@@ -251,7 +253,7 @@ public class AIGraph {
 	/**
 	 * Gibt die Liste Aller Vertexes(Knotten) zurueck
 	 * 
-	 * @return List<Vertex> gibt eine Liste von Vertex-Objekten zurück
+	 * @return List<Vertex> gibt eine Liste von Vertex-Objekten zurÃ¼ck
 	 */
 	public List<Vertex> getVertexes() {
 		return verticesList;
@@ -260,7 +262,7 @@ public class AIGraph {
 	/**
 	 * Gibt die Liste aller Edge(Kanten) zurueck
 	 * 
-	 * @return List<Edge> gibt eine Liste von Edge-Objekten zurück
+	 * @return List<Edge> gibt eine Liste von Edge-Objekten zurÃ¼ck
 	 */
 	public List<Edge> getEdges() {
 		List<Edge> result = new ArrayList<>();
@@ -402,12 +404,12 @@ public class AIGraph {
 	}
 
 	/**
-	 * Die Hilfsmethode prüft, ob bereits eine Kante zwischen den übergebenen Parametern existiert
+	 * Die Hilfsmethode prÃ¼ft, ob bereits eine Kante zwischen den Ã¼bergebenen Parametern existiert
 	 * 
 	 * @param v1 ein Vertex-Objekt
 	 * @param v2 ein Vertex-Objekt
 	 * 
-	 * @return boolean true, wenn eine Kante zwischen den beiden übergebenen parametern existiert, sonst false
+	 * @return boolean true, wenn eine Kante zwischen den beiden Ã¼bergebenen parametern existiert, sonst false
 	 */
 	private boolean includeEdge(Vertex v1, Vertex v2) {
 		//Zuerst alle ungerichteten Kanten durchsuchen
@@ -417,11 +419,11 @@ public class AIGraph {
 			boolean temp1 = false;
 			boolean temp2 = false;
 			
-			if((verticesFromEdge[0] == v1) || (verticesFromEdge[1] == v1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == v1) || (verticesFromEdge[1] == v1)) { //Da keine Reihenfolge besteht mÃ¼ssen beide Stellen Ã¼berprÃ¼ft werden
 				temp1 = true;
 			}
 			
-			if((verticesFromEdge[0] == v2) || (verticesFromEdge[1] == v2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == v2) || (verticesFromEdge[1] == v2)) { //Da keine Reihenfolge besteht mÃ¼ssen beide Stellen Ã¼berprÃ¼ft werden
 				temp2 = true;
 			}
 			
@@ -430,11 +432,11 @@ public class AIGraph {
 			}
 		}
 		
-		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fündig wurden
+		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fÃ¼ndig wurden
 		for(Edge edge : edgesListD) {
 			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
 			
-			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prüfen
+			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prÃ¼fen
 				return true;
 			}
 		}
@@ -447,8 +449,8 @@ public class AIGraph {
 //				return vertex;
 //			}
 //		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
+//		//Falls die Ã¼bergebene ID nicht existiert
+//		throw new IllegalArgumentException("Es existiert kein Knoten mit der Ã¼bergebenen ID");
 //	}
 //	
 //	private Edge ermittleEdgeU(int id) {
@@ -457,8 +459,8 @@ public class AIGraph {
 //				return edge;
 //			}
 //		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
+//		//Falls die Ã¼bergebene ID nicht existiert
+//		throw new IllegalArgumentException("Es existiert kein Knoten mit der Ã¼bergebenen ID");
 //	}
 //	
 //	private Edge ermittleEdgeD(int id) {
@@ -467,7 +469,7 @@ public class AIGraph {
 //				return edge;
 //			}
 //		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
+//		//Falls die Ã¼bergebene ID nicht existiert
+//		throw new IllegalArgumentException("Es existiert kein Knoten mit der Ã¼bergebenen ID");
 //	}
 }
