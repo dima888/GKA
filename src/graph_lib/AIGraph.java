@@ -243,9 +243,23 @@ public class AIGraph {
 	}
 	
 	public List<Vertex> getAdjacent(Vertex v1) {
-		// TODO: getAdjacent implementieren --> ermittelt alle zur Ecke v1
-		// adjazenten Ecken
-		return null;
+		List<Vertex> result = new ArrayList<>();
+		
+		//Holen aller anliegenden Kanten --> incidents
+		List<Edge> incidents = v1.getIncidents();
+		
+		//Holen aller adjazenten
+		for(Edge edge : incidents) {
+			Vertex[] vertices = edge.getVertices();
+			
+			if(vertices[0] != v1) {
+				result.add(vertices[0]);
+			} else {
+				result.add(vertices[1]);
+			}
+		}
+		
+		return result;
 	}
 	
 	/**

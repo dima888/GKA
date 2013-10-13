@@ -1,5 +1,9 @@
 package graph_lib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -143,6 +147,23 @@ public class TestAIGraph {
 		Vertex result = graph.getTarget(edge);
 		
 		assertEquals(vertex2, result);
+	}
+	
+	@Test
+	public void testGetAdjacents() {
+		Vertex vertex1 = graph.addVertex(1);
+		Vertex vertex2 = graph.addVertex(2);
+		Vertex vertex3 = graph.addVertex(3);
+		Vertex vertex4 = graph.addVertex(4);
+		
+		Edge edge1 = graph.addEdgeU(vertex1, vertex2);
+		Edge edge2 = graph.addEdgeU(vertex1, vertex3);
+		Edge edge3 = graph.addEdgeU(vertex1, vertex4);
+		
+		//EXPECTED
+		List<Vertex> expResult = new ArrayList<>(Arrays.asList(vertex2, vertex3, vertex4));
+		
+		assertEquals(expResult, graph.getAdjacent(vertex1));
 	}
 	
 	@Test

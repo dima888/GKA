@@ -15,7 +15,7 @@ class UndirectedEdge implements Edge {
 	private static int count = 0; //Hilfszaehler
 	private List<String> attrList = new ArrayList<>();
 	
-	private Map<String, Object> attrMap = new HashMap();
+	private Map<String, Object> attrMap = new HashMap<>();
 	
 	// *********ATTRIBUTE********
 	private String name;
