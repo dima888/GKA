@@ -118,7 +118,7 @@ class DirectedEdge implements Edge {
 	 */
 	public boolean hatQuelle() {
 		Vertex source = verticesFromEdge[0];
-		if(source.getIngoingEdge().size() > 1) {
+		if(source.getIngoingEdge().size() > 0) {
 			return false;
 		}
 		return true;

@@ -48,7 +48,7 @@ public class TestAIGraph {
 	
 		graph.addEdgeU(vertex1, vertex2);
 		
-		System.out.println(graph);
+		//System.out.println(graph);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -125,16 +125,14 @@ public class TestAIGraph {
 		Vertex vertex3 = graph.addVertex(3);
 	
 		Edge edge1 = graph.addEdgeD(vertex1, vertex2);
-		Edge edge2 = graph.addEdgeD(vertex3, vertex1);
+		Edge edge2 = graph.addEdgeD(vertex2, vertex1);
+		//Edge edge3 = graph.addEdgeD(vertex3, vertex1);
 		
 		Vertex result = graph.getSource(edge1);
 		
-		if(result == null) {
-			//throw new IllegalArgumentException("Ergebnis == null");
-			System.out.println("HI");
-		}
+		System.out.println(graph);
 		
-		//assertEquals(vertex1, result);
+		assertEquals(null, result);
 	}
 	
 	@Test
@@ -212,8 +210,8 @@ public class TestAIGraph {
 	public void testGetAttrVANDE() {
 		Vertex v1 = graph.addVertex(1);
 		Edge e1 = graph.addEdgeU(v1, v1);
-		System.out.println("AttrListV = " + v1.getAttrList());
-		System.out.println("AttrListE = " + e1.getAttrList());
+		//System.out.println("AttrListV = " + v1.getAttrList());
+		//System.out.println("AttrListE = " + e1.getAttrList());
 	}
 	
 	@Test 
