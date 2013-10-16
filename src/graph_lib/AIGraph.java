@@ -27,7 +27,7 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Hier wird ein Vertex(Knotten) geloescht 
+	 * Hier wird ein Vertex(Knoten) geloescht 
 	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
 	 * @return boolean true, bei erfolgreichem löschen, sonst false
 	 */
@@ -57,7 +57,7 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein vertices(Knotten) an
+	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein vertices(Knoten) an
 	 * 
 	 * @param v1 ein Vertex
 	 * @param v2 ein Vertex
@@ -67,7 +67,7 @@ public class AIGraph {
 		//Precondition		
 		//Beide Vertices müssen zu einem Grpahen gehören
 		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
-			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
+			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knoten exestieren) ");
 		}
 		
 		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
@@ -84,7 +84,7 @@ public class AIGraph {
 		//Precondition
 		//Beide Vertices müssen zu einem Grpahen gehören
 		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
-			throw new IllegalArgumentException("EdgeD (Gerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knotten exestieren) ");
+			throw new IllegalArgumentException("EdgeD (Gerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knoten exestieren) ");
 		}
 		
 		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
@@ -246,7 +246,7 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Gibt die Liste Aller Vertexes(Knotten) zurueck
+	 * Gibt die Liste Aller Vertexes(Knoten) zurueck
 	 * 
 	 * @return List<Vertex> gibt eine Liste von Vertex-Objekten zurück
 	 */
@@ -382,8 +382,8 @@ public class AIGraph {
 	
 	//********************************* PRIVATE METHODEN DIESER KLASSE *********************************
 	/**
-	 * Die Hilfsmethode prueft, ob ein Vertex(Knotten) in einer Liste vorhanden ist
-	 * @param verticesList erwartet eine Liste von Vertex(Knotten)
+	 * Die Hilfsmethode prueft, ob ein Vertex(Knoten) in einer Liste vorhanden ist
+	 * @param verticesList erwartet eine Liste von Vertex(Knoten)
 	 * @param v erwaratet ein Vertex Object
 	 * @return boolean true, wenn ein Vertex sich im Graphen befindet, sonst false
 	 */
