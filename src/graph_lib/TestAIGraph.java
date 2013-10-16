@@ -109,9 +109,7 @@ public class TestAIGraph {
 	public void testGetSourcePos1() {
 		Vertex vertex1 = graph.addVertex(1);
 		Vertex vertex2 = graph.addVertex(2);
-	
 		Edge edge = graph.addEdgeD(vertex1, vertex2);
-		
 		Vertex result = graph.getSource(edge);
 		
 		assertEquals(vertex1, result);
