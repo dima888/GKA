@@ -14,10 +14,12 @@ import static org.junit.Assert.*;
 public class TestAIGraph {
 	
 	AIGraph graph;
+	AIGraph graph2;
 	
 	@Before
 	public void init() {
 		graph = new AIGraph();
+		graph2 = new AIGraph();
 	}
 	
 	@Test
@@ -25,7 +27,10 @@ public class TestAIGraph {
 		graph.addVertex(1);
 		graph.addVertex(2);
 		
-		//System.out.println(graph);
+		graph2.addVertex(1);
+		graph2.addVertex(2);
+		
+		assertTrue(graph.equals(graph2));
 	}
 	
 	@Test
@@ -34,6 +39,10 @@ public class TestAIGraph {
 		Vertex v2 = graph.addVertex(2);
 		
 		graph.deleteVertex(v2);
+		
+		graph2.addVertex(1);
+		
+		assertTrue(graph.equals(graph2));
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -48,7 +57,12 @@ public class TestAIGraph {
 	
 		graph.addEdgeU(vertex1, vertex2);
 		
-		//System.out.println(graph);
+		Vertex vertex3 = graph2.addVertex(1);
+		Vertex vertex4 = graph2.addVertex(2);
+	
+		graph2.addEdgeU(vertex3, vertex4);
+		
+		assertTrue(graph.equals(graph2));
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -66,6 +80,13 @@ public class TestAIGraph {
 		Vertex vertex2 = graph.addVertex(2);
 	
 		graph.addEdgeD(vertex1, vertex2);
+		
+		Vertex vertex3 = graph2.addVertex(3);
+		Vertex vertex4 = graph2.addVertex(4);
+	
+		graph2.addEdgeD(vertex3, vertex4);
+		
+		assertTrue(graph.equals(graph2));
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -78,7 +99,26 @@ public class TestAIGraph {
 	}
 	
 	@Test
-	public void testDeleteEdgePos() {
+	public void testDeleteEdgeDPos() {
+		Vertex vertex1 = graph.addVertex(1);
+		Vertex vertex2 = graph.addVertex(2);
+	
+		graph.addEdgeD(vertex1, vertex2);
+		
+		graph.deleteEdge(vertex1, vertex2);
+		
+		Vertex vertex3 = graph2.addVertex(1);
+		Vertex vertex4 = graph2.addVertex(2);
+	
+		graph2.addEdgeD(vertex3, vertex4);
+		
+		graph2.deleteEdge(vertex3, vertex4);
+		
+		assertTrue(graph.equals(graph2));
+	}
+	
+	@Test
+	public void testDeleteEdgeUPos() {
 		Vertex vertex1 = graph.addVertex(1);
 		Vertex vertex2 = graph.addVertex(2);
 	
@@ -86,12 +126,14 @@ public class TestAIGraph {
 		
 		graph.deleteEdge(vertex1, vertex2);
 		
-		Vertex vertex3 = graph.addVertex(1);
-		Vertex vertex4 = graph.addVertex(2);
+		Vertex vertex3 = graph2.addVertex(1);
+		Vertex vertex4 = graph2.addVertex(2);
 	
-		graph.addEdgeD(vertex3, vertex4);
+		graph2.addEdgeU(vertex3, vertex4);
 		
-		graph.deleteEdge(vertex3, vertex4);
+		graph2.deleteEdge(vertex3, vertex4);
+		
+		assertTrue(graph.equals(graph2));
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
