@@ -443,19 +443,21 @@ public class AIGraph {
 	@Override
 	public boolean equals(Object o) {
 		//Prüfen, ob der übergebene Parameter überhaupt ein Graph ist
-		if(! (o instanceof AIGraph)) {return false;}
+		if( !(o instanceof AIGraph)) {return false;}
 		//Sicher gestellt das der übergebene Parameter ein AIGraph ist
 		AIGraph graph = (AIGraph) o;
+		
 		//Sind beide Graphen NULL-Graphen, dann sind sie gleich
 		if((this.verticesList.isEmpty()) && (graph.verticesList.isEmpty())) {return true;}
+		
 		//Prüfen ob die Anzahl der vertices übereinstimmt
 		if((this.getVertexes().size()) != (graph.getVertexes().size())) {return false;}
+		
 		//Temporäre variable für die Schleife
 		boolean temp = false;
-		//Prüfen ob bei beiden Graphen, die Adjazenzen für jede Ecke übereinstimmen
-		for(Vertex v1 : this.verticesList) {
-			//Anzahl der vertices gleich, sicher gestellt durch vorherige überprüfung
-			//Sobald für irgeneinen vertex die Adjazenten nicht übereinstimmten sind die Graphen ungleich
+		
+		//Prüfen ob bei beiden Graphen jeder Vertex die gleichen eigenschaften aufweisen(Attribute != Eigenschaften)
+		for(Vertex v1 : this.verticesList) {			
 			for(Vertex v2 : graph.verticesList) {
 				if((v1.getIngoingEdge().size()) == (v2.getIngoingEdge().size())) {
 					if((v1.getOutgoingEdge().size()) == (v2.getOutgoingEdge().size())) {
@@ -463,7 +465,8 @@ public class AIGraph {
 					}
 				}
 			}
-			if(! (temp)) {return false;}
+			//Hier ist mindestens ein Fall, der zu einen Graphen nicht überein stimmt, somit ist unsere Struktur nicht gleich
+			if(! (temp)) {return false;} 
 		}
 		return true;
 	}
