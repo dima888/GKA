@@ -4,8 +4,7 @@ class UndirectedEdge extends Edge{
 	
 	
 	public UndirectedEdge(Vertex v1, Vertex v2) {
-		super(v1, v2);
-		// TODO Auto-generated constructor stub
+		super(v1, v2);		
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class TestAIGraph {
 	}
 	
 	@Test
-	public void testGetSourcePos() {
+	public void testGetSourcePos1() {
 		Vertex vertex1 = graph.addVertex(1);
 		Vertex vertex2 = graph.addVertex(2);
 	
@@ -117,23 +117,17 @@ public class TestAIGraph {
 		assertEquals(vertex1, result);
 	}
 	
-	//TODO: Hier stimmt noch was nicht
-//	@Test //(expected = IllegalArgumentException.class)
-//	public void testGetSourceNeg() {
-//		Vertex vertex1 = graph.addVertex(1);
-//		Vertex vertex2 = graph.addVertex(2);
-//		Vertex vertex3 = graph.addVertex(3);
-//	
-//		Edge edge1 = graph.addEdgeD(vertex1, vertex2);
-//		Edge edge2 = graph.addEdgeD(vertex2, vertex1);
-//		//Edge edge3 = graph.addEdgeD(vertex3, vertex1);
-//		
-//		Vertex result = graph.getSource(edge1);
-//		
-//		System.out.println(graph);
-//		
-//		assertEquals(null, result);
-//	}
+	@Test 
+	public void testGetSourcePos2() {
+		Vertex vertex1 = graph.addVertex(1);
+		Vertex vertex2 = graph.addVertex(2);
+	
+		Edge edge1 = graph.addEdgeD(vertex1, vertex2);
+		Edge edge2 = graph.addEdgeD(vertex2, vertex1);
+		Vertex result = graph.getSource(edge1);
+		
+		assertEquals(null, result);
+	}
 	
 	@Test
 	public void testGetTargetPos() {

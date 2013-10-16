@@ -5,7 +5,8 @@ class DirectedEdge extends Edge {
 	
 	public DirectedEdge(Vertex v1, Vertex v2) {
 		super(v1, v2);		
-		// TODO Auto-generated constructor stub
+		v1.getOutgoingEdge().add(this);
+		v2.getIngoingEdge().add(this);
 	}
 
 	@Override
@@ -23,7 +24,7 @@ class DirectedEdge extends Edge {
 		Vertex source = this.getVertices()[0];
 		if(source.getIngoingEdge().size() > 0) {
 			return false;
-		}
+		}		
 		return true;
 	}
 	

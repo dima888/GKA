@@ -1,10 +1,3 @@
-//TODO: Wichtig, wir brauchen eine ToString z.B. in Enge, wo die ID des jewaligen Objekt zurueck gegeben wird
-//      Oder wir entscheiden uns anders und returnen z.B. bei addEdgeU -> einen Integer wert als seine eindeutige ID:
-
-
-//********************** WICHTIG, WIR SOLLEN KEINE MEHRFACHKANTEN ZULASSEN --> ÜBERLADENE METHODE INCLUDE IMPLEMENTIERT *********************************
-//************************* ES MÜSSEN NOCH ÜBERALL PRECONDITIONS EINGEFÜGT WERDEN, DIE AUF NULL PRÜFEN **************************************************
-// ES GIBT EIN PROBLEM BEIM TESTEN UND ZWAR, WIR KÖNNEN KEINEN VERTEX ERSTELLEN DA ES PRIVATE IST ALSO MÜSSEN WIR DOCH MIT ID ARBEITEN 😈
 
 package graph_lib;
 
@@ -16,20 +9,15 @@ public class AIGraph {
 	private List<Vertex> verticesList = new ArrayList<>();
 	List<UndirectedEdge> edgesListU = new ArrayList<>();
 	List<DirectedEdge> edgesListD = new ArrayList<>();
-	//private List<Map<Edge, Vertex[]>> edgesListD = new ArrayList<>(); //[0] von Knotten[0] zu Knotten[1]
-	
 	
 	//********************************* KONSTRUKTOREN *********************************************
-	
 	public AIGraph() {
 		//NULL Graph
 	}
 	
 	/**
 	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
-	 * 
 	 * @param newItem Wert, der im Vertex gespeichert werden soll
-	 * 
 	 * @return Vertex gibt die Referenz auf die hinzugefügte Vertex zurück
 	 */
 	public Vertex addVertex(int newItem) {
@@ -40,9 +28,7 @@ public class AIGraph {
 	
 	/**
 	 * Hier wird ein Vertex(Knotten) geloescht 
-	 * 
 	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
-	 * 
 	 * @return boolean true, bei erfolgreichem löschen, sonst false
 	 */
 	public void deleteVertex(Vertex v_id) {
@@ -75,7 +61,6 @@ public class AIGraph {
 	 * 
 	 * @param v1 ein Vertex
 	 * @param v2 ein Vertex
-	 * 
 	 * @return Edge gibt die Referenz auf die hinzugefügte Edge zurück
 	 */
 	public Edge addEdgeU(Vertex v1, Vertex v2) {		
@@ -115,10 +100,8 @@ public class AIGraph {
 	/**
 	 * Die Methode loescht eine Kante(Edge)
 	 * Es Kann nur höchstens eine Kante zwischen 2 Ecken geben
-	 * 
 	 * @param v1 erwartet ein Vertex-Objekt
 	 * @param v2 erwartet ein Vertex-Objekt
-	 * 
 	 * @return boolean true wenn die Edge gelöscht wurde, false wenn nicht
 	 */
 	public void deleteEdge(Vertex v1, Vertex v2) {
@@ -139,7 +122,6 @@ public class AIGraph {
 			
 			if(temp1 && temp2) {
 				edgesListU.remove(edge);
-				return;
 			}
 		}
 		
@@ -176,7 +158,6 @@ public class AIGraph {
 	}
 	
 	/**
-	 * TODO: ANGUCKEN; TEST LAEUFT NICHT RICHTIG DURCH
 	 *	getSource implementieren --> ermittelt im gerichteten Fall die Quelle der
 	 *	Kante e1 (gegeben als ID) im ungerichteten Fall die linke / erste Ecke
 	 *  return Wert ver Edge auf Vertex geaendert
@@ -402,10 +383,8 @@ public class AIGraph {
 	//********************************* PRIVATE METHODEN DIESER KLASSE *********************************
 	/**
 	 * Die Hilfsmethode prueft, ob ein Vertex(Knotten) in einer Liste vorhanden ist
-	 * 
 	 * @param verticesList erwartet eine Liste von Vertex(Knotten)
 	 * @param v erwaratet ein Vertex Object
-	 * 
 	 * @return boolean true, wenn ein Vertex sich im Graphen befindet, sonst false
 	 */
 	private boolean include(List<Vertex> verticesList, Vertex v) {
@@ -419,10 +398,8 @@ public class AIGraph {
 
 	/**
 	 * Die Hilfsmethode prüft, ob bereits eine Kante zwischen den übergebenen Parametern existiert
-	 * 
 	 * @param v1 ein Vertex-Objekt
 	 * @param v2 ein Vertex-Objekt
-	 * 
 	 * @return boolean true, wenn eine Kante zwischen den beiden übergebenen parametern existiert, sonst false
 	 */
 	private boolean includeEdge(Vertex v1, Vertex v2) {
@@ -456,34 +433,4 @@ public class AIGraph {
 		}
 		return false;
 	}
-	
-//	private Vertex ermittleVertex(int id) {
-//		for(Vertex vertex : verticesList) {
-//			if(vertex.getID() == id) {
-//				return vertex;
-//			}
-//		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
-//	}
-//	
-//	private Edge ermittleEdgeU(int id) {
-//		for(Edge edge : edgesListU) {
-//			if(((UndirectedEdge) edge).getID() == id) {
-//				return edge;
-//			}
-//		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
-//	}
-//	
-//	private Edge ermittleEdgeD(int id) {
-//		for(Edge edge : edgesListD) {
-//			if(((DirectedEdge) edge).getID() == id) {
-//				return edge;
-//			}
-//		}
-//		//Falls die übergebene ID nicht existiert
-//		throw new IllegalArgumentException("Es existiert kein Knoten mit der übergebenen ID");
-//	}
 }
