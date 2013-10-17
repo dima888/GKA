@@ -1,7 +1,14 @@
 package graph_lib;
 
-//****************************TODO: WICHTIG: Die IMPLEMENTIERUNGS METHODEN muessen erweitert werden, wenn ein neues Attribut dazu kommt****************************
-//Das Override muss nicht angegeben werden, ist aber so schoener, wie ich finde. 
+/*****************************TODO: WICHTIG: Die IMPLEMENTIERUNGS METHODEN muessen erweitert werden, wenn ein neues Attribut dazu kommt****************************
+Das Override muss nicht angegeben werden, ist aber so schoener, fuer die unterliegenden Klassen von Edge
+
+SPECIFIKATION: ------------------------------------------ 
+Die Gerichteten Kanten IDs sind  {0, 2, 4, 6, 8, ...}
+Die Ungerichteten Katen IDs sind {1, 3, 5, 7, 9, ...} 
+---------------------------------------------------------
+ */
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,18 +21,17 @@ public abstract class Edge implements EdgeInterface{
 	
 	private Vertex[] verticesFromEdge = new Vertex[2];
 	private List<String> attrList = new ArrayList<>();
-	private static int count = 0; //Hilfszaehler
+	
 	
 	private Map<String, Object> attrMap = new HashMap<>();
 	
 	// *********ATTRIBUTE********
 	private String name;
-	private final int secondaryId;
 	private int whatever = 100;
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
-	String attrSecondaryId = "secondaryId";
+	String attrID = "ID";
 	String attrWhatever = "whatever";
 	
 	public Edge(Vertex v1, Vertex v2) {
@@ -34,15 +40,13 @@ public abstract class Edge implements EdgeInterface{
 		
 		v1.addIncident(this);
 		v2.addIncident(this);
-		
-		secondaryId = count++; //Auto increment
+				
 		
 		//****MAP*****
 		attrMap.put(attrName, name);
-		attrMap.put(attrSecondaryId, secondaryId);
 		attrMap.put(attrWhatever, whatever);
 		
-		attrList.addAll(Arrays.asList(attrName, attrSecondaryId, attrWhatever)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever)); 	//ATTRIBUTENLISTE	
 	}
 
 	//********************************************** GETTER METHODEN **********************************************
@@ -56,10 +60,6 @@ public abstract class Edge implements EdgeInterface{
 		return this.name;
 	}
 	
-	@Override
-	public int getSecondaryId() {
-		return this.secondaryId;
-	}
 	
 	@Override
 	public List<String> getAttrList() {
@@ -89,8 +89,8 @@ public abstract class Edge implements EdgeInterface{
 	
 	@Override
 	public boolean setValE(String attr, int val) {
-		if(attr == attrSecondaryId) {
-			//this.secondaryId = val;
+		if(attr == attrID) {
+			//this.ID = val;
 			return true;
 		}
 		if(attr == attrWhatever) {
@@ -98,14 +98,6 @@ public abstract class Edge implements EdgeInterface{
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public int getAttr(String attr) {
-		if(attr == attrSecondaryId) {
-			return this.secondaryId;
-		}
-		return Integer.MAX_VALUE;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ public interface EdgeInterface {
 	//GETTER
 	int getWhatever();
 	String getName();
-	int getSecondaryId();
+	int getID();
 	List<String> getAttrList();
 	Vertex[] getVertices();
 	
