@@ -18,7 +18,7 @@ class Vertex {
 	private List<Integer> ingoingEdge = new ArrayList<>(); //Eingehende Kanten //+++++++++++++New Version++++++++++++++
 	
 	private List<String> attrList = new ArrayList<>();
-	private int count = 0; //Hilfszaehler
+	private static int count = 0; //Hilfszaehler
 	
 	//*********ATTRIBUTE********	
 	private String name; 
@@ -44,34 +44,18 @@ class Vertex {
 		return vertexValue;
 	}
 	
-	//+++++++New Version+++++++++++++
 	public void addIngoingEdge(int edge) {
-		//ingoingEdge.add(edge);
 		ingoingEdge.add(edge);
 	}
 	
-//	public List<Edge> getOutgoingEdge() {
-//		return this.outgoingEdge;
-//	}
-	
-	//+++++++New Version+++++++++++++
 	public List<Integer> getOutgoingEdge() {
 		return this.outgoingEdge;
 	}
 	
-//	public List<Edge> getIngoingEdge() {
-//		return this.ingoingEdge;
-//	}
-	
-	//+++++++New Version+++++++++++++
 	public List<Integer> getIngoingEdge() {
 		return this.ingoingEdge;
 	}
 	
-//	public List<Edge> getIncidents() { Old
-//		return this.incidents;
-//	}
-	//+++++++New Version+++++++++++++
 	public List<Integer> getIncidents() {
 		return this.incidents;
 	}
@@ -144,54 +128,17 @@ class Vertex {
 		}
 		return result;
 	}	
-	//*********************************************************************************************************
 	
-	
-//	public void addEdge(Edge edge) { Kein Plan Woher das Zeug kommt!?!?!?!?!?
-//		incidents.add(edge);
-//	}
-	
-//	public void addOutgoingEdge(Edge edge) {
-//		outgoingEdge.add(edge);
-//	}
-	
-	//+++++++New Version+++++++++++++
 	public void addOutgoingEdge(int edge) {
 		outgoingEdge.add(edge);
 	}
 	
-	//+++++++New Version+++++++++++++
-	public void addIncident(Edge edge) {
-	//incidents.add(edge);
-	incidents.add(edge.getID());
-}
-	
+	public void addIncident(int edgeID) {
+		incidents.add(edgeID);
+	}
 	
 	 @Override
 	public String toString() {
-		return "" + vertexValue;
+		return "" + name;
 	}
-	 
-//	
-//	public int getGrad() {
-//		return incidents.size();
-//	}
-//	
-//	/**
-//	 * Gibt die Anzahl des Eingang Grades
-//	 * 
-//	 * @return
-//	 */
-//	public int getEntryGrad() {
-//		return ingoingEdge.size();
-//	}
-//	
-//	/**
-//	 * Gibt die Anzahl des Ausgang Grades
-//	 * 
-//	 * @return
-//	 */
-//	public int getExitGrad() {
-//		return outgoingEdge.size();
-//	}
 }

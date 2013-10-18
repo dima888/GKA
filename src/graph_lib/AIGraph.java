@@ -7,8 +7,8 @@ import java.util.List;
 public class AIGraph {
 	
 	private List<Vertex> verticesList = new ArrayList<>();
-	List<UndirectedEdge> edgesListU = new ArrayList<>();
-	List<DirectedEdge> edgesListD = new ArrayList<>();
+	private List<UndirectedEdge> edgesListU = new ArrayList<>();
+	private List<DirectedEdge> edgesListD = new ArrayList<>();
 	
 	//********************************* KONSTRUKTOREN *********************************************
 	public AIGraph() {
@@ -18,7 +18,7 @@ public class AIGraph {
 	/**
 	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
 	 * @param newItem Wert, der im Vertex gespeichert werden soll
-	 * @return Vertex gibt die Referenz auf die hinzugefügte Vertex zurück
+	 * @return VertexID gibt die ID des hinzugefügten Vertices zurück
 	 */
 	public int addVertex(String newItem) {
 		Vertex vertex = new Vertex(newItem);
@@ -28,102 +28,85 @@ public class AIGraph {
 	
 	/**
 	 * Hier wird ein Vertex(Knoten) geloescht 
-	 * @param v_id Ein Vertex(Knoten) Objekt wird hier erwartet.
-	 * @return boolean true, bei erfolgreichem löschen, sonst false
+	 * @param v_id hier wird eine VertexID erwartet
 	 */
-	public void deleteVertex(int v_id) {
-		//Precondtion
-		//Prüfen ob sich der übergebene Knoten überhaupt im Graphen befindet
-		//++++++++++++++++++New Version++++++++++++++++++++++ 
-		for(Vertex i : verticesList) { 
-			if(i.getID() == v_id) {
-				throw new IllegalArgumentException("Dieser Knoten befindet sich nicht im Graphen");
-			}
-		}
-		//++++++++++++++++++New Version++++++++++++++++++++++ 
-		
-		//Prüfen ob sich der übergebene Knoten überhaupt im Graphen befindet
-//		if(! (verticesList.contains(v_id))) { //TODO: DIESE PRUEFUNG IST JETZT FALSCH!!! Old Version 
-//			throw new IllegalArgumentException("Dieser Knoten befindet sich nicht im Graphen");
-//		}
+	public void deleteVertex(int v_id) {	
+		//Beinhaltet schon die Precondition
+		Vertex vertex = getVertex(v_id);
 		
 		//löscht man einen Knoten, so auch seine anliegenden Kanten
 		for(Edge edge : edgesListU) {
 			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
-			if((verticesFromEdge[0].getID() == v_id) || (verticesFromEdge[1].getID() == v_id)) {
+			if((verticesFromEdge[0] == vertex) || (verticesFromEdge[1] == vertex)) {
 				edgesListU.remove(edge);
 			}
 		}
 		
 		for(Edge edge : edgesListD) {
 			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
-			if((verticesFromEdge[0].getID() == v_id) || (verticesFromEdge[1].getID() == v_id)) {
+			if((verticesFromEdge[0] == vertex) || (verticesFromEdge[1] == vertex)) {
 				edgesListD.remove(edge);
 			}
 		}
-		
-		//verticesList.remove(v_id); //TODO: WAS GEHT HIER AB???? v_id war hier mal ein Vertex. DIESE PRUEFUNG IST JETZT VERMUTLICH FALSCH, BIN SCHON ZU MUEDE UM NACH ZU DENKEN :D
-		//++++++++++++++++++New Version++++++++++++++++++++++ 
-		for(Vertex i : verticesList) { 
-			if(i.getID() == v_id) {
-				verticesList.remove(i.getID());
-			}
-		}
-		//++++++++++++++++++New Version++++++++++++++++++++++ 
+
+		verticesList.remove(vertex);
 	}
 	
 	/**
 	 * Die Methode fuegt eine EngeU(Ungerichtete Kante) an zwei oder ein vertices(Knoten) an
 	 * 
-	 * @param v1 ein Vertex
-	 * @param v2 ein Vertex
-	 * @return Edge gibt die Referenz auf die hinzugefügte Edge zurück
+	 * @param v1 eine VertexID
+	 * @param v2 eine VertexID
+	 * @return int gibt die ID der hinzugefügten Edge zurück
 	 */
-	public int addEdgeU(int v1, int v2) {		
-		//Precondition				
-		//Beide Vertices müssen zu einem Grpahen gehören
-		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
-			throw new IllegalArgumentException("EdgeU (Ungerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knoten exestieren) ");
-		}
+	public int addEdgeU(int v1, int v2) {
+		//Beinhaltet schon die Precondition
+		Vertex vertex1 = getVertex(v1);
+		Vertex vertex2 = getVertex(v2);
 		
 		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
-		if(includeEdge(v1, v2)) {
-			throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
-		}
+		if(includeEdge(v1, v2)) throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
 		
+		UndirectedEdge edge = new UndirectedEdge(vertex1, vertex2);
 		
-		//UndirectedEdge edge = new UndirectedEdge(v1, v2); //Oldversion 
-		UndirectedEdge edge = new UndirectedEdge(getVertex(v1), getVertex(v2)); //++++++++++++++++++New Version++++++++++++++++++++++ 
 		edgesListU.add(edge);
+		
 		return edge.getID();
 	}
 	
-	public Edge addEdgeD(int v1, int v2) {	
-		//Precondition
-		//Beide Vertices müssen zu einem Grpahen gehören
-		if(!(include(verticesList, v1)) && !(include(verticesList, v2))) {
-			throw new IllegalArgumentException("EdgeD (Gerichtete Kante) kann nicht hinzugefuegt werden, da vermutlich da zwischen keine vertices(Knoten exestieren) ");
-		}
+	/**
+	 * Die Methode fuegt eine EngeD(gerichtete Kante) an zwei oder ein vertices(Knoten) an
+	 * 
+	 * @param v1 eine VertexID
+	 * @param v2 eine VertexID
+	 * @return int gibt die ID der hinzugefügten Edge zurück
+	 */
+	public int addEdgeD(int v1, int v2) {	
+		//Beinhaltet schon die Precondition
+		Vertex vertex1 = getVertex(v1);
+		Vertex vertex2 = getVertex(v2);
 		
 		//Man darf nur dann eine Kante einfügen, falls keine zwischen den Vertices vorhanden ist --> Mehrfachkanten nicht erlaubt
-		if(includeEdge(v1, v2)) {
-			throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
-		}
+		if(includeEdge(v1, v2)) throw new IllegalArgumentException("Es besteht bereits eine Kante zwischen den beiden Vertices");
 		
-		//DirectedEdge edge = new DirectedEdge(v1, v2); //Old Version 
-		DirectedEdge edge = new DirectedEdge(getVertex(v1), getVertex(v2)); //++++++++++++++++++New Version++++++++++++++++++++++ 
+		DirectedEdge edge = new DirectedEdge(vertex1, vertex2);
+		
 		edgesListD.add(edge);
-		return edge;
+		
+		return edge.getID();
 	}
 	
 	/**
 	 * Die Methode loescht eine Kante(Edge)
 	 * Es Kann nur höchstens eine Kante zwischen 2 Ecken geben
-	 * @param v1 erwartet ein Vertex-Objekt
-	 * @param v2 erwartet ein Vertex-Objekt
-	 * @return boolean true wenn die Edge gelöscht wurde, false wenn nicht
+	 * @param v1 erwartet eine VertexID
+	 * @param v2 erwartet eine VertexID
 	 */
 	public void deleteEdge(int v1, int v2) {
+		//Beinhaltet schon die Precondition
+		Vertex vertex1 = getVertex(v1);
+		Vertex vertex2 = getVertex(v2);
+		
 		//Zuerst alle ungerichteten Kanten durchsuchen
 		for(Edge edge : edgesListU) {
 			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
@@ -131,11 +114,11 @@ public class AIGraph {
 			boolean temp1 = false;
 			boolean temp2 = false;
 			
-			if((verticesFromEdge[0].getID() == v1) || (verticesFromEdge[1].getID() == v1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == vertex1) || (verticesFromEdge[1] == vertex1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
 				temp1 = true;
 			}
 			
-			if((verticesFromEdge[0].getID() == v2) || (verticesFromEdge[1].getID() == v2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+			if((verticesFromEdge[0] == vertex2) || (verticesFromEdge[1] == vertex2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
 				temp2 = true;
 			}
 			
@@ -149,12 +132,12 @@ public class AIGraph {
 		for(Edge edge : edgesListD) {
 			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
 			
-			if((verticesFromEdge[0].getID() == v1) && (verticesFromEdge[1].getID() == v2)) {
+			if((verticesFromEdge[0] == vertex1) && (verticesFromEdge[1] == vertex2)) {
 				edgesListD.remove(edge);
 				return;
 			}
 			
-			if((verticesFromEdge[0].getID() == v2) && (verticesFromEdge[1].getID() == v1)) {
+			if((verticesFromEdge[0] == vertex2) && (verticesFromEdge[1] == vertex1)) {
 				edgesListD.remove(edge);
 				return;
 			}
@@ -185,60 +168,67 @@ public class AIGraph {
 	 *  Erklaerung: 
 	 *	Quelle = Eine Ecke, deren Eingangsgrad 0 ist
 	 *  Senke =  Ecke,deren Ausgangsgrad 0 is
-	 * @param e1
-	 * @return
+	 * @param e1 EdgeID
+	 * @return int ID des Source Vertices, Falls nicht vorhanden ErrorCODE -1
 	 */
 	public int getSource(int e1) {
 		//Precondition
-		//Gehört die übergebene Kante überhaupt zu diesem Graphen? Beide Listen durchsuchen		
-		//if(! (edgesListU.contains(e1) || (edgesListD.contains(e1)))) { //Old Version 
-		if(! (edgesListU.contains(getEdgeU(e1)) || (edgesListD.contains(getEdgeD(e1))))) { //++++++++++++++++++New Version++++++++++++++++++++++ 
-			throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
-		}
+		//Gehört die übergebene Kante überhaupt zu diesem Graphen? Beide Listen durchsuchen	
+		if(! (getEdges().contains(e1))) throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
 		
 		Vertex vertex = null;
 		
-//		if(e1 instanceof DirectedEdge) { Old Version 
-		if(e1 % 2 == 0) { //++++++++++++++++++New Version++++++++++++++++++++++ 
-//			if(((DirectedEdge) e1).hatQuelle()) { Old Version
-			if(((DirectedEdge) getEdgeD(e1)).hatQuelle()) {
-//				Vertex[] verticesFromEdge = ((DirectedEdge) e1).getVertices(); Old Version
-				Vertex[] verticesFromEdge = ((DirectedEdge) getEdgeD(e1)).getVertices();
+		//Prüfen ob es ein gerichteter Graph ist
+		if(e1 % 2 == 0) {
+			DirectedEdge edgeD = getEdgeD(e1);
+			
+			if(edgeD.hatQuelle()) {
+				Vertex[] verticesFromEdge = edgeD.getVertices();
 				vertex = verticesFromEdge[0]; //StartKnoten / Quelle
 			}
 		}
 		
-//		if(e1 instanceof UndirectedEdge) { Old Version
+		//Prüfen ob es ein ungerichteter Graph ist
 		if(e1 % 2 != 0) {
-			//Vertex[] verticesFromEdge = ((UndirectedEdge) e1).getVertices(); Old Version
 			Vertex[] verticesFromEdge = ((UndirectedEdge) getEdgeU(e1)).getVertices();
 			vertex = verticesFromEdge[0]; //Die Linke Ecke
 		}	
-		//return vertex Old Version
-		return vertex.getID();
+
+		//TODO: WELCHE DER VARIANTEN SOLLEN WIR NEHMEN...EIGENTLICH MÜSSTEN WIR EINEN FEHLERCODE RETURNEN, DA ES SONST NICHT KONSISTENT IST
+		//if(vertex == null) throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
+		
+		if(vertex == null) {
+			return -1;
+		} else {
+			return vertex.getID();
+		}
 	}
 	
+	/**
+	 *  Hier Hollen wir uns die Ecke in welche die Kante eingeht
+	 *  Erklaerung: 
+	 *	Quelle = Eine Ecke, deren Eingangsgrad 0 ist
+	 *  Senke =  Ecke,deren Ausgangsgrad 0 is
+	 * @param e1 EdgeID
+	 * @return int ID des Target Vertices
+	 */
 	public int getTarget(int e1) {
 		//Precondition
-		//Gehört die übergebene Kante überhaupt zu diesem Graphen ? Beide Listen durchsuchen
-		if(! (edgesListU.contains(e1) || (edgesListD.contains(e1)))) {
-			throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
-		}
+		//Gehört die übergebene Kante überhaupt zu diesem Graphen? Beide Listen durchsuchen	
+		if(! (getEdges().contains(e1))) throw new IllegalArgumentException("Die übergebene Kante gehört nicht zu diesem Graphen");
 		
 		Vertex vertex = null;
 		
-//		if(e1 instanceof DirectedEdge) { Old Version
+		//Prüfen ob es ein gerichteter Graph ist
 		if(e1 % 2 == 0) { 
-//			if(((DirectedEdge) e1).hatSenke()) { Old Version
 			if(((DirectedEdge) getEdgeD(e1)).hatSenke()) {
-//				Vertex[] verticesFromEdge = ((DirectedEdge) e1).getVertices(); Old Version
 				Vertex[] verticesFromEdge = ((DirectedEdge) getEdgeD(e1)).getVertices();
 				vertex = verticesFromEdge[1]; //EndKnoten / Ziel
 			}
 		}
 		
+		//Prüfen ob es ein ungerichteter Graph ist
 		if(e1 % 2 != 0) {
-//			Vertex[] verticesFromEdge = ((UndirectedEdge) e1).getVertices(); Old
 			Vertex[] verticesFromEdge = ((UndirectedEdge) getEdgeU(e1)).getVertices();
 			vertex = verticesFromEdge[1]; //Die rechte Ecke
 		}
@@ -247,50 +237,59 @@ public class AIGraph {
 	}
 	
 	/**
-	 * //++++++++++++++++++New Version++++++++++++++++++++++ 
-	 * ermittelt alle zur Ecke v1 izidenten Kanten
-	 * @param v1
-	 * @return
+	 * ermittelt alle zur EckenID v1 izidenten Kanten
+	 * @param v1 EckenID
+	 * @return List<Integer> Liste der EckenID´s
 	 */
-//	public List<Edge> getIncident(Vertex v1) {
-//		return v1.getIncidents();
-//	}
 	public List<Integer> getIncident(int v1) {
-		//return v1.getIncidents();
 		return getVertex(v1).getIncidents();
 	}
 	
-	//TODO: BIN GERADE ZU MUEDE UM DIE METHODE ZU IMPLEMENTIEREN; SONST IST DER REST FERTIG
-//	public List<Vertex> getAdjacent(Vertex v1) {
-//		List<Vertex> result = new ArrayList<>();
-//		
-//		//Holen aller anliegenden Kanten --> incidents
-//		List<Edge> incidents = v1.getIncidents();
-//		
-//		//Holen aller adjazenten
-//		for(Edge edge : incidents) {
-//			Vertex[] vertices = edge.getVertices();
-//			
-//			if(vertices[0] != v1) {
-//				result.add(vertices[0]);
-//			} else {
-//				result.add(vertices[1]);
-//			}
-//		}
-//		
-//		return result;
-//	}	
+	/**
+	 * ermittelt alle zur EckenID v1 adjazenten Kanten
+	 * @param v1 EckenID
+	 * @return List<Integer> Liste der EckenID´s
+	 */
+	public List<Integer> getAdjacent(int v1) {
+		
+		Vertex vertex = getVertex(v1);
+		
+		List<Integer> result = new ArrayList<>();
+		
+		//Holen aller anliegenden Kanten --> incidents
+		List<Integer> incidents = vertex.getIncidents();
+		
+		//Holen aller adjazenten
+		for(Integer edgeID : incidents) {
+			Edge edge = null;
+			
+			//Es kann nur ein gerichteter oder ungerichteter sein
+			if(edgeID % 2 == 0) {
+				System.out.println(incidents);
+				System.out.println(edgeID);
+				edge = getEdgeD(edgeID);
+			} else {
+				edge = getEdgeU(edgeID);
+			}
+				
+			Vertex[] vertices = edge.getVertices();
+			
+			if(vertices[0] != vertex) {
+				result.add(vertices[0].getID());
+			} else {
+				result.add(vertices[1].getID());
+			}
+		}
+		
+		return result;
+	}	
 
 	
 	/**
-	 * Gibt die Liste Aller Vertexes(Knoten) zurueck
+	 * Gibt die Liste Aller Vertexes(Knoten)ID´s zurueck
 	 * 
-	 * @return List<Vertex> gibt eine Liste von Vertex-Objekten zurück
+	 * @return List<Integer> gibt eine Liste von VertexID´s zurück
 	 */
-//	public List<Vertex> getVertexes() {
-//		return verticesList;
-//	}
-	//+++++++++++++++++New Version++++++++++++++++
 	public List<Integer> getVertexes() {
 		List<Integer> result = new ArrayList<>();
 		for(Vertex v : verticesList) {
@@ -300,20 +299,10 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Gibt die Liste aller Edge(Kanten) zurueck
+	 * Gibt die Liste aller Edge(Kanten)ID´s zurueck
 	 * 
-	 * @return List<Edge> gibt eine Liste von Edge-Objekten zurück
+	 * @return List<Integer> gibt eine Liste von EdgeID´s zurück
 	 */
-//	public List<Edge> getEdges() {
-//		List<Edge> result = new ArrayList<>();
-//		
-//		result.addAll(edgesListU);
-//		result.addAll(edgesListD);
-//		
-//		return result;
-//	}
-	
-	//+++++++++++++++++New Version++++++++++++++++
 	public List<Integer> getEdges() {
 		List<Edge> puffer = new ArrayList<>();
 		List<Integer> result = new ArrayList<>();
@@ -334,9 +323,6 @@ public class AIGraph {
 	 * @param attr String 
 	 * @return int
 	 */
-//	public int getValE(Edge e1, String attr) {
-//		return e1.getAttr(attr);
-//	}
 	public int getValE(int e1, String attr) {
 		if(e1 % 2 == 0) {
 			return getEdgeD(e1).getAttr(attr);
@@ -350,9 +336,6 @@ public class AIGraph {
 	 * @param attr
 	 * @return int
 	 */
-//	public int getValV(Vertex v1, String attr) {
-//		return v1.getAttr(attr);
-//	}
 	public int getValV(int v1, String attr) {
 		return getVertex(v1).getAttr(attr);
 	}
@@ -364,9 +347,6 @@ public class AIGraph {
 	 * @param attr
 	 * @return String
 	 */
-//	public String getStrE(Edge e1, String attr) {
-//		return e1.getAttrStr(attr);
-//	}
 	public String getStrE(int e1, String attr) {
 		if(e1 % 2 == 0) {
 			return getEdgeD(e1).getAttrStr(attr);
@@ -380,9 +360,6 @@ public class AIGraph {
 	 * @param attr
 	 * @return String
 	 */
-//	public String getStrV(Vertex v1, String attr) {
-//		return v1.getAttrStr(attr);
-//	}
 	public String getStrV(int v1, String attr) {
 		return getVertex(v1).getAttrStr(attr);
 	}
@@ -392,9 +369,6 @@ public class AIGraph {
 	 * @param v1
 	 * @return
 	 */
-//	public List<String> getAttrV(Vertex v1) {
-//		return v1.getAttrList();
-//	}
 	public List<String> getAttrV(int v1) {
 		return getVertex(v1).getAttrList();
 	}
@@ -404,9 +378,6 @@ public class AIGraph {
 	  * @param e1
 	  * @return
 	  */
-//	public List<?> getAttrE(Edge e1) {
-//		return e1.getAttrList();
-//	}
 	public List<?> getAttrE(int e1) {
 		if(e1 % 2 == 0) {
 			return getEdgeD(e1).getAttrList();
@@ -423,9 +394,6 @@ public class AIGraph {
 	 * @param attr
 	 * @param val
 	 */
-//	public boolean setValE(Edge e1, String attr, int val) {
-//		return e1.setValE(attr, val);
-//	}
 	public boolean setValE(int e1, String attr, int val) {
 		if(e1 % 2 == 0) {
 			return getEdgeD(e1).setValE(attr, val);
@@ -440,9 +408,7 @@ public class AIGraph {
 	 * @param val
 	 * @return
 	 */
-//	public boolean setValV(Vertex v1, String attr, int val) {
-//		return v1.setValV(attr, val);
-//	}
+
 	public boolean setValV(int v1, String attr, int val) {
 		return getVertex(v1).setValV(attr, val);
 	}
@@ -454,9 +420,6 @@ public class AIGraph {
 	 * @param val
 	 * @return bool
 	 */
-//	public boolean setStrE(Edge e1, String attr, String val) {
-//		return e1.setStrE(attr, val);
-//	}
 	public boolean setStrE(int e1, String attr, String val) {
 		if(e1 % 2 == 0) {
 			return getEdgeD(e1).setStrE(attr, val);
@@ -471,120 +434,8 @@ public class AIGraph {
 	 * @param val
 	 * @return bool
 	 */
-//	public boolean setStrV(Vertex v1, String attr, String val) {
-//		return v1.setStrV(attr, val);
-//	}
 	public boolean setStrV(int v1, String attr, String val) {
 		return getVertex(v1).setStrV(attr, val);
-	}
-	
-	@Override
-	public String toString() {
-		String result = "";
-		result += "Alle Vertices: " + verticesList + "\n";
-		result += "Alle gerichteten Edges: " + edgesListD + "\n";
-		result += "Alle ungerichteten Edges: " + edgesListU;
-		return result;
-	}
-	
-	//********************************* PRIVATE METHODEN DIESER KLASSE *********************************
-	/**
-	 * //++++++++++++++++++New Version++++++++++++++++++++++ 
-	 * Die Hilfsmethode prueft, ob ein Vertex(Knoten) in einer Liste vorhanden ist
-	 * @param verticesList erwartet eine Liste von Vertex(Knoten)
-	 * @param v erwaratet ein Vertex Object
-	 * @return boolean true, wenn ein Vertex sich im Graphen befindet, sonst false
-	 */
-	private boolean include(List<Vertex> verticesList, int v) {
-		for(Vertex vertex : verticesList) {
-			if(v == vertex.getID()) { 
-				return true;   
-			}
-		}
-		return false;
-	}
-	
-	//++++++++++++++++++New Version++++++++++++++++++++++
-	/**
-	 * TODO: DOKU BITTE
-	 * @return
-	 */
-	private Edge getEdgeD(int e_id) {
-		for(Edge e : edgesListD) {
-			if(e.getID() == e_id) {
-				return e;
-			}
-		}
-		throw new IllegalArgumentException("So eine Kante gibt es nicht in der EdgeListD");
-	}
-	
-	//++++++++++++++++++New Version++++++++++++++++++++++
-	/**
-	 * TODO: DOKU BITTE 
-	 * @return
-	 */
-	private Edge getEdgeU(int e_id) {
-		for(Edge e : edgesListU) {
-			if(e.getID() == e_id) {
-				return e;
-			}
-		}
-		throw new IllegalArgumentException("So eine Kante gibt es nicht ind er EdgeListU");
-	}
-	
-	//++++++++++++++++++New Version++++++++++++++++++++++ 
-	/**
-	 * TODO: DOKU bitte schreiben
-	 * @param v_id
-	 * @return
-	 */
-	private Vertex getVertex(int v_id) {
-		for(Vertex v : verticesList) {
-			if(v.getID() == v_id) {
-				return v;
-			}
-		}
-		throw new IllegalArgumentException("So ein Vertex exestiert in der Vertexliste nicht");
-	}
-	//++++++++++++++++++New Version++++++++++++++++++++++ 
-
-	/**
-	 * //++++++++++++++++++New Version++++++++++++++++++++++ 
-	 * Die Hilfsmethode prüft, ob bereits eine Kante zwischen den übergebenen Parametern existiert
-	 * @param v1 ein Vertex-Objekt
-	 * @param v2 ein Vertex-Objekt
-	 * @return boolean true, wenn eine Kante zwischen den beiden übergebenen parametern existiert, sonst false
-	 */
-	private boolean includeEdge(int v1, int v2) {
-		//Zuerst alle ungerichteten Kanten durchsuchen
-		for(Edge edge : edgesListU) {
-			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
-			
-			boolean temp1 = false;
-			boolean temp2 = false;
-			
-			if((verticesFromEdge[0].getID() == v1) || (verticesFromEdge[1].getID() == v1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
-				temp1 = true;
-			}
-			
-			if((verticesFromEdge[0].getID() == v2) || (verticesFromEdge[1].getID() == v2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
-				temp2 = true;
-			}
-			
-			if(temp1 && temp2) {
-				return true;
-			}
-		}
-		
-		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fündig wurden
-		for(Edge edge : edgesListD) {
-			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
-			
-			if((verticesFromEdge[0].getID() == v1) && (verticesFromEdge[1].getID() == v2)) { //Nur eine Richtung prüfen
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
@@ -621,5 +472,99 @@ public class AIGraph {
 			if(! (temp)) {return false;} 
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		result += "Alle Vertices: " + verticesList + "\n";
+		result += "Alle gerichteten Edges: " + edgesListD + "\n";
+		result += "Alle ungerichteten Edges: " + edgesListU;
+		return result;
+	}
+	
+	//********************************* PRIVATE METHODEN DIESER KLASSE *********************************
+
+	/**
+	 * Bestimmt die gerichtete Kante zu welcher die übergebene EdgeID übereinstimmt
+	 * @param int e_id ID der Kante
+	 * @return Edge
+	 */
+	private DirectedEdge getEdgeD(int e_id) {
+		for(DirectedEdge e : edgesListD) {
+			if(e.getID() == e_id) {
+				return e;
+			}
+		}
+		throw new IllegalArgumentException("In diesem Graphen existiert keine gerichtete Kante mit der übergebenen EdgeID");
+	}
+	
+	/**
+	 * Bestimmt die ungerichtete Kante zu welcher die übergebene EdgeID übereinstimmt
+	 * @param int e_id ID der Kante
+	 * @return Edge
+	 */
+	private UndirectedEdge getEdgeU(int e_id) {
+		for(UndirectedEdge e : edgesListU) {
+			if(e.getID() == e_id) {
+				return e;
+			}
+		}
+		throw new IllegalArgumentException("In diesem Graphen existiert keine ungerichtete Kante mit der übergebenen EdgeID");
+	}
+
+	/**
+	 * Bestimmt den Vertex der mit der übergebenen VertexID übereinstimmt
+	 * @param int v_id ID des Vertices
+	 * @return Vertex
+	 */
+	private Vertex getVertex(int v_id) {
+		for(Vertex v : verticesList) {
+			if(v.getID() == v_id) {
+				return v;
+			}
+		}
+		throw new IllegalArgumentException("In diesem Graphen existiert kein Vertex mit der übergebenen VertexID");
+	}
+
+	/**
+	 * Die Hilfsmethode prüft, ob bereits eine Kante zwischen den übergebenen Parametern existiert
+	 * @param v1 eine VertexID
+	 * @param v2 eine VertexID
+	 * @return boolean true, wenn eine Kante zwischen den beiden übergebenen parametern existiert, sonst false
+	 */
+	private boolean includeEdge(int v1, int v2) {
+		Vertex vertex1 = getVertex(v1);
+		Vertex vertex2 = getVertex(v2);
+		
+		//Zuerst alle ungerichteten Kanten durchsuchen
+		for(Edge edge : edgesListU) {
+			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
+			
+			boolean temp1 = false;
+			boolean temp2 = false;
+			
+			if((verticesFromEdge[0] == vertex1) || (verticesFromEdge[1] == vertex1)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+				temp1 = true;
+			}
+			
+			if((verticesFromEdge[0] == vertex2) || (verticesFromEdge[1] == vertex2)) { //Da keine Reihenfolge besteht müssen beide Stellen überprüft werden
+				temp2 = true;
+			}
+			
+			if(temp1 && temp2) {
+				return true;
+			}
+		}
+		
+		//Alle Gerichteten Kanten durchsuchen, falls wir bei den gerichteten nicht fündig wurden
+		for(Edge edge : edgesListD) {
+			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
+			
+			if((verticesFromEdge[0] == vertex1) && (verticesFromEdge[1] == vertex2)) { //Nur eine Richtung prüfen
+				return true;
+			}
+		}
+		return false;
 	}
 }

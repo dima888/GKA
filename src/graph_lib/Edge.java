@@ -38,10 +38,6 @@ public abstract class Edge implements EdgeInterface{
 		verticesFromEdge[0] = v1;
 		verticesFromEdge[1] = v2;
 		
-		v1.addIncident(this);
-		v2.addIncident(this);
-				
-		
 		//****MAP*****
 		attrMap.put(attrName, name);
 		attrMap.put(attrWhatever, whatever);

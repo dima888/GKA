@@ -7,7 +7,12 @@ class UndirectedEdge extends Edge{
 	
 	public UndirectedEdge(Vertex v1, Vertex v2) {
 		super(v1, v2);		
-		ID = count += 2; //Auto increment
+		ID = count; //Auto increment
+		
+		v1.addIncident(ID);
+		v2.addIncident(ID);
+		
+		count += 2;
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -31,6 +36,4 @@ class UndirectedEdge extends Edge{
 		result = "Vertex v1: (" + this.getVertices()[0] + "), Vertex v2: (" +this.getVertices()[1] + ")";
 		return result;
 	}
-
-
 }
