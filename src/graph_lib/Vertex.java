@@ -24,24 +24,24 @@ class Vertex {
 	private String name; 
 	private final int ID;  
 	private int whatever = 25;
-	private int vertexValue;
+	private int value;
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	
 	String attrName = "name";
 	String attrID = "ID";
 	String attrWhatever = "whatever";
-	String attrVertexValue = "vertexValue";
+	String attrValue = "value";
 	
 	public Vertex(String vertexName) {		
 		this.name = vertexName;
 		ID = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrVertexValue)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue)); 	//ATTRIBUTENLISTE	
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
-	public int getVertexValue() {
-		return vertexValue;
+	public int getvalue() {
+		return value;
 	}
 	
 	public void addIngoingEdge(int edge) {
@@ -101,8 +101,8 @@ class Vertex {
 			this.whatever = val;
 			return true;
 		}
-		if (attr == attrVertexValue) {
-			this.vertexValue = val;
+		if (attr == attrValue) {
+			this.value = val;
 			return true;
 		}
 		return false;
@@ -112,8 +112,8 @@ class Vertex {
 		if (attr == this.attrID) {
 			return this.ID;
 		}
-		if(attr == attrVertexValue) {
-			return this.vertexValue;
+		if(attr == attrValue) {
+			return this.value;
 		}
 		if(attr == attrWhatever) {
 			return this.whatever;

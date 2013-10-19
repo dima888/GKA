@@ -194,10 +194,8 @@ public class AIGraph {
 			vertex = verticesFromEdge[0]; //Die Linke Ecke
 		}	
 
-		//TODO: WELCHE DER VARIANTEN SOLLEN WIR NEHMEN...EIGENTLICH MÜSSTEN WIR EINEN FEHLERCODE RETURNEN, DA ES SONST NICHT KONSISTENT IST
-		//if(vertex == null) throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
-		
 		if(vertex == null) {
+//			throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
 			return -1;
 		} else {
 			return vertex.getID();
@@ -287,7 +285,6 @@ public class AIGraph {
 	
 	/**
 	 * Gibt die Liste Aller Vertexes(Knoten)ID´s zurueck
-	 * 
 	 * @return List<Integer> gibt eine Liste von VertexID´s zurück
 	 */
 	public List<Integer> getVertexes() {
@@ -300,7 +297,6 @@ public class AIGraph {
 	
 	/**
 	 * Gibt die Liste aller Edge(Kanten)ID´s zurueck
-	 * 
 	 * @return List<Integer> gibt eine Liste von EdgeID´s zurück
 	 */
 	public List<Integer> getEdges() {

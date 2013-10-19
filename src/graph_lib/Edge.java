@@ -34,6 +34,19 @@ public abstract class Edge implements EdgeInterface{
 	String attrID = "ID";
 	String attrWhatever = "whatever";
 	
+	//*************************** KONSTRUKTOTREN ****************************
+	public Edge(Vertex v1, Vertex v2, String name) {
+		this.name = name;
+		verticesFromEdge[0] = v1;
+		verticesFromEdge[1] = v2;
+		
+		//****MAP*****
+		attrMap.put(attrName, name);
+		attrMap.put(attrWhatever, whatever);
+		
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever)); 	//ATTRIBUTENLISTE	
+	}
+	
 	public Edge(Vertex v1, Vertex v2) {
 		verticesFromEdge[0] = v1;
 		verticesFromEdge[1] = v2;

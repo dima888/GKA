@@ -6,6 +6,20 @@ class DirectedEdge extends Edge {
 	private final int ID;
 	private static int count = 0; //Hilfszaehler
 	
+	//*************************** KONSTRUKTOTREN ****************************
+	public DirectedEdge(Vertex v1, Vertex v2, String name) {
+		super(v1, v2, name);		
+		ID = count; //Auto increment
+		
+		v1.getOutgoingEdge().add(ID);
+		v2.getIngoingEdge().add(ID);
+		
+		v1.addIncident(ID);
+		v2.addIncident(ID);
+		
+		count += 2;
+	}
+	
 	public DirectedEdge(Vertex v1, Vertex v2) {
 		super(v1, v2);		
 		
@@ -31,6 +45,9 @@ class DirectedEdge extends Edge {
 	public int getAttr(String attr) {
 		if(attr == attrID) {
 			return this.ID;
+		}
+		if(attr == attrWhatever) {
+			return super.getWhatever();
 		}
 		return Integer.MAX_VALUE;
 	}
