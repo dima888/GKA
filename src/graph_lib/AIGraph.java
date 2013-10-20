@@ -195,8 +195,7 @@ public class AIGraph {
 		}	
 
 		if(vertex == null) {
-//			throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
-			return -1;
+			throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
 		} else {
 			return vertex.getID();
 		}

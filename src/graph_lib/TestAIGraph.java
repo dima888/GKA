@@ -156,7 +156,7 @@ public class TestAIGraph {
 		assertEquals(vertex1, result);
 	}
 	
-	@Test // (expected = IllegalArgumentException.class) TODO: BESPRECHEN WAS WIR ZURÜCK ERWARTEN BEI FEHLERFALL VON GET_SOURCE
+	@Test (expected = IllegalArgumentException.class) //TODO: BESPRECHEN WAS WIR ZURÜCK ERWARTEN BEI FEHLERFALL VON GET_SOURCE
 	public void testGetSourcePos2() {
 		int vertex1 = graph.addVertex("1");
 		int vertex2 = graph.addVertex("2");
@@ -196,7 +196,6 @@ public class TestAIGraph {
 		assertEquals(expResult, graph.getAdjacent(vertex1));
 	}
 	
-	//TODO: DIESE METHODEN TESTE
 	@Test
 	public void testGetValE() { //Drei Tests im ein
 		int vertex1ID = graph.addVertex("Timon");
@@ -222,7 +221,7 @@ public class TestAIGraph {
 		int vertex1ID = graph.addVertex("Alf");
 		int vertex2ID = graph.addVertex("Ralf");				
 		int edgeID = graph.addEdgeD(vertex1ID, vertex2ID);
-		String emptyString = "";
+		String emptyString = "";		
 				
 		assertEquals(graph.getStrE(edgeID, "name"), null); //Because, name wurde nicht gesetzt
 		assertEquals(graph.getStrE(edgeID, "Hund"), emptyString);
