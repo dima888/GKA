@@ -2,7 +2,7 @@ package graph_lib;
 
 import java.util.List;
 
-public interface EdgeInterface {
+interface EdgeInterface {
 
 	//GETTER
 	int getWhatever();

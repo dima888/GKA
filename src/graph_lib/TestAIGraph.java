@@ -102,14 +102,12 @@ public class TestAIGraph {
 		int vertex2 = graph.addVertex("2");
 	
 		graph.addEdgeD(vertex1, vertex2);
-		
 		graph.deleteEdge(vertex1, vertex2);
 		
 		int vertex3 = graph2.addVertex("1");
 		int vertex4 = graph2.addVertex("2");
 	
 		graph2.addEdgeD(vertex3, vertex4);
-		
 		graph2.deleteEdge(vertex3, vertex4);
 		
 		assertTrue(graph.equals(graph2));
@@ -128,7 +126,6 @@ public class TestAIGraph {
 		int vertex4 = graph2.addVertex("2");
 	
 		graph2.addEdgeU(vertex3, vertex4);
-		
 		graph2.deleteEdge(vertex3, vertex4);
 		
 		assertTrue(graph.equals(graph2));
@@ -156,7 +153,7 @@ public class TestAIGraph {
 		assertEquals(vertex1, result);
 	}
 	
-	@Test (expected = IllegalArgumentException.class) //TODO: BESPRECHEN WAS WIR ZURÜCK ERWARTEN BEI FEHLERFALL VON GET_SOURCE
+	@Test (expected = IllegalArgumentException.class)
 	public void testGetSourcePos2() {
 		int vertex1 = graph.addVertex("1");
 		int vertex2 = graph.addVertex("2");
@@ -171,7 +168,6 @@ public class TestAIGraph {
 	public void testGetTargetPos() {
 		int vertex1 = graph.addVertex("1");
 		int vertex2 = graph.addVertex("2");
-	
 		int edge = graph.addEdgeD(vertex1, vertex2);
 		
 		int result = graph.getTarget(edge);

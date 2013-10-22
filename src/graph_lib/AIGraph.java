@@ -10,7 +10,7 @@ public class AIGraph {
 	private List<UndirectedEdge> edgesListU = new ArrayList<>();
 	private List<DirectedEdge> edgesListD = new ArrayList<>();
 	
-	//********************************* KONSTRUKTOREN *********************************************
+	//********************************* KONSTRUKTOR *********************************************
 	public AIGraph() {
 		//NULL Graph
 	}

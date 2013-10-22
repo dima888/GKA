@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Edge implements EdgeInterface{
+abstract class Edge implements EdgeInterface{
 
 	
 	private Vertex[] verticesFromEdge = new Vertex[2];
@@ -28,11 +28,13 @@ public abstract class Edge implements EdgeInterface{
 	// *********ATTRIBUTE********
 	private String name;
 	private int whatever = 100;
+	private String value = "";
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
 	String attrID = "ID";
 	String attrWhatever = "whatever";
+	String attrValue = "value";
 	
 	//*************************** KONSTRUKTOTREN ****************************
 	public Edge(Vertex v1, Vertex v2, String name) {
@@ -44,7 +46,7 @@ public abstract class Edge implements EdgeInterface{
 		attrMap.put(attrName, name);
 		attrMap.put(attrWhatever, whatever);
 		
-		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue)); 	//ATTRIBUTENLISTE	
 	}
 	
 	public Edge(Vertex v1, Vertex v2) {
@@ -91,17 +93,21 @@ public abstract class Edge implements EdgeInterface{
 	public boolean setStrE(String attr, String val) {
 		if(attr == attrName) {
 			this.name = val;
-			return true;
+			return true; 
+		}
+		if(attr == attrValue) {
+			this.value = val;
+			return true; 
 		}
 		return false;
 	}
 	
 	@Override
 	public boolean setValE(String attr, int val) {
-		if(attr == attrID) {
-			//this.ID = val;
-			return true;
-		}
+//		if(attr == attrID) {
+//			this.ID = val;
+//			return true;
+//		}
 		if(attr == attrWhatever) {
 			this.whatever = val;
 			return true;
@@ -115,6 +121,10 @@ public abstract class Edge implements EdgeInterface{
 		if(attr == attrName) {
 			result = this.name;
 		}
+		if(attr == attrValue) {
+			result = this.value;
+		}
+		
 		return result;
 	}
 	
