@@ -28,7 +28,7 @@ abstract class Edge implements EdgeInterface{
 	// *********ATTRIBUTE********
 	private String name;
 	private int whatever = 100;
-	private String value = "10";
+	private int value = 5;
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
@@ -82,8 +82,9 @@ abstract class Edge implements EdgeInterface{
 		return this.whatever;
 	}
 	
-	public String getAttrValue() {
-		return attrValue;
+	//@Override
+	public int getValue() {
+		return this.value;
 	}
 	
 	//********************************************** SETTER METHODEN **********************************************
@@ -99,10 +100,6 @@ abstract class Edge implements EdgeInterface{
 			this.name = val;
 			return true; 
 		}
-		if(attr == attrValue) {
-			this.value = val;
-			return true; 
-		}
 		return false;
 	}
 	
@@ -116,6 +113,10 @@ abstract class Edge implements EdgeInterface{
 			this.whatever = val;
 			return true;
 		}
+		if(attr == attrValue) {
+			this.value = val;
+			return true; 
+		}
 		return false;
 	}
 
@@ -126,9 +127,8 @@ abstract class Edge implements EdgeInterface{
 			result = this.name;
 		}
 		if(attr == attrValue) {
-			result = this.value;
+			result = "" + this.value;
 		}
-		
 		return result;
 	}
 	

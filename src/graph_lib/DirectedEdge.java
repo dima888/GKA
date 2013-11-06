@@ -49,6 +49,9 @@ class DirectedEdge extends Edge {
 		if(attr == attrWhatever) {
 			return super.getWhatever();
 		}
+		if(attr == attrValue) {
+			return super.getValue();
+		}
 		return Integer.MAX_VALUE;
 	}
 	
