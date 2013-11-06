@@ -28,13 +28,13 @@ abstract class Edge implements EdgeInterface{
 	// *********ATTRIBUTE********
 	private String name;
 	private int whatever = 100;
-	private String value = "";
+	private String value = "10";
 
 	// *********ATTRIBUTE-BEZEICHNUNGEN********
 	String attrName = "name";
 	String attrID = "ID";
 	String attrWhatever = "whatever";
-	String attrValue = "10"; //Geändert wegen Distanzmatrix zum TESTEN !
+	String attrValue = "value"; //Geändert wegen Distanzmatrix zum TESTEN !
 	
 	//*************************** KONSTRUKTOTREN ****************************
 	public Edge(Vertex v1, Vertex v2, String name) {
@@ -82,6 +82,10 @@ abstract class Edge implements EdgeInterface{
 		return this.whatever;
 	}
 	
+	public String getAttrValue() {
+		return attrValue;
+	}
+	
 	//********************************************** SETTER METHODEN **********************************************
 	@Override
 	public void setName(String newName) {
@@ -126,10 +130,6 @@ abstract class Edge implements EdgeInterface{
 		}
 		
 		return result;
-	}
-	
-	public String getAttrValue() {
-		return attrValue;
 	}
 	
 }
