@@ -21,13 +21,45 @@ public class TestAIGraph {
 	}
 	
 	@Test
+	public void testFloyedWarshall() {
+		//Beispiel aus GRBUCH Seite 54 2.7
+		int v1ID = graph.addVertex("1");
+		int v2ID = graph.addVertex("2");
+		int v3ID = graph.addVertex("3");
+		int v4ID = graph.addVertex("4");
+		
+		int e1ID = graph.addEdgeD(v1ID, v2ID);
+		graph.setValE(e1ID, "value", 1);
+		
+		int e2ID = graph.addEdgeD(v1ID, v4ID);
+		graph.setValE(e2ID, "value", 3);
+		
+		int e3ID = graph.addEdgeD(v2ID, v3ID);
+		graph.setValE(e3ID, "value", 2);
+		
+		int e4ID = graph.addEdgeD(v2ID, v4ID);
+		graph.setValE(e4ID, "value", 1);
+		
+		int e5ID = graph.addEdgeD(v3ID, v2ID);
+		graph.setValE(e5ID, "value", 2);
+		
+		int e6ID = graph.addEdgeD(v4ID, v3ID);
+		graph.setValE(e6ID, "value", 2);
+		
+		int e7ID = graph.addEdgeD(v4ID, v1ID);
+		graph.setValE(e7ID, "value", 2);
+		
+		//graph.floyedWarshall();
+	}
+	
+	@Test
 	public void testShowTransitMatrix() {
 		int v1ID = graph.addVertex("1");
 		int v2ID = graph.addVertex("2");
 		int v3ID = graph.addVertex("3");
 		int v4ID = graph.addVertex("4");
 		
-		graph.showTransitMatrix();
+		//graph.showTransitMatrix();
 	}
 	
 	@Test
@@ -47,16 +79,16 @@ public class TestAIGraph {
 		graph.setValE(e3ID, "value", 5);
 		
 		//Siehe Konsole für die Ausgabe
-		graph.showDistanceMatrix();
+		//graph.showDistanceMatrix();
 		
 		graph.deleteEdge(v1ID, v2ID);
-		System.out.println("Kante zwischen 1 und 2 gelöscht");
+		//System.out.println("Kante zwischen 1 und 2 gelöscht");
 		
-		graph.showDistanceMatrix();
-		System.out.println("Knoten 1 gelöscht");
+		//graph.showDistanceMatrix();
+		//System.out.println("Knoten 1 gelöscht");
 		
 		graph.deleteVertex(v1ID);
-		graph.showDistanceMatrix();
+		//graph.showDistanceMatrix();
 	}
 	
 	@Test

@@ -7,9 +7,14 @@ import java.util.Map;
 
 public class AIGraph {
 	
+	//Attribute
 	private List<Vertex> verticesList = new ArrayList<>();
 	private List<UndirectedEdge> edgesListU = new ArrayList<>();
 	private List<DirectedEdge> edgesListD = new ArrayList<>();
+	
+	//Konstanten
+	private final String INFINITE = "∞";
+	private final int MAX_VALUE = Integer.MAX_VALUE;
 	
 	//********************************* KONSTRUKTOR *********************************************
 	public AIGraph() {
@@ -23,39 +28,92 @@ public class AIGraph {
 	 * @return List<Integer> - List der KnotenIDs
 	 * Beispiel: v1 nach v2 --> kürzeste weg über: v1 --> v4 --> v3 --> v2
 	 */
-	public Map<List<Integer>, Integer> floyedWarshall(int v1_id, int v2_id) {
-		Map<List<Integer>, Integer> result = new HashMap<>();
-		List<Integer> shortestRoute = new ArrayList<>();
-		int matrixLength = verticesList.size();
+	public int[][] floyedWarshall() {
+		//Distanzmatrix erstellen für den aktuellen "Zustand" des graphen
 		Object[][] distanceMatrix = this.createDistanceMatrix();
-		String infinite = "∞";
 		
+		//Transitmatrix erstellen
+		int[][] transitMatrix = this.createTransitMatrix();
+		
+		//Größe der Matrix = | Vertices | 
+		int matrixLength = distanceMatrix.length;
+		
+		//Ergebnis Distanzmatrix --> enthält die kürzesten Distanzen
+		int[][] result = new int[matrixLength][matrixLength];
+		
+		//Algorithmus aus GRBUCH
 		for(int j = 0; j < matrixLength; j++) {
 			
 			for(int i = 0; i < matrixLength; i++) {
-				
+				//i muss ungleich j sein
+				if(i == j) {
+					continue;
+				}
 				for(int k = 0; k < matrixLength; k++) {
-					 Object elemIK = distanceMatrix[i][k];
-					 Object elemIJ = distanceMatrix[i][j];
-					 Object elemJK = distanceMatrix[j][k];
+					/*Falls Distanzmatrix an Stelle i i < 0 ist wurde ein Kreis
+					  negativer länge gefunden */
+					//Bestimmen der Zahl an stelle ii
+					int elemII = objToInt(distanceMatrix[i][i]); 
+					
+					if(elemII < 0) {
+						throw new IllegalArgumentException("Negativer Kreis wurde entdeckt!");
+					}
+					
+					//k muss ungleich j sein
+					if(k == j) {
+						continue;
+					}
 					 
-					 int elemIKInt;
-					 int elemIJInt;
-					 int elemJKInt;
+					//Zahlen ermitteln
+					int elemIK = objToInt(distanceMatrix[i][k]);
+					int elemIJ = objToInt(distanceMatrix[i][j]);
+					int elemJK = objToInt(distanceMatrix[j][k]);
 					 
-					 if(elemIK == infinite) {
-						 elemIKInt = Integer.MAX_VALUE;
-						 Double d = Double.POSITIVE_INFINITY;
-					 } else {
-						 elemIKInt = (Integer) elemIK;
-					 }
+					//Speicher für das kleinste Element
+					int min;
 					 
+					//Prüfen ob eins von beiden "Unendlich" ist
+					if((elemIJ == MAX_VALUE) || (elemJK == MAX_VALUE)) {
+						min = Math.min(elemIK, MAX_VALUE);
+					} else {
+						min = Math.min(elemIK, (elemIJ + elemJK));
+					}
+					 
+					//Setze elemIK auf min
+					//Prüfen ob min = Integer.MAX_VALUE ist --> unedlich
+					if(min == MAX_VALUE) {
+						distanceMatrix[i][k] = INFINITE;
+					} else {
+						distanceMatrix[i][k] = min; 
+					}
+					 
+					/*Falls DistanzMatrix an Stelle i k  verändert wurde setze TranzitMatrix 
+				      an Stelle i k auf j*/
+					if(elemIK != min) {
+						transitMatrix[i][k] = j + 1; // hier j + 1, da j bei uns bei 0 anfängt und beim algorithmus bei 1
+					}
 				}
 			}
 		}
 		
-		
+		this.showDistanceMatrix(distanceMatrix);
+		this.showTransitMatrix(transitMatrix);
 		return result;
+	}
+	
+	/**
+	 * Wandelt ein Object mit Inhalt Zahl oder Infinite zu einem int um 
+	 * @param elem
+	 * @return
+	 */
+	private Integer objToInt(Object elem) {
+		int number;
+		 if(elem == INFINITE) {
+			 number = MAX_VALUE;
+		 } else {
+			 number = (Integer) elem;
+		 }
+		return number;
 	}
 	
 	/**
@@ -64,7 +122,7 @@ public class AIGraph {
 	 * @param v2_id - ID des Zielknotens
 	 * @return List<Integer> - List der KnotenIDs
 	 */
-	public Map<List<Integer>, Integer> bellmanFord(int v1_id, int v2_id) {
+	public Map<List<Integer>, Integer> bellmanFord() {
 		//TODO
 		Map<List<Integer>, Integer> result = new HashMap<>();
 		List<Integer> shortestRoute = new ArrayList<>();
@@ -80,7 +138,6 @@ public class AIGraph {
 		//Singelpoint of Control --> ermitteln der Matrix größe
 		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
 		int matrixLength = verticesList.size();
-		String infinite = "∞";
 		int zero = 0;
 		
 		//Ergebnis Matrix --> Distanzmatrix des aufrufenden graphen
@@ -109,7 +166,7 @@ public class AIGraph {
 
 				//Falls keine Direkte kannte zwischen den vertices besteht
 				if(e == null) {
-					result[i][j] = infinite;
+					result[i][j] = INFINITE;
 					continue;
 				}				
 				result[i][j] = e.getAttr("value");
@@ -118,6 +175,9 @@ public class AIGraph {
 		return result;
 	}
 	
+	/**
+	 * Stellt die DistanzMatrix in der Konsole dar
+	 */
 	public void showDistanceMatrix() {
 		String showDistanceMatrix = "---DistanceMatrix---\n";		
 		Object[][] result = this.createDistanceMatrix(); 
@@ -125,6 +185,23 @@ public class AIGraph {
 		for(int i = 0; i < matrixLength; i++) {
 			for(int j = 0; j < matrixLength; j++) {
 				showDistanceMatrix += result[i][j];
+				showDistanceMatrix += " ";
+			}
+			showDistanceMatrix += "\n";
+		}
+		System.out.println(showDistanceMatrix);
+	}
+	
+	/**
+	 * Stellt die DistanzMatrix in der Konsole dar
+	 */
+	public void showDistanceMatrix(Object[][] distanceMatrix) {
+		String showDistanceMatrix = "---DistanceMatrix---\n";		
+ 		int matrixLength = distanceMatrix.length;
+ 		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showDistanceMatrix += distanceMatrix[i][j];
 				showDistanceMatrix += " ";
 			}
 			showDistanceMatrix += "\n";
@@ -156,6 +233,9 @@ public class AIGraph {
 		return result;
 	}
 	
+	/**
+	 * Stellt die Transitmatrix in der Konsole dar
+	 */
 	public void showTransitMatrix() {
 		int[][] result = this.createTransitMatrix();
 		int matrixLength = verticesList.size();
@@ -171,6 +251,23 @@ public class AIGraph {
 		System.out.println(showTransitMatrix);
 	}
 	
+	/**
+	 * Stellt die Transitmatrix in der Konsole dar
+	 */
+	public void showTransitMatrix(int[][] transitMatrix) {
+		int matrixLength = transitMatrix.length;
+		String showTransitMatrix = "---TransitMatrix---\n";
+		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showTransitMatrix += transitMatrix[i][j];
+				showTransitMatrix += " ";
+			}
+			showTransitMatrix += "\n";
+		}
+		System.out.println(showTransitMatrix);
+	}
+	
 	
 	/**
 	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
@@ -178,6 +275,13 @@ public class AIGraph {
 	 * @return VertexID gibt die ID des hinzugefügten Vertices zurück
 	 */
 	public int addVertex(String newItem) {
+		//Prüfen ob Vertex mit vertexNamen (newItem) schon existiert
+		for(Vertex v : verticesList) {
+			//Falls existiert, gib ID des bestehenden Knoten zurück
+			if(v.getName().equals(newItem)) {
+				return v.getID();
+			}
+		}
 		Vertex vertex = new Vertex(newItem);
 		verticesList.add(vertex);
 		return vertex.getID();

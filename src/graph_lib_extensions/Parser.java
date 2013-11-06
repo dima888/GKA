@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Parser {
 	
@@ -23,11 +26,13 @@ public class Parser {
 	
 	private AIGraph graph = new AIGraph();
 	
+	private Set<String> vertexNames = new HashSet<>();
+	
 	public Parser(Path path) {
 		this.path = path;
 	}
 	
-	public void createGraph() {
+	public AIGraph createGraph() {
 		if(path.toString() == "") {
 			throw new IllegalArgumentException("So ein Path existiert nicht!!!");
 		}
@@ -39,10 +44,10 @@ public class Parser {
 			commaToSpace();
 			
 			if(wort.compareTo("#gerichtet") == 0) {
-				createDirectedGraph();
+				return createDirectedGraph();
 			}
 			else if(wort.compareTo("#ungerichtet") == 0) {
-				createUndirectedGraph();
+				return createUndirectedGraph();
 			}
 			else {
 				throw new IllegalArgumentException("Die Textdatei muss mit #gerichtet oder #ungerichtet beginnen in der obersten Zeile!");
@@ -51,14 +56,15 @@ public class Parser {
 		} catch (FileNotFoundException e) {
 			System.err.println("Scanner auf Datei hat einen Fehler");
 		}
+		return null;
 	}
 	
-	private void createDirectedGraph() {
+	private AIGraph createDirectedGraph() {
 		for(int i = 0; i < textList.size(); i+=3) {
 			int v1ID = graph.addVertex(textList.get(v1Counter));
 			int v2ID = graph.addVertex(textList.get(v2Counter));
 			int e1ID = graph.addEdgeD(v1ID, v2ID);
-			graph.setStrE(e1ID, "value", textList.get(e1Counter));
+			graph.setValE(e1ID, "value", Integer.parseInt(textList.get(e1Counter)));
 			
 			v1Counter += 3;
 			v2Counter += 3;
@@ -68,14 +74,16 @@ public class Parser {
 		v1Counter = 0;
 		v2Counter = 1;
 		e1Counter = 2;
+		
+		return graph;
 	}
 	
-	private void createUndirectedGraph() {
+	private AIGraph createUndirectedGraph() {
 		for(int i = 0; i < textList.size(); i+=3) {
 			int v1ID = graph.addVertex(textList.get(v1Counter));
 			int v2ID = graph.addVertex(textList.get(v2Counter));
 			int e1ID = graph.addEdgeU(v1ID, v2ID);
-			graph.setStrE(e1ID, "value", textList.get(e1Counter));
+			graph.setValE(e1ID, "value", Integer.parseInt(textList.get(e1Counter)));
 			
 			v1Counter += 3;
 			v2Counter += 3;
@@ -85,6 +93,8 @@ public class Parser {
 		v1Counter = 0;
 		v2Counter = 1;
 		e1Counter = 2;
+		
+		return graph;
 	}
 	
 	private void commaToSpace() {
@@ -106,7 +116,8 @@ public class Parser {
 	
 	
 	public static void main(String[] args) {
-		Parser p = new Parser(Paths.get("C:\\Users\\abg688\\Desktop\\test.txt"));
-		p.createGraph();
+		Parser p = new Parser(Paths.get("C:\\Users\\Sony\\Desktop\\test.txt"));
+		AIGraph g = p.createGraph();
+		g.showDistanceMatrix();
 	}
 }
