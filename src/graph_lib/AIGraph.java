@@ -1,4 +1,3 @@
-
 package graph_lib;
 
 import java.util.ArrayList;
@@ -13,6 +12,94 @@ public class AIGraph {
 	//********************************* KONSTRUKTOR *********************************************
 	public AIGraph() {
 		//NULL Graph
+	}
+	
+	public int floyedWarshall(int v1_id, int v2_id) {
+		//TODO
+		return 0;
+	}
+	
+	public int bellmanFord(int v1_id, int v2_id) {
+		//TODO
+		return 0;
+	}
+	
+	/**
+	 * Gibt uns die Distanzmatrix zu dem aufrufenden Graphen
+	 * @return int[][] - Distanzmatrix des aufrufenden Graphen
+	 */
+	public Object[][] getDistanceMatrix() {
+		//Singelpoint of Control --> ermitteln der Matrix größe
+		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
+		int matrixLength = verticesList.size();
+		
+		//Ergebnis Matrix --> Distanzmatrix des aufrufenden graphen
+		Object[][] result = new Object[matrixLength][matrixLength];
+		
+		//Für alle Zeilen
+		for(int i = 0; i < matrixLength; i++) {
+			
+			//Für alle vertices durchlaufen
+			Vertex v1 = verticesList.get(i);
+			
+			//Für alle Spalten
+			for(int j = 0; j < matrixLength; j++) {
+				
+				//für jeden v1 alle vertices durchlaufen
+				Vertex v2 = verticesList.get(j);
+				
+				//Die selben Knoten
+				if(v1 == v2) {
+					result[i][j] = 0;
+					continue;
+				}
+				
+				//Kante herausfinden um anschließend die Distanz (= value) zu bestimmen
+				Edge e = this.getEdgeBetweenVertices(v1, v2);
+
+				//Falls keine Direkte kannte zwischen den vertices besteht
+				if(e == null) {
+					result[i][j] = "~";
+					continue;
+				}
+				
+				result[i][j] = Integer.parseInt(e.getAttrValue());
+			}
+		}
+		
+		String test = "";
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				test+= result[i][j];
+				test += " ";
+			}
+			test += "\n";
+		}
+		System.out.println(test);
+		return result;
+	}
+	
+	/**
+	 * Gibt eine neue (=leere) TransitMatrix
+	 * @return int[][] - eine mit Nullen initialisierte Transitmatrix
+	 */
+	private int[][] getTransitMatrix() {
+		//Singelpoint of Control --> ermitteln der Matrix größe
+		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
+		int matrixLength = verticesList.size();
+		
+		//Ergebnis Matrix --> Transitmatrix befüllt mit Nullen
+		int[][] result = new int[matrixLength][matrixLength];
+		
+		//Für alle Zeilen
+		for(int i = 0; i < matrixLength; i++) {
+			//Für alle Spalten
+			for(int j = 0; j < matrixLength; j++) {
+				//Alle Stellen mit 0 initialisieren
+				result[i][j] = 0;
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -262,8 +349,8 @@ public class AIGraph {
 			
 			//Es kann nur ein gerichteter oder ungerichteter sein
 			if(edgeID % 2 == 0) {
-				System.out.println(incidents);
-				System.out.println(edgeID);
+				//System.out.println(incidents);
+				//System.out.println(edgeID);
 				edge = getEdgeD(edgeID);
 			} else {
 				edge = getEdgeU(edgeID);
@@ -561,5 +648,17 @@ public class AIGraph {
 			}
 		}
 		return false;
+	}
+	
+	private Edge getEdgeBetweenVertices(Vertex v1, Vertex v2) {
+		for(Edge edge : edgesListD) {
+			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
+			
+			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prüfen
+				return edge;
+			}
+		}
+		//throw new IllegalArgumentException("Es existiert keine Kante zwischen v1 und v2!");
+		return null;
 	}
 }

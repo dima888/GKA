@@ -21,6 +21,21 @@ public class TestAIGraph {
 	}
 	
 	@Test
+	public void testGetDistanceMatrix() {
+		int v1ID = graph.addVertex("1");
+		int v2ID = graph.addVertex("2");
+		int v3ID = graph.addVertex("3");
+		int v4ID = graph.addVertex("4");
+		
+		int e1ID = graph.addEdgeD(v1ID, v2ID);
+		int e2ID = graph.addEdgeD(v1ID, v3ID);
+		int e3ID = graph.addEdgeD(v4ID, v1ID);
+		
+		//Siehe Konsole für die Ausgabe
+		graph.getDistanceMatrix();
+	}
+	
+	@Test
 	public void testAddVertex() {
 		graph.addVertex("1");
 		graph.addVertex("2");
