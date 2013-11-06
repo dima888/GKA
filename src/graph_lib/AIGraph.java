@@ -1,7 +1,9 @@
 package graph_lib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AIGraph {
 	
@@ -14,24 +16,72 @@ public class AIGraph {
 		//NULL Graph
 	}
 	
-	public int floyedWarshall(int v1_id, int v2_id) {
-		//TODO
-		return 0;
+	/**
+	 * Berechnet uns den optimalen Weg von Knoten1 nach Knoten2
+	 * @param v1_id - ID des Startknotens
+	 * @param v2_id - ID des Zielknotens
+	 * @return List<Integer> - List der KnotenIDs
+	 * Beispiel: v1 nach v2 --> kürzeste weg über: v1 --> v4 --> v3 --> v2
+	 */
+	public Map<List<Integer>, Integer> floyedWarshall(int v1_id, int v2_id) {
+		Map<List<Integer>, Integer> result = new HashMap<>();
+		List<Integer> shortestRoute = new ArrayList<>();
+		int matrixLength = verticesList.size();
+		Object[][] distanceMatrix = this.createDistanceMatrix();
+		String infinite = "∞";
+		
+		for(int j = 0; j < matrixLength; j++) {
+			
+			for(int i = 0; i < matrixLength; i++) {
+				
+				for(int k = 0; k < matrixLength; k++) {
+					 Object elemIK = distanceMatrix[i][k];
+					 Object elemIJ = distanceMatrix[i][j];
+					 Object elemJK = distanceMatrix[j][k];
+					 
+					 int elemIKInt;
+					 int elemIJInt;
+					 int elemJKInt;
+					 
+					 if(elemIK == infinite) {
+						 elemIKInt = Integer.MAX_VALUE;
+						 Double d = Double.POSITIVE_INFINITY;
+					 } else {
+						 elemIKInt = (Integer) elemIK;
+					 }
+					 
+				}
+			}
+		}
+		
+		
+		return result;
 	}
 	
-	public int bellmanFord(int v1_id, int v2_id) {
+	/**
+	 * Berechnet uns den optimalen Weg von Knoten1 nach Knoten2
+	 * @param v1_id - ID des Startknotens
+	 * @param v2_id - ID des Zielknotens
+	 * @return List<Integer> - List der KnotenIDs
+	 */
+	public Map<List<Integer>, Integer> bellmanFord(int v1_id, int v2_id) {
 		//TODO
-		return 0;
+		Map<List<Integer>, Integer> result = new HashMap<>();
+		List<Integer> shortestRoute = new ArrayList<>();
+		return result;
 	}
 	
 	/**
 	 * Gibt uns die Distanzmatrix zu dem aufrufenden Graphen
 	 * @return int[][] - Distanzmatrix des aufrufenden Graphen
 	 */
-	public Object[][] getDistanceMatrix() {
+	private Object[][] createDistanceMatrix() {
+		//TODO: anpassen INFINITY
 		//Singelpoint of Control --> ermitteln der Matrix größe
 		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
 		int matrixLength = verticesList.size();
+		String infinite = "∞";
+		int zero = 0;
 		
 		//Ergebnis Matrix --> Distanzmatrix des aufrufenden graphen
 		Object[][] result = new Object[matrixLength][matrixLength];
@@ -50,7 +100,7 @@ public class AIGraph {
 				
 				//Die selben Knoten
 				if(v1 == v2) {
-					result[i][j] = 0;
+					result[i][j] = zero;
 					continue;
 				}
 				
@@ -59,34 +109,38 @@ public class AIGraph {
 
 				//Falls keine Direkte kannte zwischen den vertices besteht
 				if(e == null) {
-					result[i][j] = "~";
+					result[i][j] = infinite;
 					continue;
-				}
-				
-				result[i][j] = Integer.parseInt(e.getAttrValue());
+				}				
+				result[i][j] = e.getAttr("value");
 			}
-		}
-		
-		String test = "";
+		}			
+		return result;
+	}
+	
+	public void showDistanceMatrix() {
+		String showDistanceMatrix = "---DistanceMatrix---\n";		
+		Object[][] result = this.createDistanceMatrix(); 
+ 		int matrixLength = verticesList.size();
 		for(int i = 0; i < matrixLength; i++) {
 			for(int j = 0; j < matrixLength; j++) {
-				test+= result[i][j];
-				test += " ";
+				showDistanceMatrix += result[i][j];
+				showDistanceMatrix += " ";
 			}
-			test += "\n";
+			showDistanceMatrix += "\n";
 		}
-		System.out.println(test);
-		return result;
+		System.out.println(showDistanceMatrix);
 	}
 	
 	/**
 	 * Gibt eine neue (=leere) TransitMatrix
 	 * @return int[][] - eine mit Nullen initialisierte Transitmatrix
 	 */
-	private int[][] getTransitMatrix() {
+	private int[][] createTransitMatrix() {
 		//Singelpoint of Control --> ermitteln der Matrix größe
 		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
 		int matrixLength = verticesList.size();
+		int zero = 0;
 		
 		//Ergebnis Matrix --> Transitmatrix befüllt mit Nullen
 		int[][] result = new int[matrixLength][matrixLength];
@@ -96,11 +150,27 @@ public class AIGraph {
 			//Für alle Spalten
 			for(int j = 0; j < matrixLength; j++) {
 				//Alle Stellen mit 0 initialisieren
-				result[i][j] = 0;
+				result[i][j] = zero;
 			}
 		}
 		return result;
 	}
+	
+	public void showTransitMatrix() {
+		int[][] result = this.createTransitMatrix();
+		int matrixLength = verticesList.size();
+		String showTransitMatrix = "---TransitMatrix---\n";
+		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showTransitMatrix += result[i][j];
+				showTransitMatrix += " ";
+			}
+			showTransitMatrix += "\n";
+		}
+		System.out.println(showTransitMatrix);
+	}
+	
 	
 	/**
 	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen

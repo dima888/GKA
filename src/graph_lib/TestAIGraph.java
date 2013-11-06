@@ -21,27 +21,42 @@ public class TestAIGraph {
 	}
 	
 	@Test
-	public void testGetDistanceMatrix() {
+	public void testShowTransitMatrix() {
+		int v1ID = graph.addVertex("1");
+		int v2ID = graph.addVertex("2");
+		int v3ID = graph.addVertex("3");
+		int v4ID = graph.addVertex("4");
+		
+		graph.showTransitMatrix();
+	}
+	
+	@Test
+	public void testShowDistanceMatrix() {
 		int v1ID = graph.addVertex("1");
 		int v2ID = graph.addVertex("2");
 		int v3ID = graph.addVertex("3");
 		int v4ID = graph.addVertex("4");
 		
 		int e1ID = graph.addEdgeD(v1ID, v2ID);
+		graph.setValE(e1ID, "value", 7);
+		
 		int e2ID = graph.addEdgeD(v1ID, v3ID);
+		graph.setValE(e2ID, "value", 3);
+		
 		int e3ID = graph.addEdgeD(v4ID, v1ID);
+		graph.setValE(e3ID, "value", 5);
 		
 		//Siehe Konsole für die Ausgabe
-		graph.getDistanceMatrix();
+		graph.showDistanceMatrix();
 		
 		graph.deleteEdge(v1ID, v2ID);
 		System.out.println("Kante zwischen 1 und 2 gelöscht");
 		
-		graph.getDistanceMatrix();
+		graph.showDistanceMatrix();
 		System.out.println("Knoten 1 gelöscht");
 		
 		graph.deleteVertex(v1ID);
-		graph.getDistanceMatrix();
+		graph.showDistanceMatrix();
 	}
 	
 	@Test
@@ -271,10 +286,14 @@ public class TestAIGraph {
 	public void testSetValE() { //Drei Tests im ein
 		int vertex1ID = graph.addVertex("Schröder");
 		int vertex2ID = graph.addVertex("Merkel");				
-		int edgeID = graph.addEdgeD(vertex1ID, vertex2ID);
+		int edgeID = graph.addEdgeD(vertex1ID, vertex2ID);		
 		
 		assertTrue(graph.setValE(edgeID, "whatever", 1500)); //Hier Setzten wir erfolgreich
 		assertEquals(graph.getValE(edgeID, "whatever"), 1500); //Hier pruefen wir erfolgreich
+		assertFalse(graph.setValE(edgeID, "Gnom", 1500)); //Hier pruefen wir negativ erfolgreich
+		
+		assertTrue(graph.setValE(edgeID, "value", 1500)); //Hier Setzten wir erfolgreich
+		assertEquals(graph.getValE(edgeID, "value"), 1500); //Hier pruefen wir erfolgreich
 		assertFalse(graph.setValE(edgeID, "Gnom", 1500)); //Hier pruefen wir negativ erfolgreich
 	}
 	
