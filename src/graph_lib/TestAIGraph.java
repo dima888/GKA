@@ -33,6 +33,15 @@ public class TestAIGraph {
 		
 		//Siehe Konsole für die Ausgabe
 		graph.getDistanceMatrix();
+		
+		graph.deleteEdge(v1ID, v2ID);
+		System.out.println("Kante zwischen 1 und 2 gelöscht");
+		
+		graph.getDistanceMatrix();
+		System.out.println("Knoten 1 gelöscht");
+		
+		graph.deleteVertex(v1ID);
+		graph.getDistanceMatrix();
 	}
 	
 	@Test
