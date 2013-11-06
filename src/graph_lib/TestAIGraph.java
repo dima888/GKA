@@ -28,6 +28,7 @@ public class TestAIGraph {
 		int v4ID = graph.addVertex("4");
 		
 		int e1ID = graph.addEdgeD(v1ID, v2ID);
+		graph.setValE(e1, attr, val);
 		int e2ID = graph.addEdgeD(v1ID, v3ID);
 		int e3ID = graph.addEdgeD(v4ID, v1ID);
 		
