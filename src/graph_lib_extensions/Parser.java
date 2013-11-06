@@ -118,6 +118,5 @@ public class Parser {
 	public static void main(String[] args) {
 		Parser p = new Parser(Paths.get("C:\\Users\\Sony\\Desktop\\test.txt"));
 		AIGraph g = p.createGraph();
-		g.showDistanceMatrix();
 	}
 }

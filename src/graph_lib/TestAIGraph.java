@@ -49,6 +49,28 @@ public class TestAIGraph {
 		int e7ID = graph.addEdgeD(v4ID, v1ID);
 		graph.setValE(e7ID, "value", 2);
 		
+		//UNGERICHTET
+//		int e1ID = graph.addEdgeU(v1ID, v2ID);
+//		graph.setValE(e1ID, "value", 1);
+//		
+//		int e2ID = graph.addEdgeU(v1ID, v4ID);
+//		graph.setValE(e2ID, "value", 3);
+//		
+//		int e3ID = graph.addEdgeU(v2ID, v3ID);
+//		graph.setValE(e3ID, "value", 2);
+//		
+//		int e4ID = graph.addEdgeU(v2ID, v4ID);
+//		graph.setValE(e4ID, "value", 1);
+//		
+////		int e5ID = graph.addEdgeU(v3ID, v2ID);
+////		graph.setValE(e5ID, "value", 2);
+//		
+//		int e6ID = graph.addEdgeU(v4ID, v3ID);
+//		graph.setValE(e6ID, "value", 2);
+//		
+////		int e7ID = graph.addEdgeU(v4ID, v1ID);
+////		graph.setValE(e7ID, "value", 2);
+		
 		//graph.floyedWarshall();
 	}
 	

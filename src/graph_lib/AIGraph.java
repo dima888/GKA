@@ -102,172 +102,36 @@ public class AIGraph {
 	}
 	
 	/**
-	 * Wandelt ein Object mit Inhalt Zahl oder Infinite zu einem int um 
-	 * @param elem
-	 * @return
+	 * Berechnet den optimalen (günstigsten) Weg von Knoten 1 nach Knoten 2
+	 * @param sID - ID des Startknotens
+	 * @param zID - ID des Zielknotens
+	 * QUELLE: http://de.wikipedia.org/wiki/Bellman-Ford-Algorithmus
 	 */
-	private Integer objToInt(Object elem) {
-		int number;
-		 if(elem == INFINITE) {
-			 number = MAX_VALUE;
-		 } else {
-			 number = (Integer) elem;
-		 }
-		return number;
-	}
-	
-	/**
-	 * Berechnet uns den optimalen Weg von Knoten1 nach Knoten2
-	 * @param v1_id - ID des Startknotens
-	 * @param v2_id - ID des Zielknotens
-	 * @return List<Integer> - List der KnotenIDs
-	 */
-	public Map<List<Integer>, Integer> bellmanFord() {
-		//TODO
-		Map<List<Integer>, Integer> result = new HashMap<>();
-		List<Integer> shortestRoute = new ArrayList<>();
-		return result;
-	}
-	
-	/**
-	 * Gibt uns die Distanzmatrix zu dem aufrufenden Graphen
-	 * @return int[][] - Distanzmatrix des aufrufenden Graphen
-	 */
-	private Object[][] createDistanceMatrix() {
-		//TODO: anpassen INFINITY
-		//Singelpoint of Control --> ermitteln der Matrix größe
-		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
-		int matrixLength = verticesList.size();
-		int zero = 0;
+	public void bellmanFord(int sID, int zID) {
+		//für jeden Knoten aus verticesList --> Distanz(v) = unendlich
+		Map<Integer, Integer> distance = new HashMap<>();
 		
-		//Ergebnis Matrix --> Distanzmatrix des aufrufenden graphen
-		Object[][] result = new Object[matrixLength][matrixLength];
+		//für jeden Knoten aus verticesList --> Vorgänger(v) = keiner
+		Map<Integer, Integer> predecessor = new HashMap<>();
 		
-		//Für alle Zeilen
-		for(int i = 0; i < matrixLength; i++) {
+		//Anzahl der Knoten im Graph
+		int countOfVertices = verticesList.size();
+		
+		//Maps vorinitialisieren
+		for(int i = 0; i < countOfVertices; i++) {
+			int vID = verticesList.get(i).getID();
+			distance.put(vID, MAX_VALUE);
+			predecessor.put(vID, null);
+		}
+		
+		//Distanz von Startknoten auf 0 setzen --> vorheriger Wert wird überschrieben
+		distance.put(sID, 0);
+		
+		//Wiederhole n - 1 mal --> n gleich Anzahl der vertices
+		for(int i = 0; i < countOfVertices - 1; i++) {
 			
-			//Für alle vertices durchlaufen
-			Vertex v1 = verticesList.get(i);
-			
-			//Für alle Spalten
-			for(int j = 0; j < matrixLength; j++) {
-				
-				//für jeden v1 alle vertices durchlaufen
-				Vertex v2 = verticesList.get(j);
-				
-				//Die selben Knoten
-				if(v1 == v2) {
-					result[i][j] = zero;
-					continue;
-				}
-				
-				//Kante herausfinden um anschließend die Distanz (= value) zu bestimmen
-				Edge e = this.getEdgeBetweenVertices(v1, v2);
-
-				//Falls keine Direkte kannte zwischen den vertices besteht
-				if(e == null) {
-					result[i][j] = INFINITE;
-					continue;
-				}				
-				result[i][j] = e.getAttr("value");
-			}
-		}			
-		return result;
-	}
-	
-	/**
-	 * Stellt die DistanzMatrix in der Konsole dar
-	 */
-	public void showDistanceMatrix() {
-		String showDistanceMatrix = "---DistanceMatrix---\n";		
-		Object[][] result = this.createDistanceMatrix(); 
- 		int matrixLength = verticesList.size();
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showDistanceMatrix += result[i][j];
-				showDistanceMatrix += " ";
-			}
-			showDistanceMatrix += "\n";
 		}
-		System.out.println(showDistanceMatrix);
 	}
-	
-	/**
-	 * Stellt die DistanzMatrix in der Konsole dar
-	 */
-	public void showDistanceMatrix(Object[][] distanceMatrix) {
-		String showDistanceMatrix = "---DistanceMatrix---\n";		
- 		int matrixLength = distanceMatrix.length;
- 		
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showDistanceMatrix += distanceMatrix[i][j];
-				showDistanceMatrix += " ";
-			}
-			showDistanceMatrix += "\n";
-		}
-		System.out.println(showDistanceMatrix);
-	}
-	
-	/**
-	 * Gibt eine neue (=leere) TransitMatrix
-	 * @return int[][] - eine mit Nullen initialisierte Transitmatrix
-	 */
-	private int[][] createTransitMatrix() {
-		//Singelpoint of Control --> ermitteln der Matrix größe
-		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
-		int matrixLength = verticesList.size();
-		int zero = 0;
-		
-		//Ergebnis Matrix --> Transitmatrix befüllt mit Nullen
-		int[][] result = new int[matrixLength][matrixLength];
-		
-		//Für alle Zeilen
-		for(int i = 0; i < matrixLength; i++) {
-			//Für alle Spalten
-			for(int j = 0; j < matrixLength; j++) {
-				//Alle Stellen mit 0 initialisieren
-				result[i][j] = zero;
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * Stellt die Transitmatrix in der Konsole dar
-	 */
-	public void showTransitMatrix() {
-		int[][] result = this.createTransitMatrix();
-		int matrixLength = verticesList.size();
-		String showTransitMatrix = "---TransitMatrix---\n";
-		
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showTransitMatrix += result[i][j];
-				showTransitMatrix += " ";
-			}
-			showTransitMatrix += "\n";
-		}
-		System.out.println(showTransitMatrix);
-	}
-	
-	/**
-	 * Stellt die Transitmatrix in der Konsole dar
-	 */
-	public void showTransitMatrix(int[][] transitMatrix) {
-		int matrixLength = transitMatrix.length;
-		String showTransitMatrix = "---TransitMatrix---\n";
-		
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showTransitMatrix += transitMatrix[i][j];
-				showTransitMatrix += " ";
-			}
-			showTransitMatrix += "\n";
-		}
-		System.out.println(showTransitMatrix);
-	}
-	
 	
 	/**
 	 * Zum hinzufügen eines Vertex(Knoten)- Objekts zum Graphen
@@ -834,5 +698,159 @@ public class AIGraph {
 		}
 		//throw new IllegalArgumentException("Es existiert keine Kante zwischen v1 und v2!");
 		return null;
+	}
+	
+	/**
+	 * Wandelt ein Object mit Inhalt Zahl oder Infinite zu einem int um 
+	 * @param elem
+	 * @return
+	 */
+	private Integer objToInt(Object elem) {
+		int number;
+		 if(elem == INFINITE) {
+			 number = MAX_VALUE;
+		 } else {
+			 number = (Integer) elem;
+		 }
+		return number;
+	}
+	
+	/**
+	 * Gibt uns die Distanzmatrix zu dem aufrufenden Graphen
+	 * @return int[][] - Distanzmatrix des aufrufenden Graphen
+	 */
+	private Object[][] createDistanceMatrix() {
+		//TODO: anpassen INFINITY
+		//Singelpoint of Control --> ermitteln der Matrix größe
+		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
+		int matrixLength = verticesList.size();
+		int zero = 0;
+		
+		//Ergebnis Matrix --> Distanzmatrix des aufrufenden graphen
+		Object[][] result = new Object[matrixLength][matrixLength];
+		
+		//Für alle Zeilen
+		for(int i = 0; i < matrixLength; i++) {
+			
+			//Für alle vertices durchlaufen
+			Vertex v1 = verticesList.get(i);
+			
+			//Für alle Spalten
+			for(int j = 0; j < matrixLength; j++) {
+				
+				//für jeden v1 alle vertices durchlaufen
+				Vertex v2 = verticesList.get(j);
+				
+				//Die selben Knoten
+				if(v1 == v2) {
+					result[i][j] = zero;
+					continue;
+				}
+				
+				//Kante herausfinden um anschließend die Distanz (= value) zu bestimmen
+				Edge e = this.getEdgeBetweenVertices(v1, v2);
+
+				//Falls keine Direkte kannte zwischen den vertices besteht
+				if(e == null) {
+					result[i][j] = INFINITE;
+					continue;
+				}				
+				result[i][j] = e.getAttr("value");
+			}
+		}			
+		return result;
+	}
+	
+	/**
+	 * Stellt die DistanzMatrix in der Konsole dar
+	 */
+	private void showDistanceMatrix() {
+		String showDistanceMatrix = "---DistanceMatrix---\n";		
+		Object[][] result = this.createDistanceMatrix(); 
+ 		int matrixLength = verticesList.size();
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showDistanceMatrix += result[i][j];
+				showDistanceMatrix += " ";
+			}
+			showDistanceMatrix += "\n";
+		}
+		System.out.println(showDistanceMatrix);
+	}
+	
+	/**
+	 * Stellt die DistanzMatrix in der Konsole dar
+	 */
+	private void showDistanceMatrix(Object[][] distanceMatrix) {
+		String showDistanceMatrix = "---DistanceMatrix---\n";		
+ 		int matrixLength = distanceMatrix.length;
+ 		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showDistanceMatrix += distanceMatrix[i][j];
+				showDistanceMatrix += " ";
+			}
+			showDistanceMatrix += "\n";
+		}
+		System.out.println(showDistanceMatrix);
+	}
+	
+	/**
+	 * Gibt eine neue (=leere) TransitMatrix
+	 * @return int[][] - eine mit Nullen initialisierte Transitmatrix
+	 */
+	private int[][] createTransitMatrix() {
+		//Singelpoint of Control --> ermitteln der Matrix größe
+		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
+		int matrixLength = verticesList.size();
+		int zero = 0;
+		
+		//Ergebnis Matrix --> Transitmatrix befüllt mit Nullen
+		int[][] result = new int[matrixLength][matrixLength];
+		
+		//Für alle Zeilen
+		for(int i = 0; i < matrixLength; i++) {
+			//Für alle Spalten
+			for(int j = 0; j < matrixLength; j++) {
+				//Alle Stellen mit 0 initialisieren
+				result[i][j] = zero;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Stellt die Transitmatrix in der Konsole dar
+	 */
+	private void showTransitMatrix() {
+		int[][] result = this.createTransitMatrix();
+		int matrixLength = verticesList.size();
+		String showTransitMatrix = "---TransitMatrix---\n";
+		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showTransitMatrix += result[i][j];
+				showTransitMatrix += " ";
+			}
+			showTransitMatrix += "\n";
+		}
+		System.out.println(showTransitMatrix);
+	}
+	
+	/**
+	 * Stellt die Transitmatrix in der Konsole dar
+	 */
+	private void showTransitMatrix(int[][] transitMatrix) {
+		int matrixLength = transitMatrix.length;
+		String showTransitMatrix = "---TransitMatrix---\n";
+		
+		for(int i = 0; i < matrixLength; i++) {
+			for(int j = 0; j < matrixLength; j++) {
+				showTransitMatrix += transitMatrix[i][j];
+				showTransitMatrix += " ";
+			}
+			showTransitMatrix += "\n";
+		}
+		System.out.println(showTransitMatrix);
 	}
 }
