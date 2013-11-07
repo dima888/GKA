@@ -31,9 +31,15 @@ public class AIGraph {
 	public int[][] floyedWarshall() {
 		//Distanzmatrix erstellen für den aktuellen "Zustand" des graphen
 		Object[][] distanceMatrix = this.createDistanceMatrix();
-		
+
 		//Transitmatrix erstellen
 		int[][] transitMatrix = this.createTransitMatrix();
+		
+		//OUTPUT --> Console
+		System.out.println("\n\tFLOYDWARSHALL\n");
+		System.out.println("Startwerte:\n");
+		this.showDistanceMatrix(distanceMatrix);
+		this.showTransitMatrix(transitMatrix);
 		
 		//Größe der Matrix = | Vertices | 
 		int matrixLength = distanceMatrix.length;
@@ -96,6 +102,8 @@ public class AIGraph {
 			}
 		}
 		
+		System.out.println("----------------------------------------------------------------\n");
+		System.out.println("Ergebnis:\n");
 		this.showDistanceMatrix(distanceMatrix);
 		this.showTransitMatrix(transitMatrix);
 		return result;
@@ -108,11 +116,14 @@ public class AIGraph {
 	 * QUELLE: http://de.wikipedia.org/wiki/Bellman-Ford-Algorithmus
 	 */
 	public void bellmanFord(int sID, int zID) {
+		//TODO: STOPP mit AUSGABE falls ein negativer Kreis gefunden wird !
 		//für jeden Knoten aus verticesList --> Distanz(v) = unendlich
-		Map<Integer, Integer> distance = new HashMap<>();
+		//Key = vID; Value = distanz (= Entfernung vom Startknoten)
+		Map<Integer, Integer> distances = new HashMap<>();
 		
 		//für jeden Knoten aus verticesList --> Vorgänger(v) = keiner
-		Map<Integer, Integer> predecessor = new HashMap<>();
+		//Key = vID; Value = vertexID des vorgängers von vID (= KEY)
+		Map<Integer, Integer> predecessors = new HashMap<>();
 		
 		//Anzahl der Knoten im Graph
 		int countOfVertices = verticesList.size();
@@ -120,17 +131,90 @@ public class AIGraph {
 		//Maps vorinitialisieren
 		for(int i = 0; i < countOfVertices; i++) {
 			int vID = verticesList.get(i).getID();
-			distance.put(vID, MAX_VALUE);
-			predecessor.put(vID, null);
+			distances.put(vID, MAX_VALUE);
+			predecessors.put(vID, null);
 		}
 		
+		//OUTPUT --> Console
+		System.out.println("\n\tBELLMANFORD\n");
+		System.out.println("Startwerte:\n");
+		showDistancesMap(distances);
+		showPredecessorsMap(predecessors);
+		
 		//Distanz von Startknoten auf 0 setzen --> vorheriger Wert wird überschrieben
-		distance.put(sID, 0);
+		distances.put(sID, 0);
 		
 		//Wiederhole n - 1 mal --> n gleich Anzahl der vertices
 		for(int i = 0; i < countOfVertices - 1; i++) {
+			//Für jedes (u,v) aus E
+			for(Edge e : edgesListD) {
+				Vertex[] vertices = e.getVertices();
+				Vertex u = vertices[0];
+				Vertex v = vertices[1];
+				
+				//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
+				int distance;
+				
+				//Distanz von Knoten u zum Startknoten herausfinden
+				int distanceOfU = distances.get(u.getID());
+				
+				//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
+				if(distanceOfU == MAX_VALUE) {
+					distance = MAX_VALUE; //repräsentiert unendlich
+				} else {
+					//Falls nicht unendlich --> Distanz(u) + Gewicht (u,v)
+					distance = distanceOfU + e.getValue();
+				}
+				
+				//Distanz von Knoten v zum Startknoten herausfinden
+				int distanceOfV = distances.get(v.getID());
+				
+				//Falls Distanz(u) + Gewicht(u,v) < Distanz(v)
+				if(distance < distanceOfV) {
+					//Distanz(v) = Distanz(u) + Gewicht(u,v)
+					distances.put(v.getID(), distance);
+					//Vorgänger(v) = u
+					predecessors.put(v.getID(), u.getID());
+				}
+			}
 			
+			//Für jedes (u,v) aus E
+			for(Edge e : edgesListU) {
+				Vertex[] vertices = e.getVertices();
+				Vertex u = vertices[0];
+				Vertex v = vertices[1];
+				
+				//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
+				int distance;
+				
+				//Distanz von Knoten u zum Startknoten herausfinden
+				int distanceOfU = distances.get(u.getID());
+				
+				//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
+				if(distanceOfU == MAX_VALUE) {
+					distance = MAX_VALUE; //repräsentiert unendlich
+				} else {
+					//Falls nicht unendlich --> Distanz(u) + Gewicht (u,v)
+					distance = distanceOfU + e.getValue();
+				}
+				
+				//Distanz von Knoten v zum Startknoten herausfinden
+				int distanceOfV = distances.get(v.getID());
+				
+				//Falls Distanz(u) + Gewicht(u,v) < Distanz(v)
+				if(distance < distanceOfV) {
+					//Distanz(v) = Distanz(u) + Gewicht(u,v)
+					distances.put(v.getID(), distance);
+					//Vorgänger(v) = u
+					predecessors.put(v.getID(), u.getID());
+				}
+			}
 		}
+		
+		System.out.println("----------------------------------------------------------------\n");
+		System.out.println("Ergebnis:\n");
+		showDistancesMap(distances);
+		showPredecessorsMap(predecessors);
 	}
 	
 	/**
@@ -696,6 +780,18 @@ public class AIGraph {
 				return edge;
 			}
 		}
+		
+		for(Edge edge : edgesListU) {
+			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
+			
+			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prüfen
+				return edge;
+			}
+			
+			if((verticesFromEdge[0] == v2) && (verticesFromEdge[1] == v1)) { //Nur eine Richtung prüfen
+				return edge;
+			}
+		}
 		//throw new IllegalArgumentException("Es existiert keine Kante zwischen v1 und v2!");
 		return null;
 	}
@@ -720,7 +816,6 @@ public class AIGraph {
 	 * @return int[][] - Distanzmatrix des aufrufenden Graphen
 	 */
 	private Object[][] createDistanceMatrix() {
-		//TODO: anpassen INFINITY
 		//Singelpoint of Control --> ermitteln der Matrix größe
 		//Da Quadratisch --> Zeilenanzahl = Spaltenanzahl
 		int matrixLength = verticesList.size();
@@ -761,35 +856,54 @@ public class AIGraph {
 		return result;
 	}
 	
-	/**
-	 * Stellt die DistanzMatrix in der Konsole dar
-	 */
-	private void showDistanceMatrix() {
-		String showDistanceMatrix = "---DistanceMatrix---\n";		
-		Object[][] result = this.createDistanceMatrix(); 
- 		int matrixLength = verticesList.size();
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showDistanceMatrix += result[i][j];
-				showDistanceMatrix += " ";
-			}
-			showDistanceMatrix += "\n";
-		}
-		System.out.println(showDistanceMatrix);
-	}
+//	/**
+//	 * Stellt die DistanzMatrix in der Konsole da
+//	 */
+//	private void showDistanceMatrix() {
+//		String showDistanceMatrix = "---DistanceMatrix---\n";		
+//		Object[][] result = this.createDistanceMatrix();
+// 		int matrixLength = verticesList.size();
+//		for(int i = 0; i < matrixLength; i++) {
+//			for(int j = 0; j < matrixLength; j++) {
+//				showDistanceMatrix += result[i][j];
+//				showDistanceMatrix += " ";
+//			}
+//			showDistanceMatrix += "\n";
+//		}
+//		System.out.println(showDistanceMatrix);
+//	}
 	
 	/**
-	 * Stellt die DistanzMatrix in der Konsole dar
+	 * Stellt die DistanzMatrix in der Konsole da
 	 */
 	private void showDistanceMatrix(Object[][] distanceMatrix) {
+		int matrixLength = distanceMatrix.length;
 		String showDistanceMatrix = "---DistanceMatrix---\n";		
- 		int matrixLength = distanceMatrix.length;
+ 		showDistanceMatrix += "ID   ";
+ 		//showDistanceMatrix += "----------------\n";
+ 		for(Vertex v : verticesList) {
+ 			showDistanceMatrix += v.getID();
+ 			showDistanceMatrix += " ";
+ 		}
+		
+ 		showDistanceMatrix += "\n";
  		
 		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showDistanceMatrix += distanceMatrix[i][j];
+			showDistanceMatrix += verticesList.get(i).getID();
+			//Falls einstellige Zahl --> extra Leerzeichen anfügen
+			if(verticesList.get(i).getID() < 10) {
 				showDistanceMatrix += " ";
 			}
+			showDistanceMatrix += " | ";
+			for(int j = 0; j < matrixLength; j++) {
+				showDistanceMatrix += distanceMatrix[i][j];
+				//int zahl = objToInt(distanceMatrix[i][j]);
+				if(verticesList.get(i).getID() > 10) {
+					showDistanceMatrix += " ";
+				}
+				showDistanceMatrix += " ";
+			}
+			showDistanceMatrix += "| ";
 			showDistanceMatrix += "\n";
 		}
 		System.out.println(showDistanceMatrix);
@@ -819,38 +933,98 @@ public class AIGraph {
 		return result;
 	}
 	
+//	/**
+//	 * Stellt die Transitmatrix in der Konsole da
+//	 */
+//	private void showTransitMatrix() {
+//		int[][] result = this.createTransitMatrix();
+//		int matrixLength = verticesList.size();
+//		String showTransitMatrix = "---TransitMatrix---\n";
+//		
+//		for(int i = 0; i < matrixLength; i++) {
+//			for(int j = 0; j < matrixLength; j++) {
+//				showTransitMatrix += result[i][j];
+//				showTransitMatrix += " ";
+//			}
+//			showTransitMatrix += "\n";
+//		}
+//		System.out.println(showTransitMatrix);
+//	}
+	
 	/**
-	 * Stellt die Transitmatrix in der Konsole dar
+	 * Stellt die Transitmatrix in der Konsole da
 	 */
-	private void showTransitMatrix() {
-		int[][] result = this.createTransitMatrix();
-		int matrixLength = verticesList.size();
+	private void showTransitMatrix(int[][] transitMatrix) {
+		int matrixLength = transitMatrix.length;
 		String showTransitMatrix = "---TransitMatrix---\n";
-		
+ 		showTransitMatrix += "ID   ";
+ 		
+ 		for(Vertex v : verticesList) {
+ 			showTransitMatrix += v.getID();
+ 			showTransitMatrix += " ";
+ 		}
+ 		
+ 		showTransitMatrix += "\n";
+ 		
 		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showTransitMatrix += result[i][j];
+			showTransitMatrix += verticesList.get(i).getID();
+			if(verticesList.get(i).getID() < 10) {
 				showTransitMatrix += " ";
 			}
+			showTransitMatrix += " | ";
+			for(int j = 0; j < matrixLength; j++) {
+				showTransitMatrix += transitMatrix[i][j];
+				showTransitMatrix += " ";
+				if(verticesList.get(i).getID() > 10) {
+					showTransitMatrix += " ";
+				}
+			}
+			showTransitMatrix += "| ";
 			showTransitMatrix += "\n";
 		}
 		System.out.println(showTransitMatrix);
 	}
 	
 	/**
-	 * Stellt die Transitmatrix in der Konsole dar
+	 * Stellt die DistanzMap in der Konsole da
 	 */
-	private void showTransitMatrix(int[][] transitMatrix) {
-		int matrixLength = transitMatrix.length;
-		String showTransitMatrix = "---TransitMatrix---\n";
-		
-		for(int i = 0; i < matrixLength; i++) {
-			for(int j = 0; j < matrixLength; j++) {
-				showTransitMatrix += transitMatrix[i][j];
-				showTransitMatrix += " ";
-			}
-			showTransitMatrix += "\n";
+	private void showDistancesMap(Map<Integer, Integer> distances) {
+		//TODO: Letzte Zeilenumbruch entfernen
+		String output = "---Distancesmap---\n"; 
+		output += "{ ";
+		for(Map.Entry<Integer, Integer> pair : distances.entrySet()) {
+			String nameOfVertex = this.getStrV(pair.getKey(), "name");
+			int distanceOfVertex = pair.getValue();
+			output += nameOfVertex;
+			output += " => ";
+			output += distanceOfVertex;
+			output += "\n  ";
 		}
-		System.out.println(showTransitMatrix);
+		output += " }";
+		System.out.println(output);
+	}
+	
+	/**
+	 * Stellt die VorgängerMap in der Konsole da
+	 */
+	private void showPredecessorsMap(Map<Integer, Integer> predecessors) {
+		//TODO: Letzte Zeilenumbruch entfernen
+		String output = "---Predecessorsmap---\n";
+		output += "{ ";
+		for(Map.Entry<Integer, Integer> pair : predecessors.entrySet()) {
+			String nameOfVertex = this.getStrV(pair.getKey(), "name");
+			String nameOfPredecessor;
+			if(pair.getValue() == null) {
+				nameOfPredecessor = "null";
+			} else {
+				nameOfPredecessor = this.getStrV(pair.getValue(), "name");
+			}
+			output += nameOfVertex;
+			output += " => ";
+			output += nameOfPredecessor;
+			output += "\n  ";
+		}
+		output += " }";
+		System.out.println(output);
 	}
 }

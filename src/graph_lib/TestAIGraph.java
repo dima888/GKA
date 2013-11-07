@@ -21,7 +21,7 @@ public class TestAIGraph {
 	}
 	
 	@Test
-	public void testFloyedWarshall() {
+	public void testFloyedWarshallGerichteterGraph() {
 		//Beispiel aus GRBUCH Seite 54 2.7
 		int v1ID = graph.addVertex("1");
 		int v2ID = graph.addVertex("2");
@@ -49,28 +49,21 @@ public class TestAIGraph {
 		int e7ID = graph.addEdgeD(v4ID, v1ID);
 		graph.setValE(e7ID, "value", 2);
 		
-		//UNGERICHTET
-//		int e1ID = graph.addEdgeU(v1ID, v2ID);
-//		graph.setValE(e1ID, "value", 1);
-//		
-//		int e2ID = graph.addEdgeU(v1ID, v4ID);
-//		graph.setValE(e2ID, "value", 3);
-//		
-//		int e3ID = graph.addEdgeU(v2ID, v3ID);
-//		graph.setValE(e3ID, "value", 2);
-//		
-//		int e4ID = graph.addEdgeU(v2ID, v4ID);
-//		graph.setValE(e4ID, "value", 1);
-//		
-////		int e5ID = graph.addEdgeU(v3ID, v2ID);
-////		graph.setValE(e5ID, "value", 2);
-//		
-//		int e6ID = graph.addEdgeU(v4ID, v3ID);
-//		graph.setValE(e6ID, "value", 2);
-//		
-////		int e7ID = graph.addEdgeU(v4ID, v1ID);
-////		graph.setValE(e7ID, "value", 2);
+		//graph.floyedWarshall();
+	}
+	
+	@Test
+	public void testFloyedWarshallUngerichteterGraph() {
+		int v1ID = graph.addVertex("1");
+		int v2ID = graph.addVertex("2");
+		int v3ID = graph.addVertex("3");
 		
+		int e1ID = graph.addEdgeU(v1ID, v2ID);
+		graph.setValE(e1ID, "value", 2);
+		
+		int e2ID = graph.addEdgeU(v1ID, v3ID);
+		graph.setValE(e2ID, "value", 4);
+
 		//graph.floyedWarshall();
 	}
 	
@@ -111,6 +104,29 @@ public class TestAIGraph {
 		
 		graph.deleteVertex(v1ID);
 		//graph.showDistanceMatrix();
+	}
+	
+	@Test
+	public void testBellmanFordGerichteterGraph() {
+		int v1ID = graph.addVertex("1");
+		int v2ID = graph.addVertex("2");
+		int v3ID = graph.addVertex("3");
+		int v4ID = graph.addVertex("4");
+		
+		int e1ID = graph.addEdgeD(v1ID, v2ID);
+		graph.setValE(e1ID, "value", 3);
+		
+		int e2ID = graph.addEdgeD(v2ID, v3ID);
+		graph.setValE(e2ID, "value", 7);
+		
+		int e3ID = graph.addEdgeD(v1ID, v4ID);
+		graph.setValE(e3ID, "value", 2);
+		
+		int e4ID = graph.addEdgeD(v4ID, v3ID);
+		graph.setValE(e4ID, "value", 2);
+		
+		graph.bellmanFord(v1ID, v3ID);
+		graph.floyedWarshall();
 	}
 	
 	@Test
