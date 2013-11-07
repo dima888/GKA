@@ -50,7 +50,7 @@ class UndirectedEdge extends Edge{
 	@Override
 	public String toString() {
 		String result = "";
-		result = "Vertex v1: (" + this.getVertices()[0] + "), Vertex v2: (" +this.getVertices()[1] + ")";
+		result = "(Vertex v1: " + this.getVertices()[0] + ", Vertex v2: " + this.getVertices()[1] + ")";
 		return result;
 	}
 }

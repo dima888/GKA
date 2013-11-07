@@ -49,7 +49,8 @@ public class TestAIGraph {
 		int e7ID = graph.addEdgeD(v4ID, v1ID);
 		graph.setValE(e7ID, "value", 2);
 		
-		//graph.floyedWarshall();
+		System.out.println("\tGraph\n" + graph);
+		graph.floyedWarshall();
 	}
 	
 	@Test
@@ -65,45 +66,6 @@ public class TestAIGraph {
 		graph.setValE(e2ID, "value", 4);
 
 		//graph.floyedWarshall();
-	}
-	
-	@Test
-	public void testShowTransitMatrix() {
-		int v1ID = graph.addVertex("1");
-		int v2ID = graph.addVertex("2");
-		int v3ID = graph.addVertex("3");
-		int v4ID = graph.addVertex("4");
-		
-		//graph.showTransitMatrix();
-	}
-	
-	@Test
-	public void testShowDistanceMatrix() {
-		int v1ID = graph.addVertex("1");
-		int v2ID = graph.addVertex("2");
-		int v3ID = graph.addVertex("3");
-		int v4ID = graph.addVertex("4");
-		
-		int e1ID = graph.addEdgeD(v1ID, v2ID);
-		graph.setValE(e1ID, "value", 7);
-		
-		int e2ID = graph.addEdgeD(v1ID, v3ID);
-		graph.setValE(e2ID, "value", 3);
-		
-		int e3ID = graph.addEdgeD(v4ID, v1ID);
-		graph.setValE(e3ID, "value", 5);
-		
-		//Siehe Konsole für die Ausgabe
-		//graph.showDistanceMatrix();
-		
-		graph.deleteEdge(v1ID, v2ID);
-		//System.out.println("Kante zwischen 1 und 2 gelöscht");
-		
-		//graph.showDistanceMatrix();
-		//System.out.println("Knoten 1 gelöscht");
-		
-		graph.deleteVertex(v1ID);
-		//graph.showDistanceMatrix();
 	}
 	
 	@Test
@@ -125,8 +87,8 @@ public class TestAIGraph {
 		int e4ID = graph.addEdgeD(v4ID, v3ID);
 		graph.setValE(e4ID, "value", 2);
 		
-		graph.bellmanFord(v1ID, v3ID);
-		graph.floyedWarshall();
+		//System.out.println("\tGraph\n" + graph);
+		//graph.bellmanFord(v1ID, v3ID);
 	}
 	
 	@Test

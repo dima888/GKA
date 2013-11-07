@@ -989,7 +989,7 @@ public class AIGraph {
 	 * Stellt die DistanzMap in der Konsole da
 	 */
 	private void showDistancesMap(Map<Integer, Integer> distances) {
-		//TODO: Letzte Zeilenumbruch entfernen
+		int count = distances.size() - 1;
 		String output = "---Distancesmap---\n"; 
 		output += "{ ";
 		for(Map.Entry<Integer, Integer> pair : distances.entrySet()) {
@@ -997,8 +997,15 @@ public class AIGraph {
 			int distanceOfVertex = pair.getValue();
 			output += nameOfVertex;
 			output += " => ";
-			output += distanceOfVertex;
-			output += "\n  ";
+			if(distanceOfVertex == MAX_VALUE) {
+				output += INFINITE;
+			} else {
+				output += distanceOfVertex;
+			}
+			if(count != 0) {
+				output += "\n  ";
+			}
+			count--;
 		}
 		output += " }";
 		System.out.println(output);
@@ -1008,7 +1015,7 @@ public class AIGraph {
 	 * Stellt die VorgängerMap in der Konsole da
 	 */
 	private void showPredecessorsMap(Map<Integer, Integer> predecessors) {
-		//TODO: Letzte Zeilenumbruch entfernen
+		int count = predecessors.size() - 1;
 		String output = "---Predecessorsmap---\n";
 		output += "{ ";
 		for(Map.Entry<Integer, Integer> pair : predecessors.entrySet()) {
@@ -1022,7 +1029,10 @@ public class AIGraph {
 			output += nameOfVertex;
 			output += " => ";
 			output += nameOfPredecessor;
-			output += "\n  ";
+			if(count != 0) {
+				output += "\n  ";
+			}
+			count--;
 		}
 		output += " }";
 		System.out.println(output);

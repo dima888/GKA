@@ -58,7 +58,7 @@ class DirectedEdge extends Edge {
 	@Override
 	public String toString() {				
 		String result = "";
-		result = "Source: ("  + this.getVertices()[0] + ") Target: (" + this.getVertices()[1] + ")";		
+		result = "(Source: "  + this.getVertices()[0] + ", Target: " + this.getVertices()[1] + ")";		
 		return result;
 	}
 	
