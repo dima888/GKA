@@ -28,7 +28,12 @@ public class AIGraph {
 	 * @return List<Integer> - List der KnotenIDs
 	 * Beispiel: v1 nach v2 --> kürzeste weg über: v1 --> v4 --> v3 --> v2
 	 */
-	public int[][] floyedWarshall() {
+	public int floyedWarshall(String v1Name, String v2Name) {
+		//Index der übergebenen vertices Namen heraus finden
+		//Falls nicht vorhanden --> Exception
+		Integer v1Index = this.getIndexOfVertexName(v1Name);
+		Integer v2Index = this.getIndexOfVertexName(v2Name);
+		
 		//Distanzmatrix erstellen für den aktuellen "Zustand" des graphen
 		Object[][] distanceMatrix = this.createDistanceMatrix();
 
@@ -43,9 +48,6 @@ public class AIGraph {
 		
 		//Größe der Matrix = | Vertices | 
 		int matrixLength = distanceMatrix.length;
-		
-		//Ergebnis Distanzmatrix --> enthält die kürzesten Distanzen
-		int[][] result = new int[matrixLength][matrixLength];
 		
 		//Algorithmus aus GRBUCH
 		for(int j = 0; j < matrixLength; j++) {
@@ -106,7 +108,10 @@ public class AIGraph {
 		System.out.println("Ergebnis:\n");
 		this.showDistanceMatrix(distanceMatrix);
 		this.showTransitMatrix(transitMatrix);
-		return result;
+		
+		int resultDistance = objToInt(distanceMatrix[v1Index][v2Index]);
+		System.out.println("Der berechnete optimale Weg durch Floys-Warshall von: " + v1Name + " nach: " + v2Name + " hat die Distanz: " + resultDistance);
+		return resultDistance;
 	}
 	
 	/**
@@ -115,8 +120,12 @@ public class AIGraph {
 	 * @param zID - ID des Zielknotens
 	 * QUELLE: http://de.wikipedia.org/wiki/Bellman-Ford-Algorithmus
 	 */
-	public void bellmanFord(int sID, int zID) {
-		//TODO: STOPP mit AUSGABE falls ein negativer Kreis gefunden wird !
+	public int bellmanFord(String v1Name, String v2Name) {
+		//ID der übergebenen vertices Namen heraus finden
+		//Falls nicht vorhanden --> Exception
+		int v1ID = this.getIDOfVertexName(v1Name);
+		int v2ID = this.getIDOfVertexName(v2Name);
+		
 		//für jeden Knoten aus verticesList --> Distanz(v) = unendlich
 		//Key = vID; Value = distanz (= Entfernung vom Startknoten)
 		Map<Integer, Integer> distances = new HashMap<>();
@@ -135,14 +144,14 @@ public class AIGraph {
 			predecessors.put(vID, null);
 		}
 		
+		//Distanz von Startknoten auf 0 setzen --> vorheriger Wert wird überschrieben
+		distances.put(v1ID, 0);
+		
 		//OUTPUT --> Console
 		System.out.println("\n\tBELLMANFORD\n");
 		System.out.println("Startwerte:\n");
 		showDistancesMap(distances);
 		showPredecessorsMap(predecessors);
-		
-		//Distanz von Startknoten auf 0 setzen --> vorheriger Wert wird überschrieben
-		distances.put(sID, 0);
 		
 		//Wiederhole n - 1 mal --> n gleich Anzahl der vertices
 		for(int i = 0; i < countOfVertices - 1; i++) {
@@ -211,10 +220,73 @@ public class AIGraph {
 			}
 		}
 		
+		//Prüfung auf negativen Kreis
+		//für jede (u,v) aus E
+		for(Edge e : edgesListD) {
+			Vertex[] vertices = e.getVertices();
+			Vertex u = vertices[0];
+			Vertex v = vertices[1];
+			
+			//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
+			int distance;
+			
+			//Distanz von Knoten u zum Startknoten herausfinden
+			int distanceOfU = distances.get(u.getID());
+			
+			//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
+			if(distanceOfU == MAX_VALUE) {
+				distance = MAX_VALUE; //repräsentiert unendlich
+			} else {
+				//Falls nicht unendlich --> Distanz(u) + Gewicht (u,v)
+				distance = distanceOfU + e.getValue();
+			}
+			
+			//Distanz von Knoten v zum Startknoten herausfinden
+			int distanceOfV = distances.get(v.getID());
+			
+			//Falls Distanz(u) + Gewicht(u,v) < Distanz(v) --> STOPP
+			if(distance < distanceOfV) {
+				throw new IllegalArgumentException("Es gibt einen Kreis negativen Gewichtes!");
+			}
+		}
+		
+		//Für jedes (u,v) aus E
+		for(Edge e : edgesListU) {
+			Vertex[] vertices = e.getVertices();
+			Vertex u = vertices[0];
+			Vertex v = vertices[1];
+			
+			//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
+			int distance;
+			
+			//Distanz von Knoten u zum Startknoten herausfinden
+			int distanceOfU = distances.get(u.getID());
+			
+			//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
+			if(distanceOfU == MAX_VALUE) {
+				distance = MAX_VALUE; //repräsentiert unendlich
+			} else {
+				//Falls nicht unendlich --> Distanz(u) + Gewicht (u,v)
+				distance = distanceOfU + e.getValue();
+			}
+			
+			//Distanz von Knoten v zum Startknoten herausfinden
+			int distanceOfV = distances.get(v.getID());
+			
+			//Falls Distanz(u) + Gewicht(u,v) < Distanz(v) --> STOPP
+			if(distance < distanceOfV) {
+				throw new IllegalArgumentException("Es gibt einen Kreis negativen Gewichtes!");
+			}
+		}
+		
 		System.out.println("----------------------------------------------------------------\n");
 		System.out.println("Ergebnis:\n");
 		showDistancesMap(distances);
 		showPredecessorsMap(predecessors);
+		
+		int resultDistance = distances.get(v2ID);
+		System.out.println("Der berechnete optimale Weg durch Bellman Ford von: " + v1Name + " nach: " + v2Name + " hat die Distanz: " + resultDistance);
+		return resultDistance;
 	}
 	
 	/**
@@ -856,40 +928,23 @@ public class AIGraph {
 		return result;
 	}
 	
-//	/**
-//	 * Stellt die DistanzMatrix in der Konsole da
-//	 */
-//	private void showDistanceMatrix() {
-//		String showDistanceMatrix = "---DistanceMatrix---\n";		
-//		Object[][] result = this.createDistanceMatrix();
-// 		int matrixLength = verticesList.size();
-//		for(int i = 0; i < matrixLength; i++) {
-//			for(int j = 0; j < matrixLength; j++) {
-//				showDistanceMatrix += result[i][j];
-//				showDistanceMatrix += " ";
-//			}
-//			showDistanceMatrix += "\n";
-//		}
-//		System.out.println(showDistanceMatrix);
-//	}
-	
 	/**
 	 * Stellt die DistanzMatrix in der Konsole da
 	 */
 	private void showDistanceMatrix(Object[][] distanceMatrix) {
 		int matrixLength = distanceMatrix.length;
 		String showDistanceMatrix = "---DistanceMatrix---\n";		
- 		showDistanceMatrix += "ID   ";
+ 		showDistanceMatrix += "Name ";
  		//showDistanceMatrix += "----------------\n";
  		for(Vertex v : verticesList) {
- 			showDistanceMatrix += v.getID();
+ 			showDistanceMatrix += v.getName();
  			showDistanceMatrix += " ";
  		}
 		
  		showDistanceMatrix += "\n";
  		
 		for(int i = 0; i < matrixLength; i++) {
-			showDistanceMatrix += verticesList.get(i).getID();
+			showDistanceMatrix += verticesList.get(i).getName();
 			//Falls einstellige Zahl --> extra Leerzeichen anfügen
 			if(verticesList.get(i).getID() < 10) {
 				showDistanceMatrix += " ";
@@ -898,7 +953,7 @@ public class AIGraph {
 			for(int j = 0; j < matrixLength; j++) {
 				showDistanceMatrix += distanceMatrix[i][j];
 				//int zahl = objToInt(distanceMatrix[i][j]);
-				if(verticesList.get(i).getID() > 10) {
+				if(verticesList.get(i).getID() > 9) {
 					showDistanceMatrix += " ";
 				}
 				showDistanceMatrix += " ";
@@ -932,24 +987,7 @@ public class AIGraph {
 		}
 		return result;
 	}
-	
-//	/**
-//	 * Stellt die Transitmatrix in der Konsole da
-//	 */
-//	private void showTransitMatrix() {
-//		int[][] result = this.createTransitMatrix();
-//		int matrixLength = verticesList.size();
-//		String showTransitMatrix = "---TransitMatrix---\n";
-//		
-//		for(int i = 0; i < matrixLength; i++) {
-//			for(int j = 0; j < matrixLength; j++) {
-//				showTransitMatrix += result[i][j];
-//				showTransitMatrix += " ";
-//			}
-//			showTransitMatrix += "\n";
-//		}
-//		System.out.println(showTransitMatrix);
-//	}
+
 	
 	/**
 	 * Stellt die Transitmatrix in der Konsole da
@@ -957,17 +995,17 @@ public class AIGraph {
 	private void showTransitMatrix(int[][] transitMatrix) {
 		int matrixLength = transitMatrix.length;
 		String showTransitMatrix = "---TransitMatrix---\n";
- 		showTransitMatrix += "ID   ";
+ 		showTransitMatrix += "N   ";
  		
  		for(Vertex v : verticesList) {
- 			showTransitMatrix += v.getID();
- 			showTransitMatrix += " ";
+ 			showTransitMatrix += v.getName();
+ 			showTransitMatrix += "  ";
  		}
  		
  		showTransitMatrix += "\n";
  		
 		for(int i = 0; i < matrixLength; i++) {
-			showTransitMatrix += verticesList.get(i).getID();
+			showTransitMatrix += verticesList.get(i).getName();
 			if(verticesList.get(i).getID() < 10) {
 				showTransitMatrix += " ";
 			}
@@ -1008,7 +1046,7 @@ public class AIGraph {
 			count--;
 		}
 		output += " }";
-		System.out.println(output);
+		System.out.println(output + "\n");
 	}
 	
 	/**
@@ -1035,6 +1073,34 @@ public class AIGraph {
 			count--;
 		}
 		output += " }";
-		System.out.println(output);
+		System.out.println(output + "\n");
+	}
+	
+	/**
+	 * Sucht den Index zu dem übergebenen Vertexnamen
+	 * @param vName - Name des Vertices
+	 * @return int - Index in der Distanzmatrix
+	 */
+	private int getIndexOfVertexName(String vName) {
+		for(Vertex v : verticesList) {
+			if(v.getName() == vName) {
+				return verticesList.indexOf(v);
+			}
+		}
+		throw new IllegalArgumentException("In diesem Graphen existiert kein Vertex mit dem Namen: " + vName);
+	}
+	
+	/**
+	 * Sucht die ID zu dem übergebenen Vertexnamen
+	 * @param vName - Name des Vertices
+	 * @return int - ID des Vertices
+	 */
+	private int getIDOfVertexName(String vName) {
+		for(Vertex v : verticesList) {
+			if(v.getName() == vName) {
+				return v.getID();
+			}
+		}
+		throw new IllegalArgumentException("In diesem Graphen existiert kein Vertex mit dem Namen: " + vName);
 	}
 }
