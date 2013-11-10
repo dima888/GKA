@@ -55,7 +55,7 @@ public class TestAIGraph {
 	}
 	
 	@Test
-	public void testOptimaleWegeUngerichteterGraph() {
+	public void testOptimaleWegeNegativerKreis() {
 		int v1ID = graph.addVertex("1");
 		int v2ID = graph.addVertex("2");
 		int v3ID = graph.addVertex("3");
@@ -71,7 +71,7 @@ public class TestAIGraph {
 
 		System.out.println("\tGraph\n" + graph);
 		//graph.floyedWarshall("1", "3");
-		graph.bellmanFord("1", "3");
+		//graph.bellmanFord("1", "3");
 	}
 	
 	@Test

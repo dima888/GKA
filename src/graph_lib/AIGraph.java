@@ -259,6 +259,8 @@ public class AIGraph {
 			//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
 			int distance;
 			
+			//****************RICHTUNG u -- > v**************************************
+			
 			//Distanz von Knoten u zum Startknoten herausfinden
 			int distanceOfU = distances.get(u.getID());
 			
@@ -272,9 +274,30 @@ public class AIGraph {
 			
 			//Distanz von Knoten v zum Startknoten herausfinden
 			int distanceOfV = distances.get(v.getID());
-			
+
 			//Falls Distanz(u) + Gewicht(u,v) < Distanz(v) --> STOPP
 			if(distance < distanceOfV) {
+				throw new IllegalArgumentException("Es gibt einen Kreis negativen Gewichtes!");
+			}
+			
+			//**********ANDERE RICHTUNG v --> u DA UNGERICHTET****************************
+			
+			//Distanz von Knoten u zum Startknoten herausfinden
+			distanceOfV = distances.get(v.getID());
+			
+			//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
+			if(distanceOfV == MAX_VALUE) {
+				distance = MAX_VALUE; //repräsentiert unendlich
+			} else {
+				//Falls nicht unendlich --> Distanz(u) + Gewicht (u,v)
+				distance = distanceOfV + e.getValue();
+			}
+			
+			//Distanz von Knoten v zum Startknoten herausfinden
+			distanceOfU = distances.get(u.getID());
+
+			//Falls Distanz(u) + Gewicht(u,v) < Distanz(v) --> STOPP
+			if(distance < distanceOfU) {
 				throw new IllegalArgumentException("Es gibt einen Kreis negativen Gewichtes!");
 			}
 		}
