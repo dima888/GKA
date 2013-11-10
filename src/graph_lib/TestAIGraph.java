@@ -51,7 +51,7 @@ public class TestAIGraph {
 		
 //		System.out.println("\tGraph\n" + graph);
 //		graph.floyedWarshall("1", "3");
-//		graph.bellmanFord("1", "3");
+		graph.bellmanFord("1", "3");
 	}
 	
 	@Test

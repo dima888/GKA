@@ -957,14 +957,14 @@ public class AIGraph {
 	private void showDistanceMatrix(Object[][] distanceMatrix) {
 		int matrixLength = distanceMatrix.length;
 		String showDistanceMatrix = "---DistanceMatrix---\n";		
- 		showDistanceMatrix += "Name ";
+ 		showDistanceMatrix += "Name\n";
  		//showDistanceMatrix += "----------------\n";
- 		for(Vertex v : verticesList) {
- 			showDistanceMatrix += v.getName();
- 			showDistanceMatrix += " ";
- 		}
-		
- 		showDistanceMatrix += "\n";
+// 		for(Vertex v : verticesList) {
+// 			showDistanceMatrix += v.getName();
+// 			showDistanceMatrix += " ";
+// 		}
+//		
+// 		showDistanceMatrix += "\n";
  		
 		for(int i = 0; i < matrixLength; i++) {
 			showDistanceMatrix += verticesList.get(i).getName();
@@ -1018,14 +1018,14 @@ public class AIGraph {
 	private void showTransitMatrix(int[][] transitMatrix) {
 		int matrixLength = transitMatrix.length;
 		String showTransitMatrix = "---TransitMatrix---\n";
- 		showTransitMatrix += "N   ";
+ 		showTransitMatrix += "Name\n";
  		
- 		for(Vertex v : verticesList) {
- 			showTransitMatrix += v.getName();
- 			showTransitMatrix += "  ";
- 		}
- 		
- 		showTransitMatrix += "\n";
+// 		for(Vertex v : verticesList) {
+// 			showTransitMatrix += v.getName();
+// 			showTransitMatrix += "  ";
+// 		}
+// 		
+// 		showTransitMatrix += "\n";
  		
 		for(int i = 0; i < matrixLength; i++) {
 			showTransitMatrix += verticesList.get(i).getName();
