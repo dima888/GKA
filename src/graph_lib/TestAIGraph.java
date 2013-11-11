@@ -1,5 +1,7 @@
 package graph_lib;
 
+import graph_lib_extensions.OptimalRoute;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,9 +51,9 @@ public class TestAIGraph {
 		int e7ID = graph.addEdgeD(v4ID, v1ID);
 		graph.setValE(e7ID, "value", 2);
 		
-//		System.out.println("\tGraph\n" + graph);
-//		graph.floyedWarshall("1", "3");
-		graph.bellmanFord("1", "3");
+		System.out.println("\tGraph\n" + graph);
+		OptimalRoute.floyedWarshall(graph, "1", "3");
+		OptimalRoute.bellmanFord(graph, "1", "3");
 	}
 	
 	@Test
@@ -69,9 +71,9 @@ public class TestAIGraph {
 		int e3ID = graph.addEdgeU(v2ID, v3ID);
 		graph.setValE(e3ID, "value", -1);
 
-		System.out.println("\tGraph\n" + graph);
-		//graph.floyedWarshall("1", "3");
-		//graph.bellmanFord("1", "3");
+		//System.out.println("\tGraph\n" + graph);
+		//OptimalRoute.floyedWarshall(graph, "1", "3");
+		//OptimalRoute.bellmanFord(graph, "1", "3");
 	}
 	
 	@Test

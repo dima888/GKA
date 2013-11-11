@@ -22,7 +22,6 @@ abstract class Edge implements EdgeInterface{
 	private Vertex[] verticesFromEdge = new Vertex[2];
 	private List<String> attrList = new ArrayList<>();
 	
-	
 	private Map<String, Object> attrMap = new HashMap<>();
 	
 	// *********ATTRIBUTE********
