@@ -5,6 +5,7 @@ import graph_lib.AIGraph;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class OptimalRoute {
@@ -266,7 +267,6 @@ public class OptimalRoute {
 			}
 		}
 		
-		getRouteBellmanFord(graph, predecessors, v1ID, v2ID);
 		System.out.println("----------------------------------------------------------------\n");
 		System.out.println("Ergebnis:\n");
 		OptimalRoute.showDistancesMap(graph, distances);
@@ -274,6 +274,7 @@ public class OptimalRoute {
 		
 		int resultDistance = distances.get(v2ID);
 		System.out.println("Der berechnete optimale Weg durch Bellman Ford von: " + v1Name + " nach: " + v2Name + " hat die Distanz: " + resultDistance);
+		getRouteBellmanFord(graph, predecessors, v1ID, v2ID);
 		System.out.println("Zugriffanzahl auf der Distanzmap: " + counterD);
 		return resultDistance;
 	}
@@ -548,13 +549,11 @@ public class OptimalRoute {
 		//ergebnis Liste --> enthält die gelaufene Route
 		List<Object> route = new ArrayList<>();
 		
-		String v1Name = graph.getStrV(v1ID, "name");
-		String v2Name = graph.getStrV(v2ID, "name");
-		
 		Integer vorgaenger = v2ID;
+		int length = predecessorsMap.size();
 		
 		try {
-			for(int i = 0; i < predecessorsMap.size(); i++) {
+			for(int i = 0; i < length; i++) {
 				route.add(graph.getStrV(vorgaenger, "name"));
 				vorgaenger = predecessorsMap.get(vorgaenger);
 			}
@@ -562,7 +561,21 @@ public class OptimalRoute {
 			
 		}
 		
-		System.out.println("ROUTE: " + route);
+		System.out.println("Gegangene Route: " + OptimalRoute.reverse(route));
+	}
+	
+	/**
+	 * Dreht eine Liste um
+	 * @param List<Object> route - Liste die reversed werden soll
+	 * @return List<String> - Die umgedrehte Liste für die Konsolenausgabe
+	 */
+	private static List<String> reverse(List<Object> route) {
+		List<String> result = new ArrayList<>();
+		ListIterator<Object> it = route.listIterator(route.size());		
+		while(it.hasPrevious()) {
+			result.add((String) it.previous());
+		}
+		return result;
 	}
 }
 
