@@ -40,7 +40,7 @@ public class AIGraph {
 	 * @param v_id hier wird eine VertexID erwartet
 	 */
 	public void deleteVertex(int v_id) {	
-		//Beinhaltet schon die Precondition
+		//Beinhaltet schon die Precondition, 
 		Vertex vertex = getVertex(v_id);
 		
 		//löscht man einen Knoten, so auch seine anliegenden Kanten
@@ -189,25 +189,12 @@ public class AIGraph {
 		
 		//Prüfen ob es ein gerichteter Graph ist
 		if(e1 % 2 == 0) {
-			DirectedEdge edgeD = getEdgeD(e1);
-			
-			if(edgeD.hatQuelle()) {
-				Vertex[] verticesFromEdge = edgeD.getVertices();
-				vertex = verticesFromEdge[0]; //StartKnoten / Quelle
-			}
-		}
-		
-		//Prüfen ob es ein ungerichteter Graph ist
-		if(e1 % 2 != 0) {
-			Vertex[] verticesFromEdge = ((UndirectedEdge) getEdgeU(e1)).getVertices();
-			vertex = verticesFromEdge[0]; //Die Linke Ecke
+			vertex = getEdgeD(e1).getSource();
+		} else {
+			vertex = getEdgeU(e1).getSource();
 		}	
 
-		if(vertex == null) {
-			throw new IllegalArgumentException("Zur Übergebenen EdgeID existiert keine Quelle!");
-		} else {
-			return vertex.getID();
-		}
+		return vertex.getID();
 	}
 	
 	/**
@@ -227,16 +214,9 @@ public class AIGraph {
 		
 		//Prüfen ob es ein gerichteter Graph ist
 		if(e1 % 2 == 0) { 
-			if(((DirectedEdge) getEdgeD(e1)).hatSenke()) {
-				Vertex[] verticesFromEdge = ((DirectedEdge) getEdgeD(e1)).getVertices();
-				vertex = verticesFromEdge[1]; //EndKnoten / Ziel
-			}
-		}
-		
-		//Prüfen ob es ein ungerichteter Graph ist
-		if(e1 % 2 != 0) {
-			Vertex[] verticesFromEdge = ((UndirectedEdge) getEdgeU(e1)).getVertices();
-			vertex = verticesFromEdge[1]; //Die rechte Ecke
+			vertex = getEdgeD(e1).getTarget();
+		} else {
+			vertex = getEdgeU(e1).getTarget();
 		}
 		
 		return vertex.getID();
@@ -570,61 +550,5 @@ public class AIGraph {
 			}
 		}
 		return false;
-	}
-	
-	//***************************************OPTIMALE WEGE****************************************************************************
-	//MUSSTE PUBLIC GEMACHT WERDEN
-	//DIESE METHODEN WÄREN ÜBERFLÜSSIG, WENN WIR BEI DEN METHODEN GETSOURCE UND GETTARGET UNS NICHT AUF DIE MIT EINGANGSGRAD 0 BESCHRÄNKEN
-	//WÜRDEN! OHNE DIESE ÄNDERUNG MUSSTEN WIR DIESE BEIDEN METHODEN DAZU ERGÄNZEN!!!
-	
-	/**
-	 * Sucht nach einer Kante zwischen zwei übergebenen KnotenID´s
-	 * @param v1ID - ID des ersten Knotens
-	 * @param v2ID - ID des zweiten Knotens
-	 * @return Integer - Falls Kante gefunden, dann KantenID, sonst null
-	 */
-	public Integer getEdgeBetweenVertices(int v1ID, int v2ID) {
-		Vertex v1 = this.getVertex(v1ID);
-		Vertex v2 = this.getVertex(v2ID);
-		
-		for(Edge edge : edgesListD) {
-			Vertex[] verticesFromEdge = ((DirectedEdge) edge).getVertices();
-			
-			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prüfen
-				return edge.getID();
-			}
-		}
-		
-		for(Edge edge : edgesListU) {
-			Vertex[] verticesFromEdge = ((UndirectedEdge) edge).getVertices();
-			
-			if((verticesFromEdge[0] == v1) && (verticesFromEdge[1] == v2)) { //Nur eine Richtung prüfen
-				return edge.getID();
-			}
-			
-			if((verticesFromEdge[0] == v2) && (verticesFromEdge[1] == v1)) { //Nur eine Richtung prüfen
-				return edge.getID();
-			}
-		}
-		//throw new IllegalArgumentException("Es existiert keine Kante zwischen v1 und v2!");
-		return null;
-	}
-	
-	/**
-	 * Holt die KnotenIDs zu einer übergebenen KantenID
-	 * @param eID - ID der Kante
-	 * @return int[] - Ein int Array mit den beiden verticesID´s
-	 */
-	public int[] getVerticesIDs(int eID) {
-		Vertex[] verticesFromEdge = new Vertex[2];
-		if(eID % 2 == 0) {
-			verticesFromEdge = getEdgeD(eID).getVertices();
-		} else {
-			verticesFromEdge = getEdgeU(eID).getVertices();
-		}
-		int[] verticesIDs = new int[2];
-		verticesIDs[0] = verticesFromEdge[0].getID();
-		verticesIDs[1] = verticesFromEdge[1].getID();
-		return verticesIDs;
 	}
 }

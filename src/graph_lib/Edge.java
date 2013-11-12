@@ -19,7 +19,7 @@ import java.util.Map;
 abstract class Edge implements EdgeInterface{
 
 	
-	private Vertex[] verticesFromEdge = new Vertex[2];
+	protected Vertex[] verticesFromEdge = new Vertex[2];
 	private List<String> attrList = new ArrayList<>();
 	
 	private Map<String, Object> attrMap = new HashMap<>();
@@ -129,6 +129,16 @@ abstract class Edge implements EdgeInterface{
 			result = "" + this.value;
 		}
 		return result;
+	}
+	
+	@Override
+	public Vertex getSource() {
+		return verticesFromEdge[0];
+	}
+	
+	@Override
+	public Vertex getTarget() {
+		return verticesFromEdge[1];
 	}
 	
 }

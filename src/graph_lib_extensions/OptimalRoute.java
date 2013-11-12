@@ -2,6 +2,7 @@ package graph_lib_extensions;
 
 import graph_lib.AIGraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class OptimalRoute {
 	//Konstanten
 	private static final String INFINITE = "∞";
 	private static final int MAX_VALUE = Integer.MAX_VALUE;
+	private int c = 0;
 	
 	/**
 	 * Berechnet uns den optimalen Weg von Knoten1 nach Knoten2
@@ -24,6 +26,12 @@ public class OptimalRoute {
 		//Falls nicht vorhanden --> Exception
 		Integer v1Index = OptimalRoute.getIndexOfVertexName(graph, v1Name);
 		Integer v2Index = OptimalRoute.getIndexOfVertexName(graph, v2Name);
+		
+		//Counter für Matrixzugriffe
+		int counterMatrix = 0;
+		
+		//Counter für TransitmatrixZugriffe
+		int counterTransit = 0;
 		
 		//Distanzmatrix erstellen für den aktuellen "Zustand" des graphen
 		Object[][] distanceMatrix = OptimalRoute.createDistanceMatrix(graph);
@@ -44,20 +52,21 @@ public class OptimalRoute {
 		for(int j = 0; j < matrixLength; j++) {
 			
 			for(int i = 0; i < matrixLength; i++) {
+				/*Falls Distanzmatrix an Stelle i i < 0 ist wurde ein Kreis
+				  negativer länge gefunden */
+				//Bestimmen der Zahl an stelle ii
+				int elemII = objToInt(distanceMatrix[i][i]);
+				
+				if(elemII < 0) {
+					throw new IllegalArgumentException("Negativer Kreis wurde entdeckt!");
+				}
+				
 				//i muss ungleich j sein
 				if(i == j) {
 					continue;
 				}
+				
 				for(int k = 0; k < matrixLength; k++) {
-					/*Falls Distanzmatrix an Stelle i i < 0 ist wurde ein Kreis
-					  negativer länge gefunden */
-					//Bestimmen der Zahl an stelle ii
-					int elemII = objToInt(distanceMatrix[i][i]); 
-					
-					if(elemII < 0) {
-						throw new IllegalArgumentException("Negativer Kreis wurde entdeckt!");
-					}
-					
 					//k muss ungleich j sein
 					if(k == j) {
 						continue;
@@ -67,7 +76,10 @@ public class OptimalRoute {
 					int elemIK = objToInt(distanceMatrix[i][k]);
 					int elemIJ = objToInt(distanceMatrix[i][j]);
 					int elemJK = objToInt(distanceMatrix[j][k]);
-					 
+					
+					//counter erhöhen
+					counterMatrix += 3;
+					
 					//Speicher für das kleinste Element
 					int min;
 					 
@@ -90,6 +102,7 @@ public class OptimalRoute {
 				      an Stelle i k auf j*/
 					if(elemIK != min) {
 						transitMatrix[i][k] = j + 1; // hier j + 1, da j bei uns bei 0 anfängt und beim algorithmus bei 1
+						counterTransit++;
 					}
 				}
 			}
@@ -102,6 +115,9 @@ public class OptimalRoute {
 		
 		int resultDistance = objToInt(distanceMatrix[v1Index][v2Index]);
 		System.out.println("Der berechnete optimale Weg durch Floys-Warshall von: " + v1Name + " nach: " + v2Name + " hat die Distanz: " + resultDistance);
+		System.out.println("Zugriffanzahl auf der Distanzmatrix: " + counterMatrix);
+		System.out.println("Zugriffanzahl auf der Transitmatrix: " + counterTransit);
+		System.out.println("Zugriffanzahl Gesammt: " + (counterTransit + counterMatrix));
 		return resultDistance;
 	}
 	
@@ -116,6 +132,12 @@ public class OptimalRoute {
 		//Falls nicht vorhanden --> Exception
 		int v1ID = OptimalRoute.getIDOfVertexName(graph, v1Name);
 		int v2ID = OptimalRoute.getIDOfVertexName(graph, v2Name);
+		
+		//Counter für Zugriffe auf der Distanzmap
+		int counterD = 0;
+		
+		//Counter für Zugriffe auf der Predecessorsmap
+		int counterP = 0;
 		
 		//für jeden Knoten aus verticesList --> Distanz(v) = unendlich
 		//Key = vID; Value = distanz (= Entfernung vom Startknoten)
@@ -155,15 +177,18 @@ public class OptimalRoute {
 			
 			//Für jedes (u,v) aus E
 			for(Integer eID : edgesList) {
-				int[] vertices = graph.getVerticesIDs(eID);
-				int u = vertices[0];
-				int v = vertices[1];
+//				int[] vertices = graph.getVerticesIDs(eID);
+//				int u = vertices[0];
+//				int v = vertices[1];
+				int u = graph.getSource(eID);
+				int v = graph.getTarget(eID);
 				
 				//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
 				int distance;
 				
 				//Distanz von Knoten u zum Startknoten herausfinden
 				int distanceOfU = distances.get(u);
+				counterD++;
 				
 				//prüfen ob Distanz von u "unendlich" ist --> unendlich + unendlich = unendlich
 				if(distanceOfU == MAX_VALUE) {
@@ -175,6 +200,7 @@ public class OptimalRoute {
 				
 				//Distanz von Knoten v zum Startknoten herausfinden
 				int distanceOfV = distances.get(v);
+				counterD++;
 				
 				//Falls Distanz(u) + Gewicht(u,v) < Distanz(v)
 				if(distance < distanceOfV) {
@@ -189,9 +215,11 @@ public class OptimalRoute {
 		//Prüfung auf negativen Kreis
 		//für jede (u,v) aus E
 		for(Integer eID : edgesList) {
-			int[] vertices = graph.getVerticesIDs(eID);
-			int u = vertices[0];
-			int v = vertices[1];
+//			int[] vertices = graph.getVerticesIDs(eID);
+//			int u = vertices[0];
+//			int v = vertices[1];
+			int u = graph.getSource(eID);
+			int v = graph.getTarget(eID);
 			
 			//Soll Ergebnis von --> Distanz(u) + Gewicht(u,v) enthalten
 			int distance;
@@ -238,6 +266,7 @@ public class OptimalRoute {
 			}
 		}
 		
+		getRouteBellmanFord(graph, predecessors, v1ID, v2ID);
 		System.out.println("----------------------------------------------------------------\n");
 		System.out.println("Ergebnis:\n");
 		OptimalRoute.showDistancesMap(graph, distances);
@@ -245,6 +274,7 @@ public class OptimalRoute {
 		
 		int resultDistance = distances.get(v2ID);
 		System.out.println("Der berechnete optimale Weg durch Bellman Ford von: " + v1Name + " nach: " + v2Name + " hat die Distanz: " + resultDistance);
+		System.out.println("Zugriffanzahl auf der Distanzmap: " + counterD);
 		return resultDistance;
 	}
 	
@@ -299,7 +329,7 @@ public class OptimalRoute {
 				}
 				
 				//Kante herausfinden um anschließend die Distanz (= value) zu bestimmen
-				Integer eID = graph.getEdgeBetweenVertices(v1, v2);
+				Integer eID = OptimalRoute.getEdgeBetweenVertices(graph, v1, v2);
 
 				//Falls keine Direkte kannte zwischen den vertices besteht
 				if(eID == null) {
@@ -491,4 +521,74 @@ public class OptimalRoute {
 		}
 		throw new IllegalArgumentException("In diesem Graphen existiert kein Vertex mit dem Namen: " + vName);
 	}	
+	
+	/**
+	 * Sucht nach einer Kante zwischen zwei übergebenen KnotenID´s
+	 * @param v1ID - ID des ersten Knotens
+	 * @param v2ID - ID des zweiten Knotens
+	 * @return Integer - Falls Kante gefunden, dann KantenID, sonst null
+	 */
+	private static Integer getEdgeBetweenVertices(AIGraph graph, int v1ID, int v2ID) {
+		//Liste der KantenID´s beschaffen aus dem Graphen
+		List<Integer> edgesList = graph.getEdges();
+		
+		for(Integer eID : edgesList) {
+			if((graph.getSource(eID) == v1ID) && (graph.getTarget(eID) == v2ID)) {
+				return eID;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Zeigt den gelaufenen Weg
+	 * @param Map<Integer, Integer> predecessorsMap - erwartet eine VorgängerMap
+	 */
+	private static void getRouteBellmanFord(AIGraph graph, Map<Integer, Integer> predecessorsMap, int v1ID, int v2ID) {
+		//ergebnis Liste --> enthält die gelaufene Route
+		List<Object> route = new ArrayList<>();
+		
+		String v1Name = graph.getStrV(v1ID, "name");
+		String v2Name = graph.getStrV(v2ID, "name");
+		
+		Integer vorgaenger = v2ID;
+		
+		try {
+			for(int i = 0; i < predecessorsMap.size(); i++) {
+				route.add(graph.getStrV(vorgaenger, "name"));
+				vorgaenger = predecessorsMap.get(vorgaenger);
+			}
+		} catch (NullPointerException e) {
+			
+		}
+		
+		System.out.println("ROUTE: " + route);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

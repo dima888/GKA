@@ -62,28 +62,28 @@ class DirectedEdge extends Edge {
 		return result;
 	}
 	
-	/**
-	 * Prüft für eine gerichtete Kante, ob sie eine Quelle hat
-	 * @return boolean true, wenn ihr Eingangsgrad größer 0 ist, sonst false
-	 */
-	public boolean hatQuelle() {
-		Vertex source = this.getVertices()[0];
-		if(source.getIngoingEdge().size() > 0) {
-			return false;
-		}		
-		return true;
-	}
+//	/**
+//	 * Prüft für eine gerichtete Kante, ob sie eine Quelle hat
+//	 * @return boolean true, wenn ihr Eingangsgrad größer 0 ist, sonst false
+//	 */
+//	public boolean hatQuelle() {
+//		Vertex source = this.getVertices()[0];
+//		if(source.getIngoingEdge().size() > 0) {
+//			return false;
+//		}		
+//		return true;
+//	}
 	
-	/**
-	 * Prüft für eine gerichtete Kante, ob sie eine Senke hat
-	 * @return boolean true, wenn die aufrufende Kante eine Senke hat, sonst false
-	 */
-	public boolean hatSenke() {
-		Vertex target = this.getVertices()[1];
-		if(target.getOutgoingEdge().size() > 1) {
-			return false;
-		}
-		return true;
-	}
+//	/**
+//	 * Prüft für eine gerichtete Kante, ob sie eine Senke hat
+//	 * @return boolean true, wenn die aufrufende Kante eine Senke hat, sonst false
+//	 */
+//	public boolean hatSenke() {
+//		Vertex target = this.getVertices()[1];
+//		if(target.getOutgoingEdge().size() > 1) {
+//			return false;
+//		}
+//		return true;
+//	}
 
 }

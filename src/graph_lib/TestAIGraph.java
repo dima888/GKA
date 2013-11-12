@@ -209,17 +209,6 @@ public class TestAIGraph {
 		assertEquals(vertex1, result);
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
-	public void testGetSourcePos2() {
-		int vertex1 = graph.addVertex("1");
-		int vertex2 = graph.addVertex("2");
-	
-		int edge1 = graph.addEdgeD(vertex1, vertex2);
-		int edge2 = graph.addEdgeD(vertex2, vertex1);
-		
-		assertEquals(-1, graph.getSource(edge1));
-	}
-	
 	@Test
 	public void testGetTargetPos() {
 		int vertex1 = graph.addVertex("1");

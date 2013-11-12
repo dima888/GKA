@@ -10,6 +10,9 @@ interface EdgeInterface {
 	int getID();
 	List<String> getAttrList();
 	Vertex[] getVertices();
+	Vertex getSource();
+	Vertex getTarget();
+	
 	
 	//SETTER
 	void setName(String newName);
@@ -19,5 +22,4 @@ interface EdgeInterface {
 	int getAttr(String attr);
 	boolean setValE(String attr, int val);
 	boolean setStrE(String attr, String val);
-	
 }
