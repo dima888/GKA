@@ -20,7 +20,7 @@ abstract class Edge implements EdgeInterface{
 
 	
 	protected Vertex[] verticesFromEdge = new Vertex[2];
-	private List<String> attrList = new ArrayList<>();
+	protected List<String> attrList = new ArrayList<>();
 	
 	private Map<String, Object> attrMap = new HashMap<>();
 	
@@ -108,6 +108,7 @@ abstract class Edge implements EdgeInterface{
 //			this.ID = val;
 //			return true;
 //		}
+		System.out.println("Ober Klasse wird beretten");
 		if(attr == attrWhatever) {
 			this.whatever = val;
 			return true;

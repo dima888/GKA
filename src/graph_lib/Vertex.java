@@ -8,13 +8,8 @@ import java.util.List;
 //Package-Private
 class Vertex {
 		
-//	private List<Edge> incidents = new ArrayList<>(); Old
 	private List<Integer> incidents = new ArrayList<>(); //+++++++++++++New Version++++++++++++++
-	
-//	private List<Edge> outgoingEdge = new ArrayList<>(); //Ausgehende Kanten
 	private List<Integer> outgoingEdge = new ArrayList<>(); //Ausgehende Kanten //+++++++++++++New Version++++++++++++++
-	
-//	private List<Edge> ingoingEdge = new ArrayList<>(); //Eingehende Kanten
 	private List<Integer> ingoingEdge = new ArrayList<>(); //Eingehende Kanten //+++++++++++++New Version++++++++++++++
 	
 	private List<String> attrList = new ArrayList<>();
@@ -25,18 +20,21 @@ class Vertex {
 	private final int ID;  
 	private int whatever = 25;
 	private int value;
+	private int marked = 0; //Bei 1 heiﬂt, es wurde markiert, was soviel bedeutet, die Kante wurde schon mal durchlaufen
+	
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	
 	String attrName = "name";
 	String attrID = "ID";
 	String attrWhatever = "whatever";
 	String attrValue = "value";
+	String attrMarked = "marked";
 	
 	public Vertex(String vertexName) {		
 		this.name = vertexName;
 		ID = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue, attrMarked)); 	//ATTRIBUTENLISTE	
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -76,6 +74,10 @@ class Vertex {
 		return this.whatever;
 	}
 	
+	public int getMarked() {
+		return this.marked;
+	}
+	
 	//********************************************** SETTER METHODEN **********************************************
 	
 	public void setName(String newName) {
@@ -105,6 +107,10 @@ class Vertex {
 			this.value = val;
 			return true;
 		}
+		if (attr == attrMarked) {
+			this.marked = val;
+			return true;
+		}
 		return false;
 	}
 	
@@ -112,11 +118,14 @@ class Vertex {
 		if (attr == this.attrID) {
 			return this.ID;
 		}
-		if(attr == attrValue) {
+		if (attr == attrValue) {
 			return this.value;
 		}
-		if(attr == attrWhatever) {
+		if (attr == attrWhatever) {
 			return this.whatever;
+		}
+		if (attr == attrMarked) {
+			return this.marked;
 		}
 		return Integer.MAX_VALUE;
 	}	

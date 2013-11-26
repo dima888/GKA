@@ -3,12 +3,22 @@ package graph_lib;
 //Package-Privat
 class DirectedEdge extends Edge {
 	
+	//*********ATTRIBUTE********
 	private final int ID;
 	private static int count = 0; //Hilfszaehler
+	private int capacity = 0; //Kapazität
+	private int actualRiver = 0; //Tatsächlicher Fluss
+	
+	//*********ATTRIBUTE-BEZEICHNUNGEN********
+	private String attrcapacity = "capacity"; 
+	private String attrActualRiver = "actualRiver"; 
 	
 	//*************************** KONSTRUKTOTREN ****************************
 	public DirectedEdge(Vertex v1, Vertex v2, String name) {
-		super(v1, v2, name);		
+		super(v1, v2, name);
+		super.attrList.add(attrcapacity);
+		super.attrList.add(attrActualRiver);
+		
 		ID = count; //Auto increment
 		
 		v1.getOutgoingEdge().add(ID);
@@ -21,7 +31,9 @@ class DirectedEdge extends Edge {
 	}
 	
 	public DirectedEdge(Vertex v1, Vertex v2) {
-		super(v1, v2);		
+		super(v1, v2);
+		super.attrList.add(attrcapacity);
+		super.attrList.add(attrActualRiver);
 		
 		ID = count; //Auto increment
 		
@@ -52,7 +64,29 @@ class DirectedEdge extends Edge {
 		if(attr == attrValue) {
 			return super.getValue();
 		}
+		if (attr == attrcapacity) {
+			return this.capacity;
+		}
+		if (attr == attrActualRiver) {
+			return this.actualRiver;
+		}
 		return Integer.MAX_VALUE;
+	}
+	
+	@Override
+	public boolean setValE(String attr, int val) {
+		if(super.setValE(attr, val)) {
+			return true;
+		}
+		if(attr == attrcapacity) {
+			this.capacity = val;
+			return true; 
+		}
+		if(attr == attrActualRiver) {
+			this.actualRiver = val;
+			return true; 
+		}
+		return false;
 	}
 	
 	@Override

@@ -284,7 +284,7 @@ public class TestAIGraph {
 	@Test
 	public void testGetAttrVANDE() {
 		int vertexID = graph.addVertex("Mozart");
-		List<String> l = new ArrayList<>(Arrays.asList("name", "ID", "whatever", "value"));
+		List<String> l = new ArrayList<>(Arrays.asList("name", "ID", "whatever", "value", "marked"));
 		assertEquals(l, graph.getAttrV(vertexID));
 	}
 	
@@ -301,7 +301,12 @@ public class TestAIGraph {
 		assertTrue(graph.setValE(edgeID, "value", 1500)); //Hier Setzten wir erfolgreich
 		assertEquals(graph.getValE(edgeID, "value"), 1500); //Hier pruefen wir erfolgreich
 		assertFalse(graph.setValE(edgeID, "Gnom", 1500)); //Hier pruefen wir negativ erfolgreich
+		
+		assertTrue(graph.setValE(edgeID, "capacity", 1)); //Hier Setzten wir erfolgreich
+		assertEquals(graph.getValE(edgeID, "capacity"), 1); //Hier pruefen wir erfolgreich
+		assertFalse(graph.setValE(edgeID, "Gnom", 1500)); //Hier pruefen wir negativ erfolgreich
 	}
+	
 	
 	@Test 
 	public void testSetValV() { //Drei Tests im ein
