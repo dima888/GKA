@@ -2,4 +2,5 @@ eclipse.preferences.version=1
 encoding//src/graph_lib/AIGraph.java=UTF-8
 encoding//src/graph_lib/TestAIGraph.java=UTF-8
 encoding//src/graph_lib/UndirectedEdge.java=UTF-8
+encoding//src/graph_lib_extensions/FordAndFulkerson.java=UTF-8
 encoding//src/graph_lib_extensions/OptimalRoute.java=UTF-8
