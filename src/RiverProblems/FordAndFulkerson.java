@@ -1,20 +1,3 @@
-package graph_lib_extensions;
-
-import graph_lib.AIGraph;
-
-/*
- * Der Algorithmus von Ford und Fulkerson IM GRBUCH SEITE 98
- */
-public class FordAndFulkerson {
-	
-	private static final String INFINITE = "∞";
-	
-	//Such nach maximaler Flusssträke, größte Anzahl an "Paketen"
-	public static void fordFulkerson(AIGraph graph) {
-		
-	}
-}
-
 /* 
  * Flußproblem beschränkung auf zusammenhängenden, schlichten gerichteten Graphen G(V, E)
  * Längs der Kanten wird ein "GUT" transportiert (Container, Strom, etc.)
@@ -46,3 +29,32 @@ public class FordAndFulkerson {
  * 
  * Es gibt nur genau eine QUELLE und SENKE pro Graph
  */
+package RiverProblems;
+
+import graph_lib.AIGraph;
+
+/*
+ * Der Algorithmus von Ford und Fulkerson IM GRBUCH SEITE 98
+ */
+public class FordAndFulkerson {
+		
+	private static final String INFINITE = "∞";
+	private int access = 0; //Zugriff
+	
+	/**
+	 * Such nach maximaler Flusssträke, größte Anzahl an "Paketen"
+	 * @param graph
+	 */
+	public static void fordFulkerson(AIGraph graph) {
+		
+	}
+	
+	/**
+	 * Gibt die Anzahl der Zugriffe, die auf den Graph erfolgt wurden
+	 * @return Integer
+	 */
+	public int getAccess() {
+		return this.access;
+	}
+}
+
