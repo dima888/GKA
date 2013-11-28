@@ -33,14 +33,16 @@ package RiverProblems;
 import java.util.ArrayList;
 import java.util.List;
 import graph_lib.AIGraph;
-
+import java.util.Collections;
 /*
  * Der Algorithmus von Ford und Fulkerson IM GRBUCH SEITE 98
  */
 public class FordAndFulkerson {
 		
 	//*****************INSTANZVARIABLEN*******************
-	private static final String INFINITE = "(undefine, ∞)";
+	private AIGraph graph;
+	private static final int UNDEFINE = -1;
+	private static final int INFINITE = Integer.MAX_VALUE;
 	private static final String INSPECTED = "*";
 	private int access = 0; //Zugriff
 	private int optimalRiver = 0; //Der optimale Fluss
@@ -64,14 +66,20 @@ public class FordAndFulkerson {
 	
 	/**
 	 * Such nach maximaler(optimaler) Flusssträke, größte Anzahl an "Paketen"
-	 * @param AIGraph graph - Der Graph braucht den richtigen Start und Ziel, 
-	 * 		  sonst koennen falsche Ergebnisse auftrette
+	 * Den Graphen muessen die Start und Ziel von Hand richtig gesetzt werden, 
+	 * sonst kann es zu falschen Ergebnissen fuehren
+	 * @param AIGraph graph - Der Graph 
 	 * @param Integer source - Start Knoten
 	 * @param Integer target - Ziel Knoten
 	 * @return AIGraph 
 	 */
 	public AIGraph startAlgorithmus(AIGraph graph, int source, int target) {
-		AIGraph resultGraph = graph;
+		List<Integer> edgeIDList = new ArrayList<>();
+		Collections.shuffle(edgeIDList); //wuerfelt den Array durch einander
+		
+		
+		//Den Graph setzten, damit die private Methode setMarked auf den selben Objekt arbeitet
+		this.graph = graph;
 		
 		//Erster Schritt, f(e ij); Ist bei uns schon fertig, da wir den tatsaechlichen Fluss schon mit 0 initialisieren
 		
@@ -79,41 +87,34 @@ public class FordAndFulkerson {
 		//Habe das weggelassen, wurde mir doch zu kompliziert, wenn die Austauschbarkeit noch erhalten bleiben soll
 		
 		//Start Knoten Markieren und inspizieren
-		graph.setStrV(source, "marked", INFINITE);
-		graph.setStrV(source, "inspected", INSPECTED);
+		setMarked(source, UNDEFINE, INFINITE);
 		
-		return resultGraph;
+		//Uns alle Kanten hollen, die an unseren Source anliegen
+		edgeIDList = graph.getIncident(source);
+		
+		//Anschliessend markieren wir die Kanten
+		
+		
+		//Jetzt entscheiden wir uns fuer eine Kante die legetim ist und inspektieren sie
+		
+		
+		
+		return graph;
 	}
 	
-//	/**
-//	 * Methode gibt uns true zurueck, wenn in den Graphen genau eine Quelle exestiert
-//	 * @param AIGraph graph - Ein Graph
-//	 * @return boolean
-//	 */
-//	public boolean hasSource(AIGraph graph) {
-//		List<Integer> buffer = new ArrayList<>();
-//		List<Integer> vertexIds = graph.getVertexes();
-//		graph.getV
-//		return true;
-//	}
-//	
-//	/**
-//	 * Prüft für eine gerichtete Kante, ob sie eine Senke hat
-//	 * @return boolean true, wenn die aufrufende Kante eine Senke hat, sonst false
-//	 */
-//	public boolean hatSenke() {
-//		List<Integer> buffer = new ArrayList<>();	
-//					
-//		Vertex target = this.getVertices()[1];
-//		if(target.getOutgoingEdge().size() > 1) {
-//			return false;
-//		}
-//		return true;
-//	}
-//	
-//	public static void main(String[] args) {
-//		
-//	}
+	/**
+	 * Diese Methode repräsentiert einen Tuppel der Markierung durch die unten definierten Attribute
+	 * @param Integer currentID - Aktuelle ID von Vertex, den die Werte gesetzt werden sollen
+	 * @param Integer predecessorID - Die ID des Vorgaenger Knoten
+	 * @param Integer delta - die minimalste Kapazitaet auf den Weg
+	 */
+	private void setMarked(int currentID, int predecessorID, int delta) {
+		this.graph.setValV(currentID, "predecessorID", predecessorID);
+		this.graph.setValV(currentID, "delta", delta);
+	}
 	
+	public static void main(String[] args) {
+		
+	}
 }
 

@@ -20,7 +20,14 @@ class Vertex {
 	private final int ID;  
 	private int whatever = 25;
 	private int value;
-	private String marked = ""; //marked isEmpty == true ? markiert : nicht markiert
+	
+	/*
+	 * Zweiter Tuppel fuer die Markierung (id, delta)
+	 * id -> id des Vorgaengers
+	 */
+	private int predecessorID; //merked != 0 ist markiert
+	private int delta; //
+	
 	private String inspected = "";
 	
 	
@@ -29,14 +36,16 @@ class Vertex {
 	String attrID = "ID";
 	String attrWhatever = "whatever";
 	String attrValue = "value";
-	String attrMarked = "marked";
+	String attrPredecessorID = "predecessorID";
+	String attrDelta = "delta";
 	String attrInspected = "inspected";
 	
 	public Vertex(String vertexName) {		
 		this.name = vertexName;
 		ID = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue, attrMarked, attrInspected)); 	//ATTRIBUTENLISTE	
+		//ATTRIBUTENLISTE
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue, attrPredecessorID, attrDelta, attrInspected)); 		
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -75,13 +84,21 @@ class Vertex {
 	public int getWhatever() {
 		return this.whatever;
 	}
-	
-	public String getMarked() {
-		return this.marked;
+
+	public int getDelta() {
+		return delta;
+	}
+
+	public int getPredecessorID() {
+		return predecessorID;
 	}
 	
-	//********************************************** SETTER METHODEN **********************************************
+	public String getInspected() {
+		return inspected;
+	}
 	
+	
+	//********************************************** SETTER METHODEN **********************************************
 	public void setName(String newName) {
 		this.name = newName;
 	}
@@ -95,10 +112,6 @@ class Vertex {
 		}
 		if (attr == attrInspected) {
 			this.inspected = val;
-			return true;
-		}
-		if (attr == attrMarked) {
-			this.marked = val;
 			return true;
 		}
 		return false;
@@ -117,6 +130,14 @@ class Vertex {
 			this.value = val;
 			return true;
 		}
+		if (attr == attrDelta) {
+			this.delta = val;
+			return true;
+		}
+		if (attr == attrPredecessorID) {
+			this.predecessorID = val;
+			return true;
+		}
 		return false;
 	}
 	
@@ -130,6 +151,12 @@ class Vertex {
 		if (attr == attrWhatever) {
 			return this.whatever;
 		}
+		if (attr == attrDelta) {
+			return this.delta;
+		}
+		if (attr == attrPredecessorID) {
+			return predecessorID;
+		}
 		return Integer.MAX_VALUE;
 	}	
 	 
@@ -137,9 +164,6 @@ class Vertex {
 		String result = "";
 		if (attr == this.attrName) {
 			result = this.name;
-		}
-		if (attr == attrMarked) {
-			result = this.marked;
 		}
 		if (attr == attrInspected) {
 			result = this.inspected;
