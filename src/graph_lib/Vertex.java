@@ -20,7 +20,8 @@ class Vertex {
 	private final int ID;  
 	private int whatever = 25;
 	private int value;
-	private int marked = 0; //Bei 1 heiﬂt, es wurde markiert, was soviel bedeutet, die Kante wurde schon mal durchlaufen
+	private String marked = ""; //marked isEmpty == true ? markiert : nicht markiert
+	private String inspected = "";
 	
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	
@@ -29,12 +30,13 @@ class Vertex {
 	String attrWhatever = "whatever";
 	String attrValue = "value";
 	String attrMarked = "marked";
+	String attrInspected = "inspected";
 	
 	public Vertex(String vertexName) {		
 		this.name = vertexName;
 		ID = count++;
 		
-		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue, attrMarked)); 	//ATTRIBUTENLISTE	
+		attrList.addAll(Arrays.asList(attrName, attrID, attrWhatever, attrValue, attrMarked, attrInspected)); 	//ATTRIBUTENLISTE	
 	}
 	
 	//********************************************** GETTER METHODEN **********************************************
@@ -74,7 +76,7 @@ class Vertex {
 		return this.whatever;
 	}
 	
-	public int getMarked() {
+	public String getMarked() {
 		return this.marked;
 	}
 	
@@ -89,6 +91,14 @@ class Vertex {
 	public boolean setStrV(String attr, String val) {
 		if (attr == attrName) {
 			this.name = val;
+			return true;
+		}
+		if (attr == attrInspected) {
+			this.inspected = val;
+			return true;
+		}
+		if (attr == attrMarked) {
+			this.marked = val;
 			return true;
 		}
 		return false;
@@ -107,10 +117,6 @@ class Vertex {
 			this.value = val;
 			return true;
 		}
-		if (attr == attrMarked) {
-			this.marked = val;
-			return true;
-		}
 		return false;
 	}
 	
@@ -124,9 +130,6 @@ class Vertex {
 		if (attr == attrWhatever) {
 			return this.whatever;
 		}
-		if (attr == attrMarked) {
-			return this.marked;
-		}
 		return Integer.MAX_VALUE;
 	}	
 	 
@@ -134,6 +137,12 @@ class Vertex {
 		String result = "";
 		if (attr == this.attrName) {
 			result = this.name;
+		}
+		if (attr == attrMarked) {
+			result = this.marked;
+		}
+		if (attr == attrInspected) {
+			result = this.inspected;
 		}
 		return result;
 	}	
