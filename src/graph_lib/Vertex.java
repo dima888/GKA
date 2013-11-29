@@ -1,6 +1,5 @@
 package graph_lib;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,11 +23,13 @@ class Vertex {
 	/*
 	 * Zweiter Tuppel fuer die Markierung (id, delta)
 	 * id -> id des Vorgaengers
+	 * Der Wert fuer nicht markiert lautet: -1
 	 */
-	private int predecessorID; //merked != 0 ist markiert
-	private int delta; //
+	private int predecessorID = -1; 
+	private int delta = -1; 
 	
-	private String inspected = "";
+	//Der Wert fuer die nicht Inspizierung lautet empty
+	private String inspected = "empty";
 	
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********	

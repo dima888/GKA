@@ -6,6 +6,7 @@ class DirectedEdge extends Edge {
 	//*********ATTRIBUTE********
 	private final int ID;
 	private static int count = 0; //Hilfszaehler
+	
 	private int capacity = 0; //Kapazität
 	private int actualRiver = 0; //Tatsächlicher Fluss
 	

@@ -44,6 +44,7 @@ public class FordAndFulkerson {
 	private static final int UNDEFINE = -1;
 	private static final int INFINITE = Integer.MAX_VALUE;
 	private static final String INSPECTED = "*";
+	private static final String EMPTY = "empty";
 	private int access = 0; //Zugriff
 	private int optimalRiver = 0; //Der optimale Fluss
 	
@@ -88,11 +89,12 @@ public class FordAndFulkerson {
 		
 		//Start Knoten Markieren und inspizieren
 		setMarked(source, UNDEFINE, INFINITE);
+		setInspected(source);
 		
 		//Uns alle Kanten hollen, die an unseren Source anliegen
 		edgeIDList = graph.getIncident(source);
 		
-		//Anschliessend markieren wir die Kanten
+		//Anschliessend markieren wir die Knoten die an den Kanten anliegen
 		
 		
 		//Jetzt entscheiden wir uns fuer eine Kante die legetim ist und inspektieren sie
@@ -111,6 +113,78 @@ public class FordAndFulkerson {
 	private void setMarked(int currentID, int predecessorID, int delta) {
 		this.graph.setValV(currentID, "predecessorID", predecessorID);
 		this.graph.setValV(currentID, "delta", delta);
+	}
+	
+	/**
+	 * Inspiziert eine Ecker eines Graphes
+	 * @param Integer currentID - Eine ID von einer/einem {Ecke, Knoten, Vertex}
+	 */
+	private void setInspected(Integer currentID) {
+		this.graph.setStrV(currentID, "inspected", INSPECTED);
+	}
+	
+	/**
+	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Markierung
+	 * @param Integer currentID - Die ID von der die Markierung entfernt wird
+	 */
+	private void deleteMarked(Integer currentID) {
+		this.graph.setValV(currentID, "predecessorID", UNDEFINE);
+		this.graph.setValV(currentID, "delta", UNDEFINE);
+	}
+	
+	/**
+	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Inspizierung
+	 * @param Integer currentID - Die ID von der/dem {Ecke, Knoten, Vertex} aud der die Inspektion entfernt wird 
+	 */
+	private void deleteInspected(Integer currentID) {
+		this.graph.setStrV(currentID, "inspected", EMPTY);
+	}
+	
+	/**
+	 * Methode prueft ob {Ecke, Knoten, Vertex} markiert ist, bei true markiert bei false unmarkiert
+	 * @param Integer currentID - ID der/des {Ecke, Knoten, Vertex} was geprueft wird
+	 * @return Boolean
+	 */
+	private boolean isMarked(Integer currentID) {
+		if (graph.getValV(currentID, "predecessorID") == -1) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Methode Prueft ob {Ecke, Knoten, Vertex} inspeziert ist oder nicht, bei inspeziert liefert 
+	 * die Methode true zurueck und bei nicht inspeziert false
+	 * @param Integer currentID - ID der/des {Ecke, Knoten, Vertex} was geprueft wird
+	 * @return
+	 */
+	private boolean isInspected(Integer currentID) {
+		if (graph.getStrV(currentID, "inspected").compareTo(EMPTY) == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Gibt den Tupel von Kapazitaet und tatsaechlichen Fluss in einem Array zurueck.
+	 * 0-Stelle im Array steht fuer die Kapaziaet
+	 * 1-Stelle im Array steht fuer den tatsaechlichen Fluss
+	 * @param Integer currentID - Die ID der Kante, von wo wir die Informationen Beziehen
+	 * @return Array[2]
+	 */
+	private int[] getCapacityActualRiverTuple(int currentID) {
+		int[] result = new int[2];
+		result[0] = graph.getValE(currentID, "capacity"); 
+		result[1] = graph.getValE(currentID, "actualRiver");
+		return result;
+	}
+	
+	/**
+	 * TODO:
+	 * @param currentID
+	 */
+	private void setActualRiver(int currentID) {
+		
 	}
 	
 	public static void main(String[] args) {

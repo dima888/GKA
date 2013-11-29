@@ -349,7 +349,7 @@ public class AIGraph {
 	/**
 	 * Ermittelt alle Attribute des Vertex(Ecke) v1
 	 * @param v1
-	 * @return
+	 * @return List<String>
 	 */
 	public List<String> getAttrV(int v1) {
 		return getVertex(v1).getAttrList();
@@ -358,7 +358,7 @@ public class AIGraph {
 	 /**
 	  * Ermittelt alle Attribute des Edge(Kante) e1
 	  * @param e1
-	  * @return
+	  * @return List<?>
 	  */
 	public List<?> getAttrE(int e1) {
 		if(e1 % 2 == 0) {
@@ -390,7 +390,6 @@ public class AIGraph {
 	 * @param val
 	 * @return
 	 */
-
 	public boolean setValV(int v1, String attr, int val) {
 		return getVertex(v1).setValV(attr, val);
 	}
