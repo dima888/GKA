@@ -59,7 +59,6 @@ public class FordAndFulkerson {
 	
 	/**
 	 * Gibt uns den Optimalen Fluss an
-	 * @param args
 	 */
 	public int getOptiomalRiver() {
 		return this.optimalRiver;
@@ -78,8 +77,7 @@ public class FordAndFulkerson {
 		List<Integer> edgeIDList = new ArrayList<>();
 		Collections.shuffle(edgeIDList); //wuerfelt den Array durch einander
 		
-		
-		//Den Graph setzten, damit die private Methode setMarked auf den selben Objekt arbeitet
+		//Den Graph setzten, damit die privaten Methode wie setMarked auf den selben Objekt arbeiten
 		this.graph = graph;
 		
 		//Erster Schritt, f(e ij); Ist bei uns schon fertig, da wir den tatsaechlichen Fluss schon mit 0 initialisieren
@@ -91,14 +89,57 @@ public class FordAndFulkerson {
 		setMarked(source, UNDEFINE, INFINITE);
 		setInspected(source);
 		
-		//Uns alle Kanten hollen, die an unseren Source anliegen
-		edgeIDList = graph.getIncident(source);
+		//Algorithmus arbeitet intensiv in dieser Phase
+		boolean isRunning = true;
+		while (isRunning) {
+			/*
+			 * -----------------------------------------------------------------------------------
+			 * TODO: Muss vielleicht nach unten gepackt werden, muss ich noch schauen
+			 * Abbruchbedingung der intensiven Arbeitsphase des Algorithmus.
+			 * Schritt 1) Laufen ueber alle Knoten und sammeln erstmal die markierten ein.
+			 * Schritt 2) Dann laufen wir ueber die markierten und pruefen ob sie alle inpiziert sind,
+			 * wenn ja, dann wird isRunning auf false gesetzt
+			 */
+			List<Integer> markedVertexIDList = new ArrayList<>();
+			//Schritt 1:
+			for (int vertexID : graph.getVertexes()) {				
+				if (isMarked(vertexID)) {
+					markedVertexIDList.add(vertexID);
+				}
+			}
+			
+			//Schritt 2:
+			for (int vertexID : markedVertexIDList) {
+				if (!isInspected(vertexID)) {
+					isRunning = true;
+					break;
+				}
+				isRunning = false;
+			}
+			//-----------------------------------------------------------------------------------			
+			
+			//Hier hollen wir uns alle Knoten die mit den inspizierten Knoten verbunden sind
+			List<Integer> adjacentVertexIDList = new ArrayList<>();
+			adjacentVertexIDList = graph.getAdjacent(source);
+			
+			//Auf den Weg den minimalste Kapazitaet ermitteln (delta)
+			
+			//TODO: Hier bin ich stehen geblieben Das Delta ermitteln
+			//Jetzt markieren wir die Knoten
+			for (int vertexID : adjacentVertexIDList) {
+				//setMarked(vertexID, source, delta);
+			}
+			
+			//Jetzt entscheiden wir uns fuer eine Kante die legetim ist und inspektieren sie
+		}
 		
-		//Anschliessend markieren wir die Knoten die an den Kanten anliegen
-		
-		
-		//Jetzt entscheiden wir uns fuer eine Kante die legetim ist und inspektieren sie
-		
+
+		/*
+		 * Schritt 4 Es gibt keinen vergrößernden Weg. Der jetzige Wert von d
+		 * ist optimal. Ein Schnitt A(X,X) mit c(X,X) = d wird gebildet von
+		 * genau denjenigen Kanten, bei denen entweder die Anfangsecke oder die
+		 * Endecke inspiziert ist.
+		 */
 		
 		
 		return graph;
@@ -180,11 +221,12 @@ public class FordAndFulkerson {
 	}
 	
 	/**
-	 * TODO:
-	 * @param currentID
+	 * Mit der Methode kann der tatsaechliche Fluss gesetzt werden.
+	 * @param Integer currentID - Die ID zu den gehoeriger Kante
+	 * @param Integer actualRiverValue - Der tatsaechliche Fluss wird mit diesen Parameter gesetzt
 	 */
-	private void setActualRiver(int currentID) {
-		
+	private void setActualRiver(int currentID, int actualRiverValue) {
+		graph.setValE(currentID, "actualRiver", actualRiverValue);
 	}
 	
 	public static void main(String[] args) {
