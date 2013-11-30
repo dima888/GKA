@@ -108,7 +108,6 @@ abstract class Edge implements EdgeInterface{
 //			this.ID = val;
 //			return true;
 //		}
-		System.out.println("Ober Klasse wird beretten");
 		if(attr == attrWhatever) {
 			this.whatever = val;
 			return true;

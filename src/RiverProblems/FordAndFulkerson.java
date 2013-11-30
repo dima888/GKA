@@ -41,13 +41,27 @@ public class FordAndFulkerson {
 		
 	//*****************INSTANZVARIABLEN*******************
 	private AIGraph graph;
-	private static final int UNDEFINE = -1;
+	private int source;
+	private int target;
+	private static final int UNDEFINE = -10;
 	private static final int INFINITE = Integer.MAX_VALUE;
 	private static final String INSPECTED = "*";
 	private static final String EMPTY = "empty";
 	private int access = 0; //Zugriff
 	private int optimalRiver = 0; //Der optimale Fluss
 	
+	//***************KONSTRUKTOR********************
+	public FordAndFulkerson(AIGraph graph, int source, int target) {
+		super();
+		this.graph = graph;
+		this.source = source;
+		this.target = target;
+		
+		//Start Knoten Markieren und inspizieren
+		setMarked(source, UNDEFINE, INFINITE);
+		setInspected(source);
+	}
+
 	//*************************GETTER**********************
 	/**
 	 * Gibt die Anzahl der Zugriffe, die auf den Graph erfolgt wurden
@@ -73,21 +87,15 @@ public class FordAndFulkerson {
 	 * @param Integer target - Ziel Knoten
 	 * @return AIGraph 
 	 */
-	public AIGraph startAlgorithmus(AIGraph graph, int source, int target) {
+	public AIGraph startAlgorithmus() {
 		List<Integer> edgeIDList = new ArrayList<>();
 		Collections.shuffle(edgeIDList); //wuerfelt den Array durch einander
 		
-		//Den Graph setzten, damit die privaten Methode wie setMarked auf den selben Objekt arbeiten
-		this.graph = graph;
 		
 		//Erster Schritt, f(e ij); Ist bei uns schon fertig, da wir den tatsaechlichen Fluss schon mit 0 initialisieren
 		
 		//Pruefen ob in den Graphen Source und Target vorhanden ist, wenn nicht, dann mit einer Exception die Methode beenden
 		//Habe das weggelassen, wurde mir doch zu kompliziert, wenn die Austauschbarkeit noch erhalten bleiben soll
-		
-		//Start Knoten Markieren und inspizieren
-		setMarked(source, UNDEFINE, INFINITE);
-		setInspected(source);
 		
 		//Algorithmus arbeitet intensiv in dieser Phase
 		boolean isRunning = true;
@@ -122,67 +130,7 @@ public class FordAndFulkerson {
 			 * --------------------------------------DAS MARKIEREN--------------------------------------
 			 * Bei bedarf dieses Code teil in eine Methode auslagern
 			 */			
-			//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
-			List<Integer> edgesFromCurrentVertex = graph.getIncident(source);
-			
-			/*
-			 * Jetzt koennen wir bei den Knoten die Tupelwerte(markieren).
-			 * Muessen hier auch in die entgegengesetzte Richtung schauen!
-			 * Example: Vertex --------> Vertex || Vertex <------- Vertex 
-			 */
-			for (int edgeID : edgesFromCurrentVertex) {
-				//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
-				int vertexID = graph.getTarget(edgeID);
-				if (!isMarked(vertexID)) {
-					//Hier muss erstmal das Delta berechnet werden
-					
-					//Kapazitaet der Kante hollen
-					int currentCapacity = getCapacity(vertexID);
-					
-					//Delta von der inspizierten Kante hollen
-					int inspectedDelta = getDelta(source);
-					
-					//Jetzt findet die Pruefungen statt
-					if (inspectedDelta == INFINITE) {						
-						setMarked(vertexID, source, currentCapacity);
-						continue;
-					} else {
-						if (currentCapacity > inspectedDelta) {
-							setMarked(vertexID, source, inspectedDelta);
-							continue;
-						} else {
-							setMarked(vertexID, source, currentCapacity);
-							continue;
-						}
-					}									
-				}
-				
-				//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen
-				vertexID = graph.getSource(edgeID);
-				if (!isMarked(vertexID)) {
-					//Hier muss erstmal das Delta berechnet werden
-					
-					//Kapazitaet der Kante hollen
-					int currentCapacity = getCapacity(vertexID);
-					
-					//Delta von der inspizierten Kante hollen
-					int inspectedDelta = getDelta(source);
-					
-					//Jetzt findet die Pruefungen statt
-					if (inspectedDelta == INFINITE) {						
-						setMarked(vertexID, source, currentCapacity);
-						continue;
-					} else {
-						if (currentCapacity > inspectedDelta) {
-							setMarked(vertexID, source, inspectedDelta);
-							continue;
-						} else {
-							setMarked(vertexID, source, currentCapacity);
-							continue;
-						}
-					}
-				}
-			}			
+			merkedAll(source);
 			/*
 			 * --------------------------------------DAS ENDE VON MARKIEREN--------------------------------------
 			 */
@@ -209,32 +157,157 @@ public class FordAndFulkerson {
 		return graph;
 	}
 	
+	/**
+	 * Diese Methode Markiert alle Knoten, die sich zu/von den inspizierten Knoten sich befinden
+	 * @param Integer inspectedVertex - Ein inspizierter Knoten
+	 */
+	public void merkedAll(int inspectedVertex) {
+		//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
+		List<Integer> edgesFromCurrentVertex = graph.getIncident(inspectedVertex);
+		//List<Integer> edgesFromCurrentVertex = graph.getAdjacent(inspectedVertex);
+		System.out.println(edgesFromCurrentVertex);
+		
+		/*
+		 * Jetzt koennen wir bei den Knoten die Tupelwerte(markieren).
+		 * Muessen hier auch in die entgegengesetzte Richtung schauen!
+		 * Example: Vertex --------> Vertex || Vertex <------- Vertex 
+		 */
+		for (int edgeID : edgesFromCurrentVertex) {
+			//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
+			int vertexID = graph.getTarget(edgeID);
+			if (!isMarked(vertexID)) {
+				//Hier muss erstmal das Delta berechnet werden
+				
+				//Kapazitaet der Kante hollen
+				int currentCapacity = getCapacity(edgeID);
+				
+				//Delta von der inspizierten Kante hollen
+				int inspectedDelta = getDelta(inspectedVertex);
+				
+				//Jetzt findet die Pruefungen statt
+				if (inspectedDelta == INFINITE) {						
+					setMarked(vertexID, inspectedVertex, currentCapacity);
+					continue;
+				} else {
+					if (currentCapacity > inspectedDelta) {
+						setMarked(vertexID, inspectedVertex, inspectedDelta);
+						continue;
+					} else {
+						setMarked(vertexID, inspectedVertex, currentCapacity);
+						continue;
+					}
+				}									
+			}
+			
+			//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen			
+			vertexID = graph.getSource(edgeID);
+			System.out.println("Eine in gegengesetzte Richtung wurde entdeckt, von der namen " + graph.getStrV(vertexID, "name") + " und der ID = " + vertexID);
+			System.out.println("Kapazitaet " + getCapacityActualRiverTuple(edgeID)[0]);
+			System.out.println("tatsaechlicher Fluss " + getCapacityActualRiverTuple(edgeID)[1]);
+			if (!isMarked(vertexID)) {
+				//Hier muss erstmal das Delta berechnet werden
+				
+				//Kapazitaet der Kante hollen
+				int currentCapacity = getCapacity(edgeID);
+				System.out.println("Kapzitaet = " + currentCapacity);
+				
+				//Delta von der inspizierten Kante hollen
+				int inspectedDelta = getDelta(inspectedVertex);
+				
+				//Jetzt findet die Pruefungen statt
+				if (inspectedDelta == INFINITE) {						
+					setMarked(vertexID, inspectedVertex, currentCapacity);
+					continue;
+				} else {
+					if (currentCapacity > inspectedDelta) {
+						setMarked(vertexID, inspectedVertex, inspectedDelta);
+						continue;
+					} else {
+						setMarked(vertexID, inspectedVertex, currentCapacity);
+						continue;
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/**
+	 * TODO: private machen
+	 * Gibt den Tupel von Kapazitaet und tatsaechlichen Fluss von einer Kante in einem Array zurueck.
+	 * 0-Stelle im Array steht fuer die Kapaziaet
+	 * 1-Stelle im Array steht fuer den tatsaechlichen Fluss
+	 * @param Integer currentID - Die ID der Kante, von wo wir die Informationen Beziehen
+	 * @return Array[2]
+	 */
+	public int[] getCapacityActualRiverTuple(int currentID) {
+		int[] result = new int[2];
+		result[0] = graph.getValE(currentID, "capacity"); 
+		result[1] = graph.getValE(currentID, "actualRiver");
+		return result;
+	}
+	
+	/**
+	 * TODO: private machen
 	 * Hollt von einem Knoten den Deltawert
 	 * @param Integer currentID - Eine ID, womit wir auf einen Knoten zugreifen koennen
 	 * @return Integer
 	 */
-	private int getDelta(int currentID) {
+	public int getDelta(int currentID) {
 		return graph.getValV(currentID, "delta");
+	}
+	
+	/**
+	 * TODO: private machen
+	 * Zeigt die Vorgaenger ID des Knotens, den wir ueber den Parameter uebergeben
+	 * @param Integer currentID - aktueller Knoten
+	 * @return Integer
+	 */
+	public int getPredecessorID(int currentID) {
+		return graph.getValV(currentID, "predecessorID");
+	}
+	
+	/**
+	 * TODO: private machen
+	 * Hollt von einer Kante seine Kapazitaet
+	 * @param Integer currentID - ID von einem Knoten, damit wir auf den zugreifen koennen
+	 * @return Integer
+	 */
+	public int getCapacity(int currentID) {
+		return graph.getValE(currentID, "capacity"); 
 	}
 
 	/**
+	 * TODO: Auf private am Ende Setzen
 	 * Diese Methode repräsentiert einen Tuppel der Markierung durch die unten definierten Attribute
 	 * @param Integer currentID - Aktuelle ID von Vertex, den die Werte gesetzt werden sollen
 	 * @param Integer predecessorID - Die ID des Vorgaenger Knoten
 	 * @param Integer delta - die minimalste Kapazitaet auf den Weg
 	 */
-	private void setMarked(int currentID, int predecessorID, int delta) {
+	public void setMarked(int currentID, int predecessorID, int delta) {
 		this.graph.setValV(currentID, "predecessorID", predecessorID);
 		this.graph.setValV(currentID, "delta", delta);
 	}
 	
 	/**
+	 * TODO: loeschen oder private machen
+	 * Diese Methode ist nur fuer den Test da
+	 * Setzt die Kapazitaet und den tatsaechlichen Fluss von einem Knoten
+	 * @param Integer currentID -
+	 * @param Integer capacity -
+	 * @param Integer actualRiver -
+	 */
+	public void setCapacityActualRiverTuple(int currentID, int capacity, int actualRiver) {
+		this.graph.setValE(currentID, "capacity", capacity);
+		this.graph.setValE(currentID, "actualRiver", actualRiver);
+	}
+	
+	/**
+	 * TODO: Auf private setzen
 	 * Inspiziert eine Ecker eines Graphes
 	 * @param Integer currentID - Eine ID von einer/einem {Ecke, Knoten, Vertex}
 	 */
-	private void setInspected(Integer currentID) {
+	public void setInspected(Integer currentID) {
 		this.graph.setStrV(currentID, "inspected", INSPECTED);
 	}
 	
@@ -248,6 +321,16 @@ public class FordAndFulkerson {
 	}
 	
 	/**
+	 * TODO: Auf private setzten
+	 * Mit der Methode kann der tatsaechliche Fluss gesetzt werden.
+	 * @param Integer currentID - Die ID zu den gehoeriger Kante
+	 * @param Integer actualRiverValue - Der tatsaechliche Fluss wird mit diesen Parameter gesetzt
+	 */
+	public void setActualRiver(int currentID, int actualRiverValue) {
+		graph.setValE(currentID, "actualRiver", actualRiverValue);
+	}
+	
+	/**
 	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Inspizierung
 	 * @param Integer currentID - Die ID von der/dem {Ecke, Knoten, Vertex} aud der die Inspektion entfernt wird 
 	 */
@@ -256,11 +339,12 @@ public class FordAndFulkerson {
 	}
 	
 	/**
+	 * TODO: auf privet setzen
 	 * Methode prueft ob {Ecke, Knoten, Vertex} markiert ist, bei true markiert bei false unmarkiert
 	 * @param Integer currentID - ID der/des {Ecke, Knoten, Vertex} was geprueft wird
 	 * @return Boolean
 	 */
-	private boolean isMarked(Integer currentID) {
+	public boolean isMarked(Integer currentID) {
 		if (graph.getValV(currentID, "predecessorID") == -1) {
 			return false;
 		}
@@ -278,38 +362,6 @@ public class FordAndFulkerson {
 			return false;
 		}
 		return true;
-	}
-	
-	/**
-	 * Gibt den Tupel von Kapazitaet und tatsaechlichen Fluss in einem Array zurueck.
-	 * 0-Stelle im Array steht fuer die Kapaziaet
-	 * 1-Stelle im Array steht fuer den tatsaechlichen Fluss
-	 * @param Integer currentID - Die ID der Kante, von wo wir die Informationen Beziehen
-	 * @return Array[2]
-	 */
-	private int[] getCapacityActualRiverTuple(int currentID) {
-		int[] result = new int[2];
-		result[0] = graph.getValE(currentID, "capacity"); 
-		result[1] = graph.getValE(currentID, "actualRiver");
-		return result;
-	}
-	
-	/**
-	 * Hollt von einem Knoten seine Kapazitaet
-	 * @param Integer currentID - ID von einem Knoten, damit wir auf den zugreifen koennen
-	 * @return Integer
-	 */
-	private int getCapacity(int currentID) {
-		return graph.getValE(currentID, "capacity"); 
-	}
-	
-	/**
-	 * Mit der Methode kann der tatsaechliche Fluss gesetzt werden.
-	 * @param Integer currentID - Die ID zu den gehoeriger Kante
-	 * @param Integer actualRiverValue - Der tatsaechliche Fluss wird mit diesen Parameter gesetzt
-	 */
-	private void setActualRiver(int currentID, int actualRiverValue) {
-		graph.setValE(currentID, "actualRiver", actualRiverValue);
 	}
 	
 	public static void main(String[] args) {

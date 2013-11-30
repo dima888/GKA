@@ -11,13 +11,13 @@ class DirectedEdge extends Edge {
 	private int actualRiver = 0; //Tatsächlicher Fluss
 	
 	//*********ATTRIBUTE-BEZEICHNUNGEN********
-	private String attrcapacity = "capacity"; 
+	private String attrCapacity = "capacity"; 
 	private String attrActualRiver = "actualRiver"; 
 	
 	//*************************** KONSTRUKTOTREN ****************************
 	public DirectedEdge(Vertex v1, Vertex v2, String name) {
 		super(v1, v2, name);
-		super.attrList.add(attrcapacity);
+		super.attrList.add(attrCapacity);
 		super.attrList.add(attrActualRiver);
 		
 		ID = count; //Auto increment
@@ -33,7 +33,7 @@ class DirectedEdge extends Edge {
 	
 	public DirectedEdge(Vertex v1, Vertex v2) {
 		super(v1, v2);
-		super.attrList.add(attrcapacity);
+		super.attrList.add(attrCapacity);
 		super.attrList.add(attrActualRiver);
 		
 		ID = count; //Auto increment
@@ -65,7 +65,7 @@ class DirectedEdge extends Edge {
 		if(attr == attrValue) {
 			return super.getValue();
 		}
-		if (attr == attrcapacity) {
+		if (attr == attrCapacity) {
 			return this.capacity;
 		}
 		if (attr == attrActualRiver) {
@@ -79,7 +79,7 @@ class DirectedEdge extends Edge {
 		if(super.setValE(attr, val)) {
 			return true;
 		}
-		if(attr == attrcapacity) {
+		if(attr == attrCapacity) {
 			this.capacity = val;
 			return true; 
 		}

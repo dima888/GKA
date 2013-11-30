@@ -169,6 +169,7 @@ class Vertex {
 		if (attr == attrInspected) {
 			result = this.inspected;
 		}
+		
 		return result;
 	}	
 	
