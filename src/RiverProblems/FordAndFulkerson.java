@@ -93,9 +93,9 @@ public class FordAndFulkerson {
 		boolean isRunning = true;
 		while (isRunning) {
 			/*
-			 * -----------------------------------------------------------------------------------
-			 * TODO: Muss vielleicht nach unten gepackt werden, muss ich noch schauen
-			 * Abbruchbedingung der intensiven Arbeitsphase des Algorithmus.
+			 * --------------------------------------ABBRUCHBEDINGUNG---------------------------------------------
+			 * Bei bedarf dieses Code teil in eine Methode auslagern
+			 * ABBRUCHBEDINGUNG der intensiven Arbeitsphase des Algorithmus. (Laut GRBuch 2a)
 			 * Schritt 1) Laufen ueber alle Knoten und sammeln erstmal die markierten ein.
 			 * Schritt 2) Dann laufen wir ueber die markierten und pruefen ob sie alle inpiziert sind,
 			 * wenn ja, dann wird isRunning auf false gesetzt
@@ -116,21 +116,85 @@ public class FordAndFulkerson {
 				}
 				isRunning = false;
 			}
-			//-----------------------------------------------------------------------------------			
+			//--------------------------------------ENDE VON ABBRUCHBEDINGUNG---------------------------------------------		
 			
-			//Hier hollen wir uns alle Knoten die mit den inspizierten Knoten verbunden sind
-			List<Integer> adjacentVertexIDList = new ArrayList<>();
-			adjacentVertexIDList = graph.getAdjacent(source);
+			/*
+			 * --------------------------------------DAS MARKIEREN--------------------------------------
+			 * Bei bedarf dieses Code teil in eine Methode auslagern
+			 */			
+			//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
+			List<Integer> edgesFromCurrentVertex = graph.getIncident(source);
 			
-			//Auf den Weg den minimalste Kapazitaet ermitteln (delta)
+			/*
+			 * Jetzt koennen wir bei den Knoten die Tupelwerte(markieren).
+			 * Muessen hier auch in die entgegengesetzte Richtung schauen!
+			 * Example: Vertex --------> Vertex || Vertex <------- Vertex 
+			 */
+			for (int edgeID : edgesFromCurrentVertex) {
+				//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
+				int vertexID = graph.getTarget(edgeID);
+				if (!isMarked(vertexID)) {
+					//Hier muss erstmal das Delta berechnet werden
+					
+					//Kapazitaet der Kante hollen
+					int currentCapacity = getCapacity(vertexID);
+					
+					//Delta von der inspizierten Kante hollen
+					int inspectedDelta = getDelta(source);
+					
+					//Jetzt findet die Pruefungen statt
+					if (inspectedDelta == INFINITE) {						
+						setMarked(vertexID, source, currentCapacity);
+						continue;
+					} else {
+						if (currentCapacity > inspectedDelta) {
+							setMarked(vertexID, source, inspectedDelta);
+							continue;
+						} else {
+							setMarked(vertexID, source, currentCapacity);
+							continue;
+						}
+					}									
+				}
+				
+				//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen
+				vertexID = graph.getSource(edgeID);
+				if (!isMarked(vertexID)) {
+					//Hier muss erstmal das Delta berechnet werden
+					
+					//Kapazitaet der Kante hollen
+					int currentCapacity = getCapacity(vertexID);
+					
+					//Delta von der inspizierten Kante hollen
+					int inspectedDelta = getDelta(source);
+					
+					//Jetzt findet die Pruefungen statt
+					if (inspectedDelta == INFINITE) {						
+						setMarked(vertexID, source, currentCapacity);
+						continue;
+					} else {
+						if (currentCapacity > inspectedDelta) {
+							setMarked(vertexID, source, inspectedDelta);
+							continue;
+						} else {
+							setMarked(vertexID, source, currentCapacity);
+							continue;
+						}
+					}
+				}
+			}			
+			/*
+			 * --------------------------------------DAS ENDE VON MARKIEREN--------------------------------------
+			 */
+
 			
-			//TODO: Hier bin ich stehen geblieben Das Delta ermitteln
-			//Jetzt markieren wir die Knoten
-			for (int vertexID : adjacentVertexIDList) {
-				//setMarked(vertexID, source, delta);
-			}
-			
-			//Jetzt entscheiden wir uns fuer eine Kante die legetim ist und inspektieren sie
+			/*
+			 * TODO: 
+			 * Gucken ob wir die Codestuecke da rueber in Methoden verlagern koennen, 
+			 * damit wir sie testen koennen, dies sehe ich als wichtig, 
+			 * da logik nicht gerade auf ersten blick ueberschau bar ist. 
+			 * Jetzt nehmen wir eine beliebige Kante und inpezieren sie!
+			 */
 		}
 		
 
@@ -145,6 +209,16 @@ public class FordAndFulkerson {
 		return graph;
 	}
 	
+	
+	/**
+	 * Hollt von einem Knoten den Deltawert
+	 * @param Integer currentID - Eine ID, womit wir auf einen Knoten zugreifen koennen
+	 * @return Integer
+	 */
+	private int getDelta(int currentID) {
+		return graph.getValV(currentID, "delta");
+	}
+
 	/**
 	 * Diese Methode repräsentiert einen Tuppel der Markierung durch die unten definierten Attribute
 	 * @param Integer currentID - Aktuelle ID von Vertex, den die Werte gesetzt werden sollen
@@ -218,6 +292,15 @@ public class FordAndFulkerson {
 		result[0] = graph.getValE(currentID, "capacity"); 
 		result[1] = graph.getValE(currentID, "actualRiver");
 		return result;
+	}
+	
+	/**
+	 * Hollt von einem Knoten seine Kapazitaet
+	 * @param Integer currentID - ID von einem Knoten, damit wir auf den zugreifen koennen
+	 * @return Integer
+	 */
+	private int getCapacity(int currentID) {
+		return graph.getValE(currentID, "capacity"); 
 	}
 	
 	/**
