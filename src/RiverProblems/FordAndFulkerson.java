@@ -119,6 +119,7 @@ public class FordAndFulkerson {
 			/*
 			 * Jetzt nehmen wir eine beliebigen Knoten und inpezieren den!
 			 * So mit ist das jetzt unser neuer aktueller inspizierter Knoten
+			 * TODO: Die inspectedRandomVertex Methode vielleicht zu void machen, damit ich nicht auf -1 pruefen muss
 			 */
 			currentVertexID = inspectedRandomVertex(currentVertexID);
 			if(currentVertexID == -1) {
@@ -132,7 +133,7 @@ public class FordAndFulkerson {
 			 * Wir geben auch den vergroesserten Fluss an
 			 */
 			if(isTarget(currentVertexID)) {
-				backToTheSource();
+				backToTheSource(currentVertexID);
 			}
 		}
 		
@@ -150,10 +151,12 @@ public class FordAndFulkerson {
 	
 	/**
 	 * TODO: auf private setzten
-	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen,
-	 * Markierungen und gibt uns den vergroesserten Weg an
+	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen und Markierungen,
+	 * gibt uns den vergroesserten Weg an
+	 * Aktuelle ID wird wieder auf source gesetzt
+	 * @param Integer currentVertexID - Aktuelle ID mit der wir arbeiten
 	 */
-	public void backToTheSource() {
+	public void backToTheSource(int currentVertexID) {
 		// TODO Auto-generated method stub
 		
 	}
