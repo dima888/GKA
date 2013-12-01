@@ -43,6 +43,8 @@ public class FordAndFulkerson {
 	private AIGraph graph;
 	private int source;
 	private int target;
+	private String SOURCENAME = "source";
+	private String TARGETNAME = "target";
 	private static final int UNDEFINE = -10;
 	private static final int INFINITE = Integer.MAX_VALUE;
 	private static final String INSPECTED = "*";
@@ -56,6 +58,10 @@ public class FordAndFulkerson {
 		this.graph = graph;
 		this.source = source;
 		this.target = target;
+		
+		//source & target benennen
+		graph.setStrV(source, "name", SOURCENAME);
+		graph.setStrV(source, "name", TARGETNAME);
 		
 		//Start Knoten Markieren und inspizieren
 		setMarked(source, UNDEFINE, INFINITE);
@@ -87,62 +93,44 @@ public class FordAndFulkerson {
 	 * @param Integer target - Ziel Knoten
 	 * @return AIGraph 
 	 */
-	public AIGraph startAlgorithmus() {
-		List<Integer> edgeIDList = new ArrayList<>();
-		Collections.shuffle(edgeIDList); //wuerfelt den Array durch einander
-		
-		
+	public AIGraph startAlgorithmus() {		
 		//Erster Schritt, f(e ij); Ist bei uns schon fertig, da wir den tatsaechlichen Fluss schon mit 0 initialisieren
 		
-		//Pruefen ob in den Graphen Source und Target vorhanden ist, wenn nicht, dann mit einer Exception die Methode beenden
-		//Habe das weggelassen, wurde mir doch zu kompliziert, wenn die Austauschbarkeit noch erhalten bleiben soll
+		/*
+		 * TODO: Evtl das noch implementieren
+		 * Pruefen ob in den Graphen Source und Target vorhanden ist, wenn nicht, dann mit einer Exception die Methode beenden
+		 * Habe das weggelassen, wurde mir doch zu kompliziert, wenn die Austauschbarkeit noch erhalten bleiben soll
+		 */
 		
-		//Algorithmus arbeitet intensiv in dieser Phase
-		boolean isRunning = true;
-		while (isRunning) {
+		int currentVertexID = source;
+		
+		/*
+		 * --------------------------------------ABBRUCHBEDINGUNG---------------------------------------------
+		 * ABBRUCHBEDINGUNG der intensiven Arbeitsphase des Algorithmus. (Laut GRBuch 2a)
+		 * Schritt 1) Laufen ueber alle Knoten und sammeln erstmal die markierten ein.
+		 * Schritt 2) Dann laufen wir ueber die markierten und pruefen ob sie alle inpiziert sind,
+		 * wenn ja, dann lieft die Methode false zurueck und die whileschleife wird verlassen
+		 */
+		while (isAllmarkedVertexNotInspected()) {
+			
+			//Hier werden alle Knoten markiert, die mit den inspizierten Knoten verbunden sind			
+			merkedAll(currentVertexID);
+			
 			/*
-			 * --------------------------------------ABBRUCHBEDINGUNG---------------------------------------------
-			 * Bei bedarf dieses Code teil in eine Methode auslagern
-			 * ABBRUCHBEDINGUNG der intensiven Arbeitsphase des Algorithmus. (Laut GRBuch 2a)
-			 * Schritt 1) Laufen ueber alle Knoten und sammeln erstmal die markierten ein.
-			 * Schritt 2) Dann laufen wir ueber die markierten und pruefen ob sie alle inpiziert sind,
-			 * wenn ja, dann wird isRunning auf false gesetzt
+			 * Jetzt nehmen wir eine beliebigen Knoten und inpezieren den!
+			 * So mit ist das jetzt unser neuer aktueller inspizierter Knoten
 			 */
-			List<Integer> markedVertexIDList = new ArrayList<>();
-			//Schritt 1:
-			for (int vertexID : graph.getVertexes()) {				
-				if (isMarked(vertexID)) {
-					markedVertexIDList.add(vertexID);
-				}
+			currentVertexID = inspectedRandomVertex(currentVertexID);
+			
+			/*
+			 * In der Methode pruefen wir, ob der Zielknoten(Target) gefunden wurde
+			 * Wenn ja, dann laufen wir zurueck und entfernen alle Markierungen, sowie
+			 * inspizierungen. 
+			 * Wir geben auch den vergroesserten Fluss an
+			 */
+			if(isTarget(currentVertexID)) {
+				runBack();
 			}
-			
-			//Schritt 2:
-			for (int vertexID : markedVertexIDList) {
-				if (!isInspected(vertexID)) {
-					isRunning = true;
-					break;
-				}
-				isRunning = false;
-			}
-			//--------------------------------------ENDE VON ABBRUCHBEDINGUNG---------------------------------------------		
-			
-			/*
-			 * --------------------------------------DAS MARKIEREN--------------------------------------
-			 * Bei bedarf dieses Code teil in eine Methode auslagern
-			 */			
-			merkedAll(source);
-			/*
-			 * --------------------------------------DAS ENDE VON MARKIEREN--------------------------------------
-			 */
-
-			
-			/*
-			 * TODO: 
-			 * Gucken ob wir die Codestuecke da rueber in Methoden verlagern koennen, 
-			 * damit wir sie testen koennen, dies sehe ich als wichtig, 
-			 * da logik nicht gerade auf ersten blick ueberschau bar ist. 
-			 * Jetzt nehmen wir eine beliebige Kante und inpezieren sie!
-			 */
 		}
 		
 
@@ -158,14 +146,92 @@ public class FordAndFulkerson {
 	}
 	
 	/**
+	 * TODO: auf private setzten
+	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen,
+	 * Markierungen und gibt uns den vergroesserten Weg an
+	 */
+	public void runBack() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * TODO: auf private setzten
+	 * Methode ueberprueft ob wir unser Ziel(target) erreicht haben, 
+	 * wenn ja, dann wird true return, sonst false
+	 * @param Integer currentVertexID - Eine VertexID die wir betrachten 
+	 * @return Boolean
+	 */
+	public boolean isTarget(int currentVertexID) {
+		if (graph.getStrV(currentVertexID, "name").compareTo(TARGETNAME) == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * TODO: auf private schreiben
+	 * Methode prueft ob alle markierten Knoten inspeziert sind, 
+	 * wenn das der Fall ist, dann wird false zurueck gelieft. 
+	 * @return Boolean
+	 */
+	public boolean isAllmarkedVertexNotInspected() {
+		List<Integer> markedVertexIDList = new ArrayList<>();
+		//Schritt 1:
+		for (int vertexID : graph.getVertexes()) {				
+			if (isMarked(vertexID)) {
+				markedVertexIDList.add(vertexID);
+			}			
+		}
+		//Schritt 2:
+		for (int vertexID : markedVertexIDList) {
+			if (!isInspected(vertexID)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * TODO: Implementieren und auf privet setzen
+	 * Inspiziert einen Knoten, von den wir dann alles weiter betrachten.
+	 * Bekommen den neuen inspizierten Knoten zurueck
+	 * @param Integer currentInspectedVertexID - Der aktuelle inspizierte Knoten
+	 * @return Integer  
+	 */
+	public int inspectedRandomVertex(int currentInspectedVertexID) {
+		//Holle mir zuerst alle Knoten die mit currentInspectedVertexID verbunden sind
+		List<Integer> vertexIDList = graph.getAdjacent(currentInspectedVertexID);
+		List<Integer> uninspectedIDList = new ArrayList<>();
+		
+		//Jetzt filtern wir die nicht inspizierten heraus
+		for (int vertexID : vertexIDList) {
+			if(!isInspected(vertexID)) {
+				uninspectedIDList.add(vertexID);
+			}
+		}
+		
+		/*
+		 * jetzt mische ich die vertexIDList durch und nehme mir den ersten da raus.
+		 * Somit haben wir ein Psydo zufallgriff erschaffen.
+		 * Dies ist der Collections Klasse zu verdanken
+		 */
+		Collections.shuffle(uninspectedIDList); //wuerfelt den Array durch einander
+		
+		//Jetzt inspizieren wir den ausgewaehlten Knoten
+		setInspected(uninspectedIDList.get(0));
+		
+		//Den geben wir anschliessend auch wieder zurueck
+		return uninspectedIDList.get(0);
+	}
+
+	/**
 	 * Diese Methode Markiert alle Knoten, die sich zu/von den inspizierten Knoten sich befinden
 	 * @param Integer inspectedVertex - Ein inspizierter Knoten
 	 */
 	public void merkedAll(int inspectedVertex) {
 		//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
 		List<Integer> edgesFromCurrentVertex = graph.getIncident(inspectedVertex);
-		//List<Integer> edgesFromCurrentVertex = graph.getAdjacent(inspectedVertex);
-		System.out.println(edgesFromCurrentVertex);
 		
 		/*
 		 * Jetzt koennen wir bei den Knoten die Tupelwerte(markieren).
@@ -201,15 +267,11 @@ public class FordAndFulkerson {
 			
 			//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen			
 			vertexID = graph.getSource(edgeID);
-			System.out.println("Eine in gegengesetzte Richtung wurde entdeckt, von der namen " + graph.getStrV(vertexID, "name") + " und der ID = " + vertexID);
-			System.out.println("Kapazitaet " + getCapacityActualRiverTuple(edgeID)[0]);
-			System.out.println("tatsaechlicher Fluss " + getCapacityActualRiverTuple(edgeID)[1]);
 			if (!isMarked(vertexID)) {
 				//Hier muss erstmal das Delta berechnet werden
 				
 				//Kapazitaet der Kante hollen
 				int currentCapacity = getCapacity(edgeID);
-				System.out.println("Kapzitaet = " + currentCapacity);
 				
 				//Delta von der inspizierten Kante hollen
 				int inspectedDelta = getDelta(inspectedVertex);
