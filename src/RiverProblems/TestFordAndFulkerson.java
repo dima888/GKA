@@ -16,6 +16,7 @@ public class TestFordAndFulkerson {
 	
 	AIGraph graph;
 	FordAndFulkerson fordAndFulkerson;
+
 	int source;
 	int target;
 
@@ -83,10 +84,67 @@ public class TestFordAndFulkerson {
 		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 25, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v4ToSource, 2, 0);
 		
-		fordAndFulkerson.merkedAll(source);
+		fordAndFulkerson.markedAllVertex(source);
+		
+		List<Integer> vertexIDList = new ArrayList<>(Arrays.asList(source, v2, v4, v3));
+		//Funktioniert
+//		for (int vertexID : vertexIDList) {
+//			System.out.println("VertexID = " + graph.getStrV(vertexID, "name") + "; ID = " + vertexID + " marked = " + fordAndFulkerson.isMarked(vertexID) + " Tuple = (" + fordAndFulkerson.getPredecessorID(vertexID) + " | " + fordAndFulkerson.getDelta(vertexID) + ")");
+//		}
+	}
+	
+	@Test
+	public void markedAllTest2() {
+		//Erstellen der Knoten
+		//int source = graph.addVertex("Source");
+		int v2 = graph.addVertex("v2");
+		int v3 = graph.addVertex("v3");
+		int v4 = graph.addVertex("v4");
+		
+		//Kanten hinzu fuegen
+		int sourceTov2 = graph.addEdgeD(source, v2);
+		int v4ToSource = graph.addEdgeD(v4, source);
+		int v2Tov3 = graph.addEdgeD(v2, v3);
+				
+		//Bei den Kanten den zweier Tupel von Kapazitaet und tatsaechlichen Fluss setzten
+		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 3, 2);
+		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 25, 2);
+		fordAndFulkerson.setCapacityActualRiverTuple(v4ToSource, 2, 4);
+		
+		fordAndFulkerson.markedAllVertex(source);
 		
 		List<Integer> vertexIDList = new ArrayList<>(Arrays.asList(source, v2, v4, v3));
 		
+		//Funktioniert
+//		for (int vertexID : vertexIDList) {
+//			System.out.println("VertexID = " + graph.getStrV(vertexID, "name") + "; ID = " + vertexID + " marked = " + fordAndFulkerson.isMarked(vertexID) + " Tuple = (" + fordAndFulkerson.getPredecessorID(vertexID) + " | " + fordAndFulkerson.getDelta(vertexID) + ")");
+//		}
+	}
+	
+	@Test
+	public void markedAllTest3() {
+		//Erstellen der Knoten
+		//int source = graph.addVertex("Source");
+		int v2 = graph.addVertex("v2");
+		int v3 = graph.addVertex("v3");
+		int v4 = graph.addVertex("v4");
+		
+		//Kanten hinzu fuegen
+		int sourceTov2 = graph.addEdgeD(source, v2);
+		int v4ToSource = graph.addEdgeD(v4, source);
+		int v2Tov3 = graph.addEdgeD(v2, v3);
+				
+		//Bei den Kanten den zweier Tupel von Kapazitaet und tatsaechlichen Fluss setzten
+		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 7, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 12, 6);
+		fordAndFulkerson.setCapacityActualRiverTuple(v4ToSource, 10, 4);
+		
+		fordAndFulkerson.markedAllVertex(source);
+		fordAndFulkerson.inspectedRandomVertex(source);
+		fordAndFulkerson.markedAllVertex(v2);
+		
+		List<Integer> vertexIDList = new ArrayList<>(Arrays.asList(source, v2, v4, v3));
+		//Funktioniert
 //		for (int vertexID : vertexIDList) {
 //			System.out.println("VertexID = " + graph.getStrV(vertexID, "name") + "; ID = " + vertexID + " marked = " + fordAndFulkerson.isMarked(vertexID) + " Tuple = (" + fordAndFulkerson.getPredecessorID(vertexID) + " | " + fordAndFulkerson.getDelta(vertexID) + ")");
 //		}
@@ -154,10 +212,14 @@ public class TestFordAndFulkerson {
 		int v5Tov3 = graph.addEdgeD(v5, v3);
 		int v5Tos = graph.addEdgeD(v5, target);
 		
+		
+		
 		//Funktioniert!
 		int inspectedVertex = source;
-//		System.out.println("VertexListe die mit den inspizierten Knoten in direkter Verbindung stehen: " + graph.getAdjacent(inspectedVertex)) ;
-//		//System.out.println("Davon die VertexListe, deren Knoten noch nicht inspiziert sind: " ); 
-//		System.out.println(graph.getStrV(fordAndFulkerson.inspectedRandomVertex(inspectedVertex), "name") + " wurde inspiziert mit der ID: " + fordAndFulkerson.inspectedRandomVertex(inspectedVertex));
+		fordAndFulkerson.markedAllVertex(inspectedVertex);
+		
+//		system.out.println("vertexliste die mit den inspizierten knoten in direkter verbindung stehen: " + graph.getadjacent(inspectedvertex)) ;
+//		//system.out.println("davon die vertexliste, deren knoten noch nicht inspiziert sind: " ); 
+//		system.out.println("wurde inspiziert mit der id: " + fordandfulkerson.inspectedrandomvertex(inspectedvertex));
 	}
 }

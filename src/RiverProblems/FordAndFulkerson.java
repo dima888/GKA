@@ -61,7 +61,7 @@ public class FordAndFulkerson {
 		
 		//source & target benennen
 		graph.setStrV(source, "name", SOURCENAME);
-		graph.setStrV(source, "name", TARGETNAME);
+		graph.setStrV(target, "name", TARGETNAME);
 		
 		//Start Knoten Markieren und inspizieren
 		setMarked(source, UNDEFINE, INFINITE);
@@ -114,13 +114,16 @@ public class FordAndFulkerson {
 		while (isAllmarkedVertexNotInspected()) {
 			
 			//Hier werden alle Knoten markiert, die mit den inspizierten Knoten verbunden sind			
-			merkedAll(currentVertexID);
+			markedAllVertex(currentVertexID);
 			
 			/*
 			 * Jetzt nehmen wir eine beliebigen Knoten und inpezieren den!
 			 * So mit ist das jetzt unser neuer aktueller inspizierter Knoten
 			 */
 			currentVertexID = inspectedRandomVertex(currentVertexID);
+			if(currentVertexID == -1) {
+				break;
+			}
 			
 			/*
 			 * In der Methode pruefen wir, ob der Zielknoten(Target) gefunden wurde
@@ -129,11 +132,11 @@ public class FordAndFulkerson {
 			 * Wir geben auch den vergroesserten Fluss an
 			 */
 			if(isTarget(currentVertexID)) {
-				runBack();
+				backToTheSource();
 			}
 		}
 		
-
+		System.out.println("Fertig");
 		/*
 		 * Schritt 4 Es gibt keinen vergrößernden Weg. Der jetzige Wert von d
 		 * ist optimal. Ein Schnitt A(X,X) mit c(X,X) = d wird gebildet von
@@ -150,7 +153,7 @@ public class FordAndFulkerson {
 	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen,
 	 * Markierungen und gibt uns den vergroesserten Weg an
 	 */
-	public void runBack() {
+	public void backToTheSource() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -193,7 +196,7 @@ public class FordAndFulkerson {
 	}
 	
 	/**
-	 * TODO: Implementieren und auf privet setzen
+	 * TODO: auf privet setzen 
 	 * Inspiziert einen Knoten, von den wir dann alles weiter betrachten.
 	 * Bekommen den neuen inspizierten Knoten zurueck
 	 * @param Integer currentInspectedVertexID - Der aktuelle inspizierte Knoten
@@ -202,34 +205,54 @@ public class FordAndFulkerson {
 	public int inspectedRandomVertex(int currentInspectedVertexID) {
 		//Holle mir zuerst alle Knoten die mit currentInspectedVertexID verbunden sind
 		List<Integer> vertexIDList = graph.getAdjacent(currentInspectedVertexID);
-		List<Integer> uninspectedIDList = new ArrayList<>();
+		List<Integer> uninspectedVertexIDList = new ArrayList<>();
+		List<Integer> legitimUninspectedVertexIDList = new ArrayList<>();
+		
+ 
 		
 		//Jetzt filtern wir die nicht inspizierten heraus
 		for (int vertexID : vertexIDList) {
 			if(!isInspected(vertexID)) {
-				uninspectedIDList.add(vertexID);
+				uninspectedVertexIDList.add(vertexID);
 			}
 		}
 		
 		/*
-		 * jetzt mische ich die vertexIDList durch und nehme mir den ersten da raus.
+		 * Jetzt muss geprueft werden, ob die gefilterten markiert sind, sonst duerfen wir den Knoten nicht inspizieren
+		 * Etwas redundant, aber sicher
+		 */
+		for (int vertexID : uninspectedVertexIDList) {
+			if(isMarked(vertexID)) {
+				legitimUninspectedVertexIDList.add(vertexID);
+			}
+		}
+		
+		//Precondition: TODO: Keine Ahnung wie ich das noch loesen soll
+		if(legitimUninspectedVertexIDList.size() < 1) {			
+			return -1;
+		}
+			
+		/*
+		 * Hier werden alle Verteces aus der Liste entfernt, außer nur einer und das per Zufall
 		 * Somit haben wir ein Psydo zufallgriff erschaffen.
 		 * Dies ist der Collections Klasse zu verdanken
 		 */
-		Collections.shuffle(uninspectedIDList); //wuerfelt den Array durch einander
+		Collections.shuffle(legitimUninspectedVertexIDList); //wuerfelt den Array durch einander
 		
 		//Jetzt inspizieren wir den ausgewaehlten Knoten
-		setInspected(uninspectedIDList.get(0));
+		System.out.println("Das ist gerade in der Liste " + legitimUninspectedVertexIDList);
+		setInspected(legitimUninspectedVertexIDList.get(0));
 		
 		//Den geben wir anschliessend auch wieder zurueck
-		return uninspectedIDList.get(0);
+		return legitimUninspectedVertexIDList.get(0);
 	}
 
 	/**
-	 * Diese Methode Markiert alle Knoten, die sich zu/von den inspizierten Knoten sich befinden
+	 * Diese Methode Markiert alle Knoten, die sich zu/von den inspizierten Knoten befinden
+	 * Jedoch muessen die Kritaerien des Algorithmus erfuellt sein, damit dies passieren kann
 	 * @param Integer inspectedVertex - Ein inspizierter Knoten
 	 */
-	public void merkedAll(int inspectedVertex) {
+	public void markedAllVertex(int inspectedVertex) {
 		//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
 		List<Integer> edgesFromCurrentVertex = graph.getIncident(inspectedVertex);
 		
@@ -242,24 +265,36 @@ public class FordAndFulkerson {
 			//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
 			int vertexID = graph.getTarget(edgeID);
 			if (!isMarked(vertexID)) {
-				//Hier muss erstmal das Delta berechnet werden
 				
 				//Kapazitaet der Kante hollen
 				int currentCapacity = getCapacity(edgeID);
 				
-				//Delta von der inspizierten Kante hollen
+				//Tatsaechlichen Fluss der Kante hollen
+				int currentActualRiver = getActualRiver(edgeID);
+				
+				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
+				if(currentCapacity < currentActualRiver) {
+					continue;
+				}
+				
+				//Delta von der inspizierten Knoten hollen
 				int inspectedDelta = getDelta(inspectedVertex);
 				
-				//Jetzt findet die Pruefungen statt
+				//Das ist ein Sonderfall, gilt nur fuer ersten durchlauf mit source
 				if (inspectedDelta == INFINITE) {						
 					setMarked(vertexID, inspectedVertex, currentCapacity);
 					continue;
 				} else {
-					if (currentCapacity > inspectedDelta) {
+					/*
+					 * Berechnung von Delta
+					 * Formel: DeltaJ = MIN( (c(e ij) - f(e ij)) ,  DeltaI)
+					 */
+					int buffer = currentCapacity - currentActualRiver;
+					if (buffer > inspectedDelta) {
 						setMarked(vertexID, inspectedVertex, inspectedDelta);
 						continue;
 					} else {
-						setMarked(vertexID, inspectedVertex, currentCapacity);
+						setMarked(vertexID, inspectedVertex, buffer);
 						continue;
 					}
 				}									
@@ -268,24 +303,35 @@ public class FordAndFulkerson {
 			//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen			
 			vertexID = graph.getSource(edgeID);
 			if (!isMarked(vertexID)) {
-				//Hier muss erstmal das Delta berechnet werden
+				
+				//Tatsaechlichen Fluss der Kante hollen
+				int currentActualRiver = getActualRiver(edgeID);
+				
+				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
+				if(currentActualRiver < 0) {
+					continue;
+				}
 				
 				//Kapazitaet der Kante hollen
 				int currentCapacity = getCapacity(edgeID);
 				
-				//Delta von der inspizierten Kante hollen
+				//Delta von der inspizierten Knoten hollen
 				int inspectedDelta = getDelta(inspectedVertex);
 				
-				//Jetzt findet die Pruefungen statt
+				//Das ist ein Sonderfall, gilt nur fuer ersten durchlauf mit source
 				if (inspectedDelta == INFINITE) {						
-					setMarked(vertexID, inspectedVertex, currentCapacity);
+					setMarked(vertexID, -inspectedVertex, currentCapacity);
 					continue;
 				} else {
+					/*
+					 * Berechnung von Delta
+					 * Formel: DeltaJ = MIN(f(e ij), DeltaI)
+					 */
 					if (currentCapacity > inspectedDelta) {
-						setMarked(vertexID, inspectedVertex, inspectedDelta);
+						setMarked(vertexID, -inspectedVertex, inspectedDelta);
 						continue;
 					} else {
-						setMarked(vertexID, inspectedVertex, currentCapacity);
+						setMarked(vertexID, -inspectedVertex, currentCapacity);
 						continue;
 					}
 				}
@@ -293,6 +339,15 @@ public class FordAndFulkerson {
 		}
 	}
 	
+	/**
+	 * TODO: Private machen
+	 * Die Methode lieft uns den tatsaechlichen Fluss einer Kante 
+	 * @param Integer edgeID - Eine ID von einer Kante, auf die wir zugreifen moechten
+	 * @return Integer
+	 */
+	public int getActualRiver(int edgeID)  {
+		return graph.getValE(edgeID, "actualRiver");
+	}
 	
 	/**
 	 * TODO: private machen
