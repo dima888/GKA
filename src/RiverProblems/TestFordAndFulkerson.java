@@ -53,15 +53,53 @@ public class TestFordAndFulkerson {
 		int sourceTov4 = graph.addEdgeD(source, v4);
 		int v2Tov3 = graph.addEdgeD(v2, v3);
 		int v3Tov4 = graph.addEdgeD(v3, v4);
-		int v3Tos = graph.addEdgeD(v3, target);
+		int v3Totarget = graph.addEdgeD(v3, target);
 		
 		int v4Tov2 = graph.addEdgeD(v4, v2);
 		int v4Tov5 = graph.addEdgeD(v4, v5);
 		int v5Tov3 = graph.addEdgeD(v5, v3);
-		int v5Tos = graph.addEdgeD(v5, target);
+		int v5Totarget = graph.addEdgeD(v5, target);
 		
-		//this.fordAndFulkerson.startAlgorithmus(graph, source, s);
-		//assertEsourceuals(expected, fordAndFulkerson.getOptiomalRiver());
+		//Tupe der Kanten Setzten
+		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 3, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v3Totarget, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v3Tov4, 2, 0);
+		
+		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov4, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov2, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov5, 2, 0);
+		
+		fordAndFulkerson.setCapacityActualRiverTuple(v5Tov3, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v5Totarget, 4, 0);
+		
+		//Tupelwerte Vorher:
+		System.out.println("Vorher: ");
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov2));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov4) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov4));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v2Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v2Tov3));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Tov4) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Tov4));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Totarget));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v4Tov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v4Tov2));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v4Tov5) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v4Tov5));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v5Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v5Tov3));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v5Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v5Totarget));
+		
+		System.out.println(graph.toString());
+		fordAndFulkerson.startAlgorithmus();
+		
+		//Die Tupelwerwte nachher:
+		System.out.println("Nachher: ");
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov2));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov4) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov4));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v2Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v2Tov3));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Tov4) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Tov4));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Totarget));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v4Tov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v4Tov2));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v4Tov5) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v4Tov5));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v5Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v5Tov3));
+		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v5Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v5Totarget));
+		
 	}
 	
 	@Test
@@ -221,5 +259,61 @@ public class TestFordAndFulkerson {
 //		system.out.println("vertexliste die mit den inspizierten knoten in direkter verbindung stehen: " + graph.getadjacent(inspectedvertex)) ;
 //		//system.out.println("davon die vertexliste, deren knoten noch nicht inspiziert sind: " ); 
 //		system.out.println("wurde inspiziert mit der id: " + fordandfulkerson.inspectedrandomvertex(inspectedvertex));
+	}
+	
+	@Test
+	public void backToTheSourceTest() {
+		//Erstellen der Knoten
+		int v2 = graph.addVertex("v2");
+		int v3 = graph.addVertex("v3");
+		
+		//Erstellen der Kanten
+		int sourceTov2 = graph.addEdgeD(source, v2);
+		int v2Tov3 = graph.addEdgeD(v2, v3);
+		int v3Totarget = graph.addEdgeD(v3, target);
+		
+		//Tupe der Kanten Setzten
+		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 3, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v3Totarget, 2, 0);
+		
+		//Die Knoten markieren :
+		fordAndFulkerson.markedAllVertex(source);
+		fordAndFulkerson.inspectedRandomVertex(source);
+		
+		fordAndFulkerson.markedAllVertex(v2);
+		fordAndFulkerson.inspectedRandomVertex(v2);
+		
+		fordAndFulkerson.markedAllVertex(v3);
+		fordAndFulkerson.inspectedRandomVertex(v3);
+		
+		fordAndFulkerson.markedAllVertex(target);
+		fordAndFulkerson.inspectedRandomVertex(target);
+		
+		//Funktioniert fuer den definierten Fall!
+		
+		//Einmal betrachten wie der Graph vor der Methode aussieht
+//		System.out.println("Vorher: ");
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov2));
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v2Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v2Tov3));
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Totarget));
+//		System.out.println(fordAndFulkerson.isMarked(source));
+//		System.out.println(fordAndFulkerson.isMarked(v2));
+//		System.out.println(fordAndFulkerson.isMarked(v3));
+//		System.out.println(fordAndFulkerson.isMarked(target));
+//		
+//		fordAndFulkerson.backToTheSource(target);
+//		
+//		//Betrachten, wie der Graph nach der Methode aussieht
+//		System.out.println("Nachher: ");
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(sourceTov2) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(sourceTov2));
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v2Tov3) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v2Tov3));
+//		System.out.println("Kapazitaet = " + fordAndFulkerson.getCapacity(v3Totarget) + " Tatsaechlicher Fluss = " + fordAndFulkerson.getActualRiver(v3Totarget));
+//		System.out.println(fordAndFulkerson.isMarked(source));
+//		System.out.println(fordAndFulkerson.isMarked(v2));
+//		System.out.println(fordAndFulkerson.isMarked(v3));
+//		System.out.println(fordAndFulkerson.isMarked(target));
+		
+		
 	}
 }

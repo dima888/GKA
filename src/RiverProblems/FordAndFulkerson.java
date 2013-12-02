@@ -46,6 +46,7 @@ public class FordAndFulkerson {
 	private String SOURCENAME = "source";
 	private String TARGETNAME = "target";
 	private static final int UNDEFINE = -10;
+	private static final int UNDEFINEFORMARKED = -1;
 	private static final int INFINITE = Integer.MAX_VALUE;
 	private static final String INSPECTED = "*";
 	private static final String EMPTY = "empty";
@@ -138,6 +139,7 @@ public class FordAndFulkerson {
 		}
 		
 		System.out.println("Fertig");
+		
 		/*
 		 * Schritt 4 Es gibt keinen vergrößernden Weg. Der jetzige Wert von d
 		 * ist optimal. Ein Schnitt A(X,X) mit c(X,X) = d wird gebildet von
@@ -154,14 +156,14 @@ public class FordAndFulkerson {
 	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen und Markierungen,
 	 * gibt uns den vergroesserten Weg an
 	 * Aktuelle ID wird wieder auf source gesetzt
-	 * @param Integer currentVertexID - Aktuelle ID mit der wir arbeiten
+	 * @param Integer currentVertexID - Aktuelle ID mit der wir arbeiten und zwar der Target(s)
 	 */
 	public void backToTheSource(int currentVertexID) {		
 		//Abspeichern von DeltaS
 		int deltaS = graph.getValV(currentVertexID, "delta");
 		
-		//Abbruchbedingung noch einbauen
-		while (true) {
+		//Abbruchbedinung = Wenn currentVertexID = SourceID ist
+		while (isNotSource(currentVertexID)) {
 			
 			//Die ID des Vorgaengers hollen
 			int predecessorID = graph.getValV(currentVertexID, "predecessorID");
@@ -172,26 +174,39 @@ public class FordAndFulkerson {
 			 * Dann suchen nach der Kante die predecessorID und currentVertexID verbindet
 			 */
 			List<Integer> edgeIDLIst = graph.getIncident(currentVertexID);
-			int currentEdgeID;
+			int currentEdgeID = 0;
 			for (int edgeID : edgeIDLIst) {
 				
 				if ((graph.getSource(edgeID) == predecessorID && graph.getTarget(edgeID) == currentVertexID) || (graph.getSource(edgeID) == currentVertexID && graph.getTarget(edgeID) == predecessorID)) {
+					System.out.println("Richtige Kante gefunden");
 					currentEdgeID = edgeID;
 				}
 			}
 			
 			/*
 			 * Hier pruefen wir, ob wir eine Vorwaerskante oder Ruckwaerskante haben.
-			 * Bei Vorwaerskante ist die predecessorID positiv und f(e ij) wird erhoeht.
-			 * Bei Rueckwaerts ist die predecessorID negativ und f(e ij) wird vermindert.
+			 * Bei Vorwaerskante ist die predecessorID positiv und f(e ij) wird erhoeht um DeltaS.
+			 * Bei Rueckwaerts ist die predecessorID negativ und f(e ij) wird vermindert um DeltaS.
 			 */
 			if(predecessorID > 0) {
-				//Vorwaerskante
-				
+				//Vorwaerskante				
+				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") + deltaS;				
+				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);						
 			} else {
-				//Rueckwaerts
+				//Rueckwaertskante
+				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") - deltaS;
+				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);
+				predecessorID = (predecessorID * -1);
 			}
 			
+			/*
+			 * Markierung und Inspizierung des aktuellen Knoten entfernen
+			 * currentVertexID auf predecessor setzten,
+			 * somit gehen wir einen Schritt zurueck 
+			 */
+			deleteInspected(currentVertexID);
+			deleteMarked(currentVertexID);
+			currentVertexID = predecessorID;
 		}		
 	}
 
@@ -210,6 +225,7 @@ public class FordAndFulkerson {
 	}
 
 	/**
+	 * TODO: Hier ist ein schwachpunkt, am anfang liefert die methode schon false zurueck und das ist nicht ganz richtig
 	 * TODO: auf private schreiben
 	 * Methode prueft ob alle markierten Knoten inspeziert sind, 
 	 * wenn das der Fall ist, dann wird false zurueck gelieft. 
@@ -277,7 +293,6 @@ public class FordAndFulkerson {
 		Collections.shuffle(legitimUninspectedVertexIDList); //wuerfelt den Array durch einander
 		
 		//Jetzt inspizieren wir den ausgewaehlten Knoten
-		System.out.println("Das ist gerade in der Liste " + legitimUninspectedVertexIDList);
 		setInspected(legitimUninspectedVertexIDList.get(0));
 		
 		//Den geben wir anschliessend auch wieder zurueck
@@ -466,15 +481,6 @@ public class FordAndFulkerson {
 	}
 	
 	/**
-	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Markierung
-	 * @param Integer currentID - Die ID von der die Markierung entfernt wird
-	 */
-	private void deleteMarked(Integer currentID) {
-		this.graph.setValV(currentID, "predecessorID", UNDEFINE);
-		this.graph.setValV(currentID, "delta", UNDEFINE);
-	}
-	
-	/**
 	 * TODO: Auf private setzten
 	 * Mit der Methode kann der tatsaechliche Fluss gesetzt werden.
 	 * @param Integer currentID - Die ID zu den gehoeriger Kante
@@ -485,10 +491,20 @@ public class FordAndFulkerson {
 	}
 	
 	/**
+	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Markierung
+	 * @param Integer currentID - Die ID von der die Markierung entfernt wird
+	 */
+	private void deleteMarked(Integer currentID) {
+		this.graph.setValV(currentID, "predecessorID", UNDEFINEFORMARKED);
+		this.graph.setValV(currentID, "delta", UNDEFINEFORMARKED);
+	}
+	
+	
+	/**
 	 * Entfernt in einer/einem {Ecke, Knoten, Vertex} eines Graphes die Inspizierung
 	 * @param Integer currentID - Die ID von der/dem {Ecke, Knoten, Vertex} aud der die Inspektion entfernt wird 
 	 */
-	private void deleteInspected(Integer currentID) {
+	private void deleteInspected(int currentID) {
 		this.graph.setStrV(currentID, "inspected", EMPTY);
 	}
 	
@@ -498,8 +514,8 @@ public class FordAndFulkerson {
 	 * @param Integer currentID - ID der/des {Ecke, Knoten, Vertex} was geprueft wird
 	 * @return Boolean
 	 */
-	public boolean isMarked(Integer currentID) {
-		if (graph.getValV(currentID, "predecessorID") == -1) {
+	public boolean isMarked(int currentID) {
+		if (graph.getValV(currentID, "predecessorID") == UNDEFINEFORMARKED) {
 			return false;
 		}
 		return true;
@@ -511,8 +527,22 @@ public class FordAndFulkerson {
 	 * @param Integer currentID - ID der/des {Ecke, Knoten, Vertex} was geprueft wird
 	 * @return
 	 */
-	private boolean isInspected(Integer currentID) {
+	private boolean isInspected(int currentID) {
 		if (graph.getStrV(currentID, "inspected").compareTo(EMPTY) == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * TODO: Methode auf private setzen
+	 * Methode prueft ob der uebergebene Paramenter die Quelle ist.
+	 * Wenn es nicht die Quelle ist, dann wird true return und sonst false.
+	 * @param Integer currendVertexID - Uebergebene ID die wir uns anschauen
+	 * @return Boolean
+	 */
+	public boolean isNotSource(int currendVertexID) {
+		if (graph.getValV(currendVertexID, "predecessorID") == UNDEFINE) {
 			return false;
 		}
 		return true;
