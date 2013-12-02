@@ -156,9 +156,43 @@ public class FordAndFulkerson {
 	 * Aktuelle ID wird wieder auf source gesetzt
 	 * @param Integer currentVertexID - Aktuelle ID mit der wir arbeiten
 	 */
-	public void backToTheSource(int currentVertexID) {
-		// TODO Auto-generated method stub
+	public void backToTheSource(int currentVertexID) {		
+		//Abspeichern von DeltaS
+		int deltaS = graph.getValV(currentVertexID, "delta");
 		
+		//Abbruchbedingung noch einbauen
+		while (true) {
+			
+			//Die ID des Vorgaengers hollen
+			int predecessorID = graph.getValV(currentVertexID, "predecessorID");
+			
+			/*
+			 * Die Kante zwischen currentID predecessorID heraus finden
+			 * Zuerst hollen wir uns alle Kanten die zur currentVertexID anliegen
+			 * Dann suchen nach der Kante die predecessorID und currentVertexID verbindet
+			 */
+			List<Integer> edgeIDLIst = graph.getIncident(currentVertexID);
+			int currentEdgeID;
+			for (int edgeID : edgeIDLIst) {
+				
+				if ((graph.getSource(edgeID) == predecessorID && graph.getTarget(edgeID) == currentVertexID) || (graph.getSource(edgeID) == currentVertexID && graph.getTarget(edgeID) == predecessorID)) {
+					currentEdgeID = edgeID;
+				}
+			}
+			
+			/*
+			 * Hier pruefen wir, ob wir eine Vorwaerskante oder Ruckwaerskante haben.
+			 * Bei Vorwaerskante ist die predecessorID positiv und f(e ij) wird erhoeht.
+			 * Bei Rueckwaerts ist die predecessorID negativ und f(e ij) wird vermindert.
+			 */
+			if(predecessorID > 0) {
+				//Vorwaerskante
+				
+			} else {
+				//Rueckwaerts
+			}
+			
+		}		
 	}
 
 	/**
