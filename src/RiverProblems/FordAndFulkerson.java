@@ -114,7 +114,7 @@ public class FordAndFulkerson {
 		 */
 		do  {
 			
-			System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
+			//System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
 			
 			//Hier werden alle Knoten markiert, die mit den inspizierten Knoten verbunden sind			
 			markedAllVertex(currentVertexID);
@@ -185,7 +185,7 @@ public class FordAndFulkerson {
 			for (int edgeID : edgeIDLIst) {
 				
 				if ((graph.getSource(edgeID) == predecessorID && graph.getTarget(edgeID) == currentVertexID) || (graph.getSource(edgeID) == currentVertexID && graph.getTarget(edgeID) == predecessorID)) {
-					System.out.println("Richtige Kante gefunden");
+//					System.out.println("Richtige Kante gefunden");
 					currentEdgeID = edgeID;
 				}
 			}
@@ -203,7 +203,7 @@ public class FordAndFulkerson {
 			 * Bei Vorwaerskante ist die predecessorID positiv und f(e ij) wird erhoeht um DeltaS.
 			 * Bei Rueckwaerts ist die predecessorID negativ und f(e ij) wird vermindert um DeltaS.
 			 */
-			if(predecessorID > 0) {
+			if(predecessorID >= 0) {
 				//Vorwaerskante				
 				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") + deltaS;				
 				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);						
@@ -271,14 +271,14 @@ public class FordAndFulkerson {
 		
 		//TODO: Nur zum testen
 		for (int vertexID : markedVertexIDList) {
-			System.out.println("Markierten Knoten: " + graph.getStrV(vertexID, "name"));
+			System.out.println("Markierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
 		}
 		System.out.println("---------------------------------------------------------------------------");
 		
 		//TODO: Nur zum testen
 		for (int vertexID : markedVertexIDList) {
 			if (isInspected(vertexID)) {
-				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name"));
+				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
 			}
 		}
 		System.out.println("----------------------------------------------------------------------------");
@@ -300,6 +300,7 @@ public class FordAndFulkerson {
 	 * @return Integer  
 	 */
 	public int inspectedRandomVertex(int currentInspectedVertexID) {
+		System.out.println("Bertette InspectRandom");
 		//Holle mir zuerst alle Knoten die mit currentInspectedVertexID verbunden sind
 		List<Integer> vertexIDList = graph.getAdjacent(currentInspectedVertexID);
 		List<Integer> uninspectedVertexIDList = new ArrayList<>();
@@ -325,13 +326,23 @@ public class FordAndFulkerson {
 					setInspected(target);
 					return target;
 				}
-				legitimUninspectedVertexIDList.add(vertexID);
+				/*
+				 * TODO: Dieses IF neu eingebaut
+				 * Es duerfen die inspiziert werden, 
+				 * die von markierten vorgaenger markiert wurden
+				 */
+				if (currentInspectedVertexID == graph.getValV(vertexID, "predecessorID")) {
+					legitimUninspectedVertexIDList.add(vertexID);
+				}
+				
 			}
 		}			
 		
 		//Precondition: TODO: Keine Ahnung wie ich das noch loesen soll
 		if(legitimUninspectedVertexIDList.size() < 1) {			
-			return -1;
+			System.out.println("TODO: Hilfe");
+			//return -1;
+			return graph.getValV(currentInspectedVertexID, "predecessorID");
 		}
 			
 		/*
@@ -368,7 +379,7 @@ public class FordAndFulkerson {
 		for (int edgeID : edgesFromCurrentVertex) {
 			//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
 			int vertexID = graph.getTarget(edgeID);
-			System.out.println("CurrentVertex( " + graph.getStrV(inspectedVertex, "name") +  ")" + " zeigt mit Vorwaertskante auf: " + graph.getStrV(vertexID, "name"));
+			//System.out.println("CurrentVertex( " + graph.getStrV(inspectedVertex, "name") +  ")" + " zeigt mit Vorwaertskante auf: " + graph.getStrV(vertexID, "name"));
 			if (!isMarked(vertexID)) {
 				
 				//Kapazitaet der Kante hollen
@@ -379,10 +390,13 @@ public class FordAndFulkerson {
 				
 				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
 				System.out.println("aktueler Kanten Tupel: (" + currentCapacity + " | " + currentActualRiver + ")");
-				if(currentCapacity <= currentActualRiver) {
-					System.out.println("FEHLER; DAS DARF NICHT PASSIEREN");
+				if(currentCapacity <= currentActualRiver) { //<=
+					//throw new IllegalArgumentException("currentCapacity <= currentActualRiver" + "    " + currentCapacity + " <= " + currentActualRiver);
+					 //throw new IllegalArgumentException( "Kein Alter <= 0 erlaubt!" );
+					System.out.println(graph.getStrV(vertexID, "name") + " DARF NICHT MARKIERT WERDEN");
 					continue;
 				}
+				 
 				
 				//Delta von der inspizierten Knoten hollen
 				int inspectedDelta = getDelta(inspectedVertex);
@@ -404,12 +418,12 @@ public class FordAndFulkerson {
 						setMarked(vertexID, inspectedVertex, buffer);
 						continue;
 					}
-				}									
+				}
 			}
 			
 			//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen			
 			vertexID = graph.getSource(edgeID);
-			System.out.println(graph.getStrV(vertexID, "name") + " zeigt auf CurrentVertex(" + "CurrentVertex( " + graph.getStrV(inspectedVertex, "name") + ")"  + ", somit ist es eine Rueckwaertskante");
+			//System.out.println(graph.getStrV(vertexID, "name") + " zeigt auf CurrentVertex(" + "CurrentVertex( " + graph.getStrV(inspectedVertex, "name") + ")"  + ", somit ist es eine Rueckwaertskante");
 			if (!isMarked(vertexID)) {
 				
 				//Tatsaechlichen Fluss der Kante hollen
