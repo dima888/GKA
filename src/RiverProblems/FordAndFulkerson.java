@@ -112,7 +112,9 @@ public class FordAndFulkerson {
 		 * Schritt 2) Dann laufen wir ueber die markierten und pruefen ob sie alle inpiziert sind,
 		 * wenn ja, dann lieft die Methode false zurueck und die whileschleife wird verlassen
 		 */
-		while (isAllmarkedVertexNotInspected()) {
+		do  {
+			
+			System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
 			
 			//Hier werden alle Knoten markiert, die mit den inspizierten Knoten verbunden sind			
 			markedAllVertex(currentVertexID);
@@ -127,6 +129,8 @@ public class FordAndFulkerson {
 				break;
 			}
 			
+			System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
+			
 			/*
 			 * In der Methode pruefen wir, ob der Zielknoten(Target) gefunden wurde
 			 * Wenn ja, dann laufen wir zurueck und entfernen alle Markierungen, sowie
@@ -134,9 +138,10 @@ public class FordAndFulkerson {
 			 * Wir geben auch den vergroesserten Fluss an
 			 */
 			if(isTarget(currentVertexID)) {
-				backToTheSource(currentVertexID);
+				currentVertexID = backToTheSource(currentVertexID);				
 			}
-		}
+			getFromAllEdgesTheTuple();
+		} while (isAllmarkedVertexNotInspected());
 		
 		System.out.println("Fertig");
 		
@@ -152,13 +157,13 @@ public class FordAndFulkerson {
 	}
 	
 	/**
-	 * TODO: auf private setzten
+	 * TODO: auf private setzten, TODO:HIer scheint noch der Fehler zu sein, dass nicht auf source wieder gesetzt wird
 	 * Laueft den ganzen Weg zurueck zur Source und entfernt alle inspizierungen und Markierungen,
 	 * gibt uns den vergroesserten Weg an
 	 * Aktuelle ID wird wieder auf source gesetzt
 	 * @param Integer currentVertexID - Aktuelle ID mit der wir arbeiten und zwar der Target(s)
 	 */
-	public void backToTheSource(int currentVertexID) {		
+	public int backToTheSource(int currentVertexID) {		
 		//Abspeichern von DeltaS
 		int deltaS = graph.getValV(currentVertexID, "delta");
 		
@@ -169,7 +174,7 @@ public class FordAndFulkerson {
 			int predecessorID = graph.getValV(currentVertexID, "predecessorID");
 			
 			/*
-			 * Die Kante zwischen currentID predecessorID heraus finden
+			 * Die Kante zwischen currentID und predecessorID heraus finden
 			 * Zuerst hollen wir uns alle Kanten die zur currentVertexID anliegen
 			 * Dann suchen nach der Kante die predecessorID und currentVertexID verbindet
 			 */
@@ -182,6 +187,14 @@ public class FordAndFulkerson {
 					currentEdgeID = edgeID;
 				}
 			}
+			
+			/*
+			 * Nehme alle Kanten von Predecessor, 
+			 * wenn der Source oder Target auf CurrentID
+			 * zeigt, dann haben wir unsere Kante gefunden
+			 * und koennen das Tupel setzten
+			 */
+			// int actualEdge = graph.getI
 			
 			/*
 			 * Hier pruefen wir, ob wir eine Vorwaerskante oder Ruckwaerskante haben.
@@ -204,10 +217,13 @@ public class FordAndFulkerson {
 			 * currentVertexID auf predecessor setzten,
 			 * somit gehen wir einen Schritt zurueck 
 			 */
-			deleteInspected(currentVertexID);
-			deleteMarked(currentVertexID);
+//			deleteInspected(currentVertexID);
+//			deleteMarked(currentVertexID);
 			currentVertexID = predecessorID;
-		}		
+			System.out.println("Auf den Rueckweg der aktuelle Knoten ist: " + graph.getStrV(currentVertexID, "name"));
+		}	
+		deleteAllMarkedAndInspectedValues();
+		return source;
 	}
 
 	/**
@@ -236,9 +252,14 @@ public class FordAndFulkerson {
 		//Schritt 1:
 		for (int vertexID : graph.getVertexes()) {				
 			if (isMarked(vertexID)) {
+				//Bei source eine Ausnahme machen
+				if (graph.getValV(vertexID, "ID") == source) {
+					continue;
+				}
 				markedVertexIDList.add(vertexID);
 			}			
 		}
+		System.out.println("Alle markierten KnotenIDs" + markedVertexIDList);
 		//Schritt 2:
 		for (int vertexID : markedVertexIDList) {
 			if (!isInspected(vertexID)) {
@@ -316,6 +337,7 @@ public class FordAndFulkerson {
 		for (int edgeID : edgesFromCurrentVertex) {
 			//erst gucken wir uns die Knoten an, die weg von inpizierten Knoten gehen
 			int vertexID = graph.getTarget(edgeID);
+			System.out.println("CurrentVertex( " + graph.getStrV(inspectedVertex, "name") +  ")" + " zeigt mit Vorwaertskante auf: " + graph.getStrV(vertexID, "name"));
 			if (!isMarked(vertexID)) {
 				
 				//Kapazitaet der Kante hollen
@@ -326,6 +348,7 @@ public class FordAndFulkerson {
 				
 				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
 				if(currentCapacity < currentActualRiver) {
+					System.out.println("FEHLER; DAS DARF NICHT PASSIEREN");
 					continue;
 				}
 				
@@ -354,13 +377,14 @@ public class FordAndFulkerson {
 			
 			//jetzt gucken wir uns die Knoten an, ob sie in Richtung des inzipierten Knoten gehen			
 			vertexID = graph.getSource(edgeID);
+			System.out.println(graph.getStrV(vertexID, "name") + " zeigt auf CurrentVertex(" + "CurrentVertex( " + graph.getStrV(inspectedVertex, "name") + ")"  + ", somit ist es eine Rueckwaertskante");
 			if (!isMarked(vertexID)) {
 				
 				//Tatsaechlichen Fluss der Kante hollen
 				int currentActualRiver = getActualRiver(edgeID);
 				
 				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
-				if(currentActualRiver < 0) {
+				if(currentActualRiver <= 0) {
 					continue;
 				}
 				
@@ -392,6 +416,32 @@ public class FordAndFulkerson {
 	}
 	
 	/**
+	 * TODO: Auf privet setzten
+	 * Methode entfernt alle Markierungen und alle Inpizierungen
+	 */
+	public void deleteAllMarkedAndInspectedValues() {
+		//Alle Markierungen entfernen
+		for (int vertexID : graph.getVertexes()) {
+			if (vertexID == source) {
+				continue;
+			}
+			if (isMarked(vertexID)) {
+				deleteMarked(vertexID);
+			}
+		}
+		
+		//Alle Inspiezierungen entfernen
+		for (int vertexID : graph.getVertexes()) {
+			if (vertexID == source) {
+				continue;
+			}
+			if (isInspected(vertexID)) {
+				deleteInspected(vertexID);
+			}
+		}
+	}
+	
+	/**
 	 * TODO: Private machen
 	 * Die Methode lieft uns den tatsaechlichen Fluss einer Kante 
 	 * @param Integer edgeID - Eine ID von einer Kante, auf die wir zugreifen moechten
@@ -399,6 +449,16 @@ public class FordAndFulkerson {
 	 */
 	public int getActualRiver(int edgeID)  {
 		return graph.getValE(edgeID, "actualRiver");
+	}
+	
+	/**
+	 * Gibt von allen Kanten die Tuple als string aus
+	 */
+	public void getFromAllEdgesTheTuple() {
+		for (int edgeID : graph.getEdges()) {
+			System.out.println("(" + getCapacityActualRiverTuple(edgeID)[0] + " | " + getCapacityActualRiverTuple(edgeID)[1] + ")");
+		}
+			
 	}
 	
 	/**
