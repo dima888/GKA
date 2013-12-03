@@ -64,13 +64,13 @@ public class TestFordAndFulkerson {
 		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 3, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 2, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v3Totarget, 2, 0);
-		fordAndFulkerson.setCapacityActualRiverTuple(v3Tov4, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v3Tov4, 1, 0);
 		
 		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov4, 2, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov2, 2, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov5, 2, 0);
 		
-		fordAndFulkerson.setCapacityActualRiverTuple(v5Tov3, 2, 0);
+		fordAndFulkerson.setCapacityActualRiverTuple(v5Tov3, 1, 0);
 		fordAndFulkerson.setCapacityActualRiverTuple(v5Totarget, 4, 0);
 		
 		//Tupelwerte Vorher:

@@ -128,8 +128,10 @@ public class FordAndFulkerson {
 			if(currentVertexID == -1) {
 				break;
 			}
+		System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID) + " AKTUELER KNOTEN");
 			
-			System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
+			markedAllVertex(currentVertexID);
+			
 			
 			/*
 			 * In der Methode pruefen wir, ob der Zielknoten(Target) gefunden wurde
@@ -249,6 +251,8 @@ public class FordAndFulkerson {
 	 */
 	public boolean isAllmarkedVertexNotInspected() {
 		List<Integer> markedVertexIDList = new ArrayList<>();
+		List<Integer> inspectedVertexIDList = new ArrayList<>();
+		
 		//Schritt 1:
 		for (int vertexID : graph.getVertexes()) {				
 			if (isMarked(vertexID)) {
@@ -259,7 +263,26 @@ public class FordAndFulkerson {
 				markedVertexIDList.add(vertexID);
 			}			
 		}
-		System.out.println("Alle markierten KnotenIDs" + markedVertexIDList);
+		
+		//Sonderpruefung
+		if (markedVertexIDList.size() == 0) {
+			return true;
+		}
+		
+		//TODO: Nur zum testen
+		for (int vertexID : markedVertexIDList) {
+			System.out.println("Markierten Knoten: " + graph.getStrV(vertexID, "name"));
+		}
+		System.out.println("---------------------------------------------------------------------------");
+		
+		//TODO: Nur zum testen
+		for (int vertexID : markedVertexIDList) {
+			if (isInspected(vertexID)) {
+				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name"));
+			}
+		}
+		System.out.println("----------------------------------------------------------------------------");
+		
 		//Schritt 2:
 		for (int vertexID : markedVertexIDList) {
 			if (!isInspected(vertexID)) {
@@ -296,10 +319,15 @@ public class FordAndFulkerson {
 		 * Etwas redundant, aber sicher
 		 */
 		for (int vertexID : uninspectedVertexIDList) {
-			if(isMarked(vertexID)) {
+			if(isMarked(vertexID)) {				
+				//Sonderregelung, wenn Target mit enthalten ist, dann gehen wir auch dahin!
+				if (vertexID == target) {
+					setInspected(target);
+					return target;
+				}
 				legitimUninspectedVertexIDList.add(vertexID);
 			}
-		}
+		}			
 		
 		//Precondition: TODO: Keine Ahnung wie ich das noch loesen soll
 		if(legitimUninspectedVertexIDList.size() < 1) {			
@@ -329,6 +357,9 @@ public class FordAndFulkerson {
 		//Hier hollen wir uns alle Kanten die an den inspizierten Knoten haengen
 		List<Integer> edgesFromCurrentVertex = graph.getIncident(inspectedVertex);
 		
+		//Sonderregelung
+		
+		
 		/*
 		 * Jetzt koennen wir bei den Knoten die Tupelwerte(markieren).
 		 * Muessen hier auch in die entgegengesetzte Richtung schauen!
@@ -347,7 +378,8 @@ public class FordAndFulkerson {
 				int currentActualRiver = getActualRiver(edgeID);
 				
 				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
-				if(currentCapacity < currentActualRiver) {
+				System.out.println("aktueler Kanten Tupel: (" + currentCapacity + " | " + currentActualRiver + ")");
+				if(currentCapacity <= currentActualRiver) {
 					System.out.println("FEHLER; DAS DARF NICHT PASSIEREN");
 					continue;
 				}
