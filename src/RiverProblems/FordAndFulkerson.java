@@ -31,8 +31,12 @@
  */
 package RiverProblems;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import graph_lib.AIGraph;
+
 import java.util.Collections;
 /*
  * Der Algorithmus von Ford und Fulkerson IM GRBUCH SEITE 98
@@ -52,7 +56,8 @@ public class FordAndFulkerson {
 	private static final String EMPTY = "empty";
 	private int access = 0; //Zugriff
 	private int optimalRiver = 0; //Der optimale Fluss
-	
+	private int optimalFlow = 0;
+	private Set<Integer> markedVertexSet = new HashSet<>();
 	//***************KONSTRUKTOR********************
 	public FordAndFulkerson(AIGraph graph, int source, int target) {
 //		super();
@@ -133,7 +138,7 @@ public class FordAndFulkerson {
 		 */
 		do  {
 			
-			//System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
+			System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID));
 			
 			//Hier werden alle Knoten markiert, die mit den inspizierten Knoten verbunden sind			
 			markedAllVertex(currentVertexID);
@@ -144,17 +149,17 @@ public class FordAndFulkerson {
 			 * TODO: Die inspectedRandomVertex Methode vielleicht zu void machen, damit ich nicht auf -1 pruefen muss
 			 */
 			currentVertexID = inspectedRandomVertex(currentVertexID);
-			if(currentVertexID == -1) {
+//			if(currentVertexID == -1) {
+//				break;
+//			}
+			
+			/*
+			 * Alle Knoten markiet und inspiziert, wir kommen nicht mehr weiter
+			 * Hier wurde zurueck gegangen bis Source, aehnlich wie bei backtracking
+			 */
+			if(currentVertexID == UNDEFINE) {
 				break;
 			}
-			
-			if(currentVertexID == UNDEFINE) {
-				System.out.println("AWULLALALLALAL" + source);
-//				currentVertexID = source;
-//				break;
-				continue;
-			}
-			System.out.println("NADANCH STERBEN WIR");
 			System.out.println("*****AktuelleID " + currentVertexID + "*************");
 			System.out.println("*****AktuelleID " + graph.getStrV(currentVertexID, "name") + " *************");
 			
@@ -176,14 +181,24 @@ public class FordAndFulkerson {
 			getFromAllEdgesTheTuple();
 		} while (isAllmarkedVertexNotInspected());
 		
-		System.out.println("Fertig");
-		
 		/*
 		 * Schritt 4 Es gibt keinen vergrößernden Weg. Der jetzige Wert von d
 		 * ist optimal. Ein Schnitt A(X,X) mit c(X,X) = d wird gebildet von
 		 * genau denjenigen Kanten, bei denen entweder die Anfangsecke oder die
 		 * Endecke inspiziert ist.
 		 */
+		List<Integer> edgeIDListFromSource = graph.getIncident(source);  
+		List<Integer> edgeIDListFromTarget = graph.getIncident(target);  
+		for (int edgeID : edgeIDListFromSource) {
+			optimalRiver += graph.getValE(edgeID, "actualRiver");
+		}
+		for (int edgeID : edgeIDListFromTarget) {
+			optimalFlow += graph.getValE(edgeID, "actualRiver");
+		}
+		
+		if (optimalRiver == optimalFlow) {
+			System.out.println("We are ready, Bye bye");
+		}
 		
 		
 		return graph;
@@ -356,6 +371,7 @@ public class FordAndFulkerson {
 		}
 		
 		/*
+		 * TODO: Diese stelle merken
 		 * Jetzt muss geprueft werden, ob die gefilterten markiert sind, sonst duerfen wir den Knoten nicht inspizieren
 		 * Etwas redundant, aber sicher
 		 */
@@ -387,6 +403,11 @@ public class FordAndFulkerson {
 		 */
 		if(legitimUninspectedVertexIDList.size() < 1) {	
 			this.access++;
+//			boolean inspectedFlag = true;
+//			for (int vertexID : uninspectedVertexIDList) {
+//				
+//			}
+			System.out.println("Versagen");
 			return graph.getValV(currentInspectedVertexID, "predecessorID");
 		}
 			
@@ -435,9 +456,7 @@ public class FordAndFulkerson {
 				
 				//Pruefung des Algorithmus, ob der Knoten ueberhaupt markiert werden darf
 				System.out.println("aktueler Kanten Tupel: (" + currentCapacity + " | " + currentActualRiver + ")");
-				if(currentCapacity <= currentActualRiver) { //<=
-					//throw new IllegalArgumentException("currentCapacity <= currentActualRiver" + "    " + currentCapacity + " <= " + currentActualRiver);
-					 //throw new IllegalArgumentException( "Kein Alter <= 0 erlaubt!" );
+				if(currentCapacity <= currentActualRiver) { 
 					System.out.println(graph.getStrV(vertexID, "name") + " DARF NICHT MARKIERT WERDEN");
 					this.access++;
 					continue;
@@ -450,6 +469,7 @@ public class FordAndFulkerson {
 				//Das ist ein Sonderfall, gilt nur fuer ersten durchlauf mit source
 				if (inspectedDelta == INFINITE) {						
 					setMarked(vertexID, inspectedVertex, currentCapacity);
+					markedVertexSet.add(vertexID);
 					continue;
 				} else {
 					/*
@@ -459,6 +479,7 @@ public class FordAndFulkerson {
 					int buffer = currentCapacity - currentActualRiver;
 					if (buffer > inspectedDelta) {
 						setMarked(vertexID, inspectedVertex, inspectedDelta);
+						markedVertexSet.add(vertexID);
 						this.access++;
 						continue;
 					} else {
@@ -491,6 +512,7 @@ public class FordAndFulkerson {
 				//Das ist ein Sonderfall, gilt nur fuer ersten durchlauf mit source
 				if (inspectedDelta == INFINITE) {						
 					setMarked(vertexID, -inspectedVertex, currentCapacity);
+					markedVertexSet.add(vertexID);
 					this.access++;
 					continue;
 				} else {
@@ -500,10 +522,12 @@ public class FordAndFulkerson {
 					 */
 					if (currentCapacity > inspectedDelta) {
 						setMarked(vertexID, -inspectedVertex, inspectedDelta);
+						markedVertexSet.add(vertexID);
 						this.access++;
 						continue;
 					} else {
 						setMarked(vertexID, -inspectedVertex, currentCapacity);
+						markedVertexSet.add(vertexID);
 						this.access++;
 						continue;
 					}
@@ -526,6 +550,7 @@ public class FordAndFulkerson {
 				this.access++;
 				deleteMarked(vertexID);
 			}
+			markedVertexSet = new HashSet();
 		}
 		
 		//Alle Inspiezierungen entfernen

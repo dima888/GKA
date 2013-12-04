@@ -32,81 +32,8 @@ public class TestFordAndFulkerson {
 	@Before
 	public void setUp() {
 		graph = new AIGraph();
-//		fordAndFulkerson = new FordAndFulkerson(graph, source , target);		
 	}
-
-	/**
-	 * In diesem Test wird der Graph von GRBuch Seite 99 
-	 * zusammen gebaut
-	 */
-//	@Test
-//	public void optimalRiverTest() {
-//		int expected = 4;
-//
-//		//Erstellen der Knoten
-//		//int source = graph.addVertex("Source");
-//		source = graph.addVertex("source");
-//		target = graph.addVertex("target");
-//		int v2 = graph.addVertex("v2");
-//		int v3 = graph.addVertex("v3");
-//		int v4 = graph.addVertex("v4");
-//		int v5 = graph.addVertex("v5");		
-//		//int s = graph.addVertex("Target");
-//		
-//		
-//		
-//		//Kanten hinzu fuegen
-//		int sourceTov2 = graph.addEdgeD(source, v2);
-//		int sourceTov4 = graph.addEdgeD(source, v4);
-//		int v2Tov3 = graph.addEdgeD(v2, v3);
-//		int v3Tov4 = graph.addEdgeD(v3, v4);
-//		int v3Totarget = graph.addEdgeD(v3, target);
-//		
-//		int v4Tov2 = graph.addEdgeD(v4, v2);
-//		int v4Tov5 = graph.addEdgeD(v4, v5);
-//		int v5Tov3 = graph.addEdgeD(v5, v3);
-//		int v5Totarget = graph.addEdgeD(v5, target);
-//		
-//		fordAndFulkerson = new FordAndFulkerson(graph);
-//		
-//		//Tupe der Kanten Setzten
-//		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov2, 3, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v2Tov3, 2, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v3Totarget, 2, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v3Tov4, 1, 0);
-//		
-//		fordAndFulkerson.setCapacityActualRiverTuple(sourceTov4, 2, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov2, 2, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v4Tov5, 2, 0);
-//		
-//		fordAndFulkerson.setCapacityActualRiverTuple(v5Tov3, 1, 0);
-//		fordAndFulkerson.setCapacityActualRiverTuple(v5Totarget, 4, 0);
-//		
-//		
-//		System.out.println(graph.toString());
-//		fordAndFulkerson.startAlgorithmus();
-//		System.out.println(fordAndFulkerson.getAccess());
-//		
-//	}
 	
-//	@Test 
-//	public void graph6Test() {
-//		
-//		/*
-//		 * Der Pfad, wo Ihre Textdatei mit den Graphen liegt
-//		 * Example: Pfrad -> c:\\graphen\\graph6
-//		 */
-//		String path = "c:\\users\\abg688\\desktop\\graph6.txt";
-//		
-//	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
-//	 	
-//	 	AIGraph graph6 = graphParser.createGraph();
-//	 	//graph8.toString();
-//	 	
-//	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph6);
-//	 	fordAndFulkerson.startAlgorithmus();
-//	 	
-//	}
 //	
 //	@Test 
 //	public void graph8Test() {
@@ -115,7 +42,7 @@ public class TestFordAndFulkerson {
 //		 * Der Pfad, wo Ihre Textdatei mit den Graphen liegt
 //		 * Example: Pfrad -> c:\\graphen\\graph8
 //		 */
-//		String path = "c:\\users\\abg688\\desktop\\graph8.txt";
+//		String path = "c:\\users\\foxhound\\desktop\\graph8.txt";
 //		
 //	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 //	 	
@@ -124,12 +51,13 @@ public class TestFordAndFulkerson {
 //	 	
 //	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph8);
 //	 	fordAndFulkerson.startAlgorithmus();
+//	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
 //	 	
 //	}
 	
 	@Test
 	public void graph9Test() {
-		String path = "c:\\users\\abg688\\desktop\\graph9.txt";
+		String path = "c:\\users\\foxhound\\desktop\\graph9.txt";
 		
 	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 	 	
@@ -138,11 +66,12 @@ public class TestFordAndFulkerson {
 	 	
 	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph9);
 	 	fordAndFulkerson.startAlgorithmus();
+	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
 	}
 //	
 //	@Test
 //	public void graphGRBuchSeite99() {
-//		String path = "c:\\users\\abg688\\desktop\\GRBuch99.txt";
+//		String path = "c:\\users\\foxhound\\desktop\\GRBuch99.txt";
 //		
 //	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 //	 	
@@ -151,6 +80,7 @@ public class TestFordAndFulkerson {
 //	 	
 //	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(GRBuch99);
 //	 	fordAndFulkerson.startAlgorithmus();
+//	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
 //	}
 //	
 //	@Test
