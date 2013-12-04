@@ -55,6 +55,21 @@ public class EdmondsAndKarp {
 			setMarked(source, UNDEFINE, INFINITE);
 			setInspected(source);
 		}
+		
+		public EdmondsAndKarp(AIGraph graph) {
+			super();
+			this.graph = graph;
+			this.source = getSource(graph);
+			this.target = getTarget(graph);
+			
+			//source & target benennen
+			graph.setStrV(source, "name", SOURCENAME);
+			graph.setStrV(target, "name", TARGETNAME);
+			
+			//Start Knoten Markieren und inspizieren
+			setMarked(source, UNDEFINE, INFINITE);
+			setInspected(source);
+		}
 
 		//*************************GETTER**********************
 		/**
@@ -653,5 +668,53 @@ public class EdmondsAndKarp {
 				return false;
 			}
 			return true;
+		}
+		
+	public int getSource(AIGraph graph) {
+		List<Integer> verticesList = graph.getVertexes();
+		List<Integer> edgesList = graph.getEdges();
+		boolean flag = true;
+		Integer result;
+
+		for (Integer vID : verticesList) {
+			flag = true;
+			for (Integer eID : edgesList) {
+				if (graph.getTarget(eID) == vID) {
+					flag = false;
+				}
+			}
+
+			if (flag) {
+				System.out.println("SOURCE ID = " + vID);
+				return vID;
+			}
+		}
+		
+		System.out.println("SOURCE NICHT GEFUNDEN");
+		return -1;
+	}
+		
+		public int getTarget(AIGraph graph) {
+			List<Integer> verticesList = graph.getVertexes();
+			List<Integer> edgesList = graph.getEdges();
+			boolean flag = true;
+			Integer result;
+
+			for (Integer vID : verticesList) {
+				flag = true;
+				for (Integer eID : edgesList) {
+					if (graph.getSource(eID) == vID) {
+						System.out.println("SOURCE: " + graph.getSource(eID) + " TARGET: " + graph.getTarget(eID));
+						flag = false;
+					}
+				}
+
+				if (flag) {
+					System.out.println("TARGET ID = " + vID);
+					return vID;
+				}
+			}
+			System.out.println("TARGET NICHT GEFUNDEN");
+			return -1;
 		}
 }

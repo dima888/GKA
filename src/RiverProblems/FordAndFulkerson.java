@@ -55,10 +55,29 @@ public class FordAndFulkerson {
 	
 	//***************KONSTRUKTOR********************
 	public FordAndFulkerson(AIGraph graph, int source, int target) {
-		super();
+//		super();
 		this.graph = graph;
 		this.source = source;
 		this.target = target;
+		
+		
+		
+		//source & target benennen
+		graph.setStrV(source, "name", SOURCENAME);
+		graph.setStrV(target, "name", TARGETNAME);
+		
+		//Start Knoten Markieren und inspizieren
+		setMarked(source, UNDEFINE, INFINITE);
+		setInspected(source);
+	}
+	
+	public FordAndFulkerson(AIGraph graph) {
+//		super();
+		this.graph = graph;
+		System.out.println("Start Knoten ist : " + graph.getStrV(getSource(graph), "name"));
+		System.out.println("Ende Knoten ist : " + graph.getStrV(getTarget(graph), "name"));
+		this.source = getSource(graph);
+		this.target = getTarget(graph);
 		
 		//source & target benennen
 		graph.setStrV(source, "name", SOURCENAME);
@@ -128,8 +147,20 @@ public class FordAndFulkerson {
 			if(currentVertexID == -1) {
 				break;
 			}
-		System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID) + " AKTUELER KNOTEN");
 			
+			if(currentVertexID == UNDEFINE) {
+				System.out.println("AWULLALALLALAL" + source);
+//				currentVertexID = source;
+//				break;
+				continue;
+			}
+			System.out.println("NADANCH STERBEN WIR");
+			System.out.println("*****AktuelleID " + currentVertexID + "*************");
+			System.out.println("*****AktuelleID " + graph.getStrV(currentVertexID, "name") + " *************");
+			
+			
+		System.out.println("currentVertexname: " + graph.getStrV(currentVertexID, "name") + " |isMarked? " + isMarked(currentVertexID) + " |isInspected? " + isInspected(currentVertexID) + " AKTUELER KNOTEN");
+		
 			markedAllVertex(currentVertexID);
 			
 			
@@ -171,8 +202,10 @@ public class FordAndFulkerson {
 		
 		//Abbruchbedinung = Wenn currentVertexID = SourceID ist
 		while (isNotSource(currentVertexID)) {
-			
+			System.out.println("***********Der weg ueber die IDs  zurueck ID: " + currentVertexID);
+			System.out.println("***********Der name zur ID: "+ graph.getStrV(currentVertexID, "name"));
 			//Die ID des Vorgaengers hollen
+			
 			int predecessorID = graph.getValV(currentVertexID, "predecessorID");
 			this.access++;
 			
@@ -276,18 +309,18 @@ public class FordAndFulkerson {
 			return true;
 		}
 		
-		//TODO: Nur zum testen
-		for (int vertexID : markedVertexIDList) {
-			System.out.println("Markierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
-		}
-		System.out.println("---------------------------------------------------------------------------");
-		
-		//TODO: Nur zum testen
-		for (int vertexID : markedVertexIDList) {
-			if (isInspected(vertexID)) {				
-				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
-			}
-		}
+//		//TODO: Nur zum testen
+//		for (int vertexID : markedVertexIDList) {
+//			System.out.println("Markierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
+//		}
+//		System.out.println("---------------------------------------------------------------------------");
+//		
+//		//TODO: Nur zum testen
+//		for (int vertexID : markedVertexIDList) {
+//			if (isInspected(vertexID)) {				
+//				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
+//			}
+//		}
 		System.out.println("----------------------------------------------------------------------------");
 		
 		//Schritt 2:
@@ -307,7 +340,6 @@ public class FordAndFulkerson {
 	 * @return Integer  
 	 */
 	public int inspectedRandomVertex(int currentInspectedVertexID) {
-		System.out.println("Bertette InspectRandom");
 		//Holle mir zuerst alle Knoten die mit currentInspectedVertexID verbunden sind
 		List<Integer> vertexIDList = graph.getAdjacent(currentInspectedVertexID);
 		List<Integer> uninspectedVertexIDList = new ArrayList<>();
@@ -689,6 +721,54 @@ public class FordAndFulkerson {
 		}
 		return true;
 	}
+	
+	public int getSource(AIGraph graph) {
+		List<Integer> verticesList = graph.getVertexes();
+		List<Integer> edgesList = graph.getEdges();
+		boolean flag = true;
+		Integer result;
+
+		for (Integer vID : verticesList) {
+			flag = true;
+			for (Integer eID : edgesList) {
+				if (graph.getTarget(eID) == vID) {
+					flag = false;
+				}
+			}
+
+			if (flag) {
+				//System.out.println("SOURCE ID = " + vID);
+				return vID;
+			}
+		}
+		
+		System.out.println("SOURCE NICHT GEFUNDEN");
+		return -1;
+	}
+		
+		public int getTarget(AIGraph graph) {
+			List<Integer> verticesList = graph.getVertexes();
+			List<Integer> edgesList = graph.getEdges();
+			boolean flag = true;
+			Integer result;
+
+			for (Integer vID : verticesList) {
+				flag = true;
+				for (Integer eID : edgesList) {
+					if (graph.getSource(eID) == vID) {
+						//System.out.println("SOURCE: " + graph.getSource(eID) + " TARGET: " + graph.getTarget(eID));
+						flag = false;
+					}
+				}
+
+				if (flag) {
+					//System.out.println("TARGET ID = " + vID);
+					return vID;
+				}
+			}
+			System.out.println("TARGET NICHT GEFUNDEN");
+			return -1;
+		}
 	
 	public static void main(String[] args) {
 		

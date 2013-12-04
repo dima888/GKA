@@ -24,7 +24,9 @@ public class TestEdmondsAndKarp {
 		graph = new AIGraph();
 		source = graph.addVertex("source");
 		target = graph.addVertex("target");
-		edmondsAndKarp = new EdmondsAndKarp(graph, source , target);
+		//edmondsAndKarp = new EdmondsAndKarp(graph, source , target);
+//		edmondsAndKarp = new EdmondsAndKarp(graph);
+
 	}
 
 	
@@ -36,6 +38,16 @@ public class TestEdmondsAndKarp {
 	public void optimalRiverTest() {
 		int expected = 4;
 
+		System.out.println("Source = " + source);
+		System.out.println("Target = " + target);
+		
+//		try {
+//			Thread.currentThread().sleep(10000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		//Erstellen der Knoten
 		//int source = graph.addVertex("Source");
 		int v2 = graph.addVertex("v2");
@@ -57,6 +69,8 @@ public class TestEdmondsAndKarp {
 		int v4Tov5 = graph.addEdgeD(v4, v5);
 		int v5Tov3 = graph.addEdgeD(v5, v3);
 		int v5Totarget = graph.addEdgeD(v5, target);
+		
+		edmondsAndKarp = new EdmondsAndKarp(graph);
 		
 		//Tupe der Kanten Setzten
 		edmondsAndKarp.setCapacityActualRiverTuple(sourceTov2, 3, 0);

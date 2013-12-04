@@ -64,7 +64,8 @@ public class Parser {
 			int v1ID = graph.addVertex(textList.get(v1Counter));
 			int v2ID = graph.addVertex(textList.get(v2Counter));
 			int e1ID = graph.addEdgeD(v1ID, v2ID);
-			graph.setValE(e1ID, "value", Integer.parseInt(textList.get(e1Counter)));
+			//graph.setValE(e1ID, "value", Integer.parseInt(textList.get(e1Counter)));
+			graph.setValE(e1ID, "capacity", Integer.parseInt(textList.get(e1Counter)));
 			
 			v1Counter += 3;
 			v2Counter += 3;
