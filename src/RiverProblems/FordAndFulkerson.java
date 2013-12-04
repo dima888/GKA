@@ -174,6 +174,7 @@ public class FordAndFulkerson {
 			
 			//Die ID des Vorgaengers hollen
 			int predecessorID = graph.getValV(currentVertexID, "predecessorID");
+			this.access++;
 			
 			/*
 			 * Die Kante zwischen currentID und predecessorID heraus finden
@@ -183,7 +184,7 @@ public class FordAndFulkerson {
 			List<Integer> edgeIDLIst = graph.getIncident(currentVertexID);
 			int currentEdgeID = 0;
 			for (int edgeID : edgeIDLIst) {
-				
+				this.access++;
 				if ((graph.getSource(edgeID) == predecessorID && graph.getTarget(edgeID) == currentVertexID) || (graph.getSource(edgeID) == currentVertexID && graph.getTarget(edgeID) == predecessorID)) {
 //					System.out.println("Richtige Kante gefunden");
 					currentEdgeID = edgeID;
@@ -205,12 +206,16 @@ public class FordAndFulkerson {
 			 */
 			if(predecessorID >= 0) {
 				//Vorwaerskante				
-				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") + deltaS;				
-				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);						
+				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") + deltaS;
+				this.access++;
+				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);
+				this.access++;
 			} else {
 				//Rueckwaertskante
 				int newActualRiver = graph.getValE(currentEdgeID, "actualRiver") - deltaS;
+				this.access++;
 				graph.setValE(currentEdgeID, "actualRiver", newActualRiver);
+				this.access++;
 				predecessorID = (predecessorID * -1);
 			}
 			
@@ -237,6 +242,7 @@ public class FordAndFulkerson {
 	 */
 	public boolean isTarget(int currentVertexID) {
 		if (graph.getStrV(currentVertexID, "name").compareTo(TARGETNAME) == 0) {
+			this.access++;
 			return true;
 		}
 		return false;
@@ -255,6 +261,7 @@ public class FordAndFulkerson {
 		
 		//Schritt 1:
 		for (int vertexID : graph.getVertexes()) {				
+			this.access++;
 			if (isMarked(vertexID)) {
 				//Bei source eine Ausnahme machen
 				if (graph.getValV(vertexID, "ID") == source) {
@@ -277,7 +284,7 @@ public class FordAndFulkerson {
 		
 		//TODO: Nur zum testen
 		for (int vertexID : markedVertexIDList) {
-			if (isInspected(vertexID)) {
+			if (isInspected(vertexID)) {				
 				System.out.println("Inspizierten Knoten: " + graph.getStrV(vertexID, "name") + " mit PredecessorID = " + graph.getValV(vertexID, "predecessorID") + "(" + graph.getStrV(graph.getValV(vertexID, "predecessorID"), "name") + ")");
 			}
 		}
@@ -310,7 +317,8 @@ public class FordAndFulkerson {
 		
 		//Jetzt filtern wir die nicht inspizierten heraus
 		for (int vertexID : vertexIDList) {
-			if(!isInspected(vertexID)) {
+			this.access++;
+			if(!isInspected(vertexID)) {				
 				uninspectedVertexIDList.add(vertexID);
 			}
 		}
@@ -324,24 +332,29 @@ public class FordAndFulkerson {
 				//Sonderregelung, wenn Target mit enthalten ist, dann gehen wir auch dahin!
 				if (vertexID == target) {
 					setInspected(target);
+					this.access++;
 					return target;
 				}
+				
 				/*
-				 * TODO: Dieses IF neu eingebaut
 				 * Es duerfen die inspiziert werden, 
 				 * die von markierten vorgaenger markiert wurden
 				 */
 				if (currentInspectedVertexID == graph.getValV(vertexID, "predecessorID")) {
+					this.access++;
 					legitimUninspectedVertexIDList.add(vertexID);
 				}
 				
 			}
 		}			
 		
-		//Precondition: TODO: Keine Ahnung wie ich das noch loesen soll
-		if(legitimUninspectedVertexIDList.size() < 1) {			
-			System.out.println("TODO: Hilfe");
-			//return -1;
+		/*
+		 * Hier kommt der Algorihmus in eine Sackgase
+		 * und kehrt zurueck und nimm sich einen 
+		 * anderen Knoten
+		 */
+		if(legitimUninspectedVertexIDList.size() < 1) {	
+			this.access++;
 			return graph.getValV(currentInspectedVertexID, "predecessorID");
 		}
 			
@@ -394,6 +407,7 @@ public class FordAndFulkerson {
 					//throw new IllegalArgumentException("currentCapacity <= currentActualRiver" + "    " + currentCapacity + " <= " + currentActualRiver);
 					 //throw new IllegalArgumentException( "Kein Alter <= 0 erlaubt!" );
 					System.out.println(graph.getStrV(vertexID, "name") + " DARF NICHT MARKIERT WERDEN");
+					this.access++;
 					continue;
 				}
 				 
@@ -413,9 +427,11 @@ public class FordAndFulkerson {
 					int buffer = currentCapacity - currentActualRiver;
 					if (buffer > inspectedDelta) {
 						setMarked(vertexID, inspectedVertex, inspectedDelta);
+						this.access++;
 						continue;
 					} else {
 						setMarked(vertexID, inspectedVertex, buffer);
+						this.access++;
 						continue;
 					}
 				}
@@ -443,6 +459,7 @@ public class FordAndFulkerson {
 				//Das ist ein Sonderfall, gilt nur fuer ersten durchlauf mit source
 				if (inspectedDelta == INFINITE) {						
 					setMarked(vertexID, -inspectedVertex, currentCapacity);
+					this.access++;
 					continue;
 				} else {
 					/*
@@ -451,9 +468,11 @@ public class FordAndFulkerson {
 					 */
 					if (currentCapacity > inspectedDelta) {
 						setMarked(vertexID, -inspectedVertex, inspectedDelta);
+						this.access++;
 						continue;
 					} else {
 						setMarked(vertexID, -inspectedVertex, currentCapacity);
+						this.access++;
 						continue;
 					}
 				}
@@ -472,6 +491,7 @@ public class FordAndFulkerson {
 				continue;
 			}
 			if (isMarked(vertexID)) {
+				this.access++;
 				deleteMarked(vertexID);
 			}
 		}
@@ -482,6 +502,7 @@ public class FordAndFulkerson {
 				continue;
 			}
 			if (isInspected(vertexID)) {
+				this.access++;
 				deleteInspected(vertexID);
 			}
 		}
@@ -494,6 +515,7 @@ public class FordAndFulkerson {
 	 * @return Integer
 	 */
 	public int getActualRiver(int edgeID)  {
+		this.access++;
 		return graph.getValE(edgeID, "actualRiver");
 	}
 	
@@ -502,6 +524,7 @@ public class FordAndFulkerson {
 	 */
 	public void getFromAllEdgesTheTuple() {
 		for (int edgeID : graph.getEdges()) {
+			this.access = this.access + 2;
 			System.out.println("(" + getCapacityActualRiverTuple(edgeID)[0] + " | " + getCapacityActualRiverTuple(edgeID)[1] + ")");
 		}
 			
@@ -519,6 +542,7 @@ public class FordAndFulkerson {
 		int[] result = new int[2];
 		result[0] = graph.getValE(currentID, "capacity"); 
 		result[1] = graph.getValE(currentID, "actualRiver");
+		this.access = this.access + 2;
 		return result;
 	}
 	
@@ -529,6 +553,7 @@ public class FordAndFulkerson {
 	 * @return Integer
 	 */
 	public int getDelta(int currentID) {
+		this.access++;
 		return graph.getValV(currentID, "delta");
 	}
 	
@@ -539,6 +564,7 @@ public class FordAndFulkerson {
 	 * @return Integer
 	 */
 	public int getPredecessorID(int currentID) {
+		this.access++;
 		return graph.getValV(currentID, "predecessorID");
 	}
 	
@@ -549,6 +575,7 @@ public class FordAndFulkerson {
 	 * @return Integer
 	 */
 	public int getCapacity(int currentID) {
+		this.access++;
 		return graph.getValE(currentID, "capacity"); 
 	}
 
@@ -562,6 +589,7 @@ public class FordAndFulkerson {
 	public void setMarked(int currentID, int predecessorID, int delta) {
 		this.graph.setValV(currentID, "predecessorID", predecessorID);
 		this.graph.setValV(currentID, "delta", delta);
+		this.access = this.access + 2;
 	}
 	
 	/**
@@ -575,6 +603,7 @@ public class FordAndFulkerson {
 	public void setCapacityActualRiverTuple(int currentID, int capacity, int actualRiver) {
 		this.graph.setValE(currentID, "capacity", capacity);
 		this.graph.setValE(currentID, "actualRiver", actualRiver);
+		this.access = this.access + 2; 
 	}
 	
 	/**
@@ -584,6 +613,7 @@ public class FordAndFulkerson {
 	 */
 	public void setInspected(Integer currentID) {
 		this.graph.setStrV(currentID, "inspected", INSPECTED);
+		this.access++;
 	}
 	
 	/**
@@ -594,6 +624,7 @@ public class FordAndFulkerson {
 	 */
 	public void setActualRiver(int currentID, int actualRiverValue) {
 		graph.setValE(currentID, "actualRiver", actualRiverValue);
+		this.access++;
 	}
 	
 	/**
@@ -603,6 +634,7 @@ public class FordAndFulkerson {
 	private void deleteMarked(Integer currentID) {
 		this.graph.setValV(currentID, "predecessorID", UNDEFINEFORMARKED);
 		this.graph.setValV(currentID, "delta", UNDEFINEFORMARKED);
+		this.access = this.access + 2;
 	}
 	
 	
@@ -612,6 +644,7 @@ public class FordAndFulkerson {
 	 */
 	private void deleteInspected(int currentID) {
 		this.graph.setStrV(currentID, "inspected", EMPTY);
+		this.access++;
 	}
 	
 	/**
@@ -622,6 +655,7 @@ public class FordAndFulkerson {
 	 */
 	public boolean isMarked(int currentID) {
 		if (graph.getValV(currentID, "predecessorID") == UNDEFINEFORMARKED) {
+			this.access++;
 			return false;
 		}
 		return true;
@@ -635,6 +669,7 @@ public class FordAndFulkerson {
 	 */
 	private boolean isInspected(int currentID) {
 		if (graph.getStrV(currentID, "inspected").compareTo(EMPTY) == 0) {
+			this.access++;
 			return false;
 		}
 		return true;
@@ -649,6 +684,7 @@ public class FordAndFulkerson {
 	 */
 	public boolean isNotSource(int currendVertexID) {
 		if (graph.getValV(currendVertexID, "predecessorID") == UNDEFINE) {
+			this.access++;
 			return false;
 		}
 		return true;
