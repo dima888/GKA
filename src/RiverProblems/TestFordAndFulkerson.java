@@ -35,39 +35,39 @@ public class TestFordAndFulkerson {
 	}
 	
 	
-//	@Test 
-//	public void graph8Test() {
-//		
-//		/*
-//		 * Der Pfad, wo Ihre Textdatei mit den Graphen liegt
-//		 * Example: Pfrad -> c:\\graphen\\graph8
-//		 */
-//		String path = "c:\\users\\dima\\desktop\\graph8.txt";
-//		
-//	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
-//	 	
-//	 	AIGraph graph8 = graphParser.createGraph();
-//	 	//graph8.toString();
-//	 	
-//	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph8);
-//	 	fordAndFulkerson.startAlgorithmus();
-//	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
-//	 	
-//	}
-	
-	@Test
-	public void graph9Test() {
-		String path = "c:\\users\\dima\\desktop\\graph9.txt";
+	@Test 
+	public void graph8Test() {
+		
+		/*
+		 * Der Pfad, wo Ihre Textdatei mit den Graphen liegt
+		 * Example: Pfrad -> c:\\graphen\\graph8
+		 */
+		String path = "c:\\users\\abg688.INFORMATIK\\desktop\\graph8.txt";
 		
 	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 	 	
-	 	AIGraph graph9 = graphParser.createGraph();
+	 	AIGraph graph8 = graphParser.createGraph();
 	 	//graph8.toString();
 	 	
-	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph9);
+	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph8);
 	 	fordAndFulkerson.startAlgorithmus();
 	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
+	 	
 	}
+	
+//	@Test
+//	public void graph9Test() {
+//		String path = "c:\\users\\abg688.INFORMATIK\\desktop\\graph9.txt";
+//		
+//	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
+//	 	
+//	 	AIGraph graph9 = graphParser.createGraph();
+//	 	//graph8.toString();
+//	 	
+//	 	FordAndFulkerson fordAndFulkerson = new FordAndFulkerson(graph9);
+//	 	fordAndFulkerson.startAlgorithmus();
+//	 	System.out.println("Optimaler Fluss = " + fordAndFulkerson.getOptiomalRiver());
+//	}
 //	
 //	@Test
 //	public void graphGRBuchSeite99() {

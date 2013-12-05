@@ -187,22 +187,42 @@ public class FordAndFulkerson {
 		 * genau denjenigen Kanten, bei denen entweder die Anfangsecke oder die
 		 * Endecke inspiziert ist.
 		 */
-		List<Integer> edgeIDListFromSource = graph.getIncident(source);  
-		List<Integer> edgeIDListFromTarget = graph.getIncident(target);  
-		for (int edgeID : edgeIDListFromSource) {
-			optimalRiver += graph.getValE(edgeID, "actualRiver");
+		Set<Integer> markedVertices = new HashSet<>();
+		
+		
+		for (int vertexID : graph.getVertexes()) {
+			if (isMarked(vertexID)) {
+				markedVertices.add(vertexID);
+			}					
 		}
-		for (int edgeID : edgeIDListFromTarget) {
-			optimalFlow += graph.getValE(edgeID, "actualRiver");
+		for (int edgeID : graph.getEdges()) {
+			if (isMarked(graph.getSource(edgeID)) != isMarked(graph.getTarget(edgeID))) {
+				int flowFromEdge = graph.getValE(edgeID, "actualRiver");
+				if (markedVertices.contains(graph.getSource(edgeID))) {
+					optimalRiver += flowFromEdge;
+				} else {
+					optimalRiver -= flowFromEdge;
+				}
+			}
 		}
 		
-		if (optimalRiver == optimalFlow) {
-			System.out.println("We are ready, Bye bye");
-		}
+//		List<Integer> edgeIDListFromSource = graph.getIncident(source);  
+//		List<Integer> edgeIDListFromTarget = graph.getIncident(target);  
+//		for (int edgeID : edgeIDListFromSource) {
+//			optimalRiver += graph.getValE(edgeID, "actualRiver");
+//		}
+//		for (int edgeID : edgeIDListFromTarget) {
+//			optimalFlow += graph.getValE(edgeID, "actualRiver");
+//		}
+//		
+//		if (optimalRiver == optimalFlow) {
+//			System.out.println("We are ready, Bye bye");
+//		}
 		
 		
 		return graph;
 	}
+	
 	
 	/**
 	 * TODO: auf private setzten, TODO:HIer scheint noch der Fehler zu sein, dass nicht auf source wieder gesetzt wird
