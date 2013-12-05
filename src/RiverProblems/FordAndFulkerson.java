@@ -149,9 +149,9 @@ public class FordAndFulkerson {
 			 * TODO: Die inspectedRandomVertex Methode vielleicht zu void machen, damit ich nicht auf -1 pruefen muss
 			 */
 			currentVertexID = inspectedRandomVertex(currentVertexID);
-//			if(currentVertexID == -1) {
-//				break;
-//			}
+			if(currentVertexID == -1) {
+				break;
+			}
 			
 			/*
 			 * Alle Knoten markiet und inspiziert, wir kommen nicht mehr weiter
@@ -412,7 +412,7 @@ public class FordAndFulkerson {
 					this.access++;
 					legitimUninspectedVertexIDList.add(vertexID);
 				}
-				
+				//legitimUninspectedVertexIDList.add(vertexID);
 			}
 		}			
 		
@@ -423,10 +423,13 @@ public class FordAndFulkerson {
 		 */
 		if(legitimUninspectedVertexIDList.size() < 1) {	
 			this.access++;
-//			boolean inspectedFlag = true;
-//			for (int vertexID : uninspectedVertexIDList) {
-//				
-//			}
+			
+			for (int id : legitimUninspectedVertexIDList) {
+				if (!isInspected(id)) {
+					return -1;
+				}
+			}
+			
 			System.out.println("Versagen");
 			return graph.getValV(currentInspectedVertexID, "predecessorID");
 		}
