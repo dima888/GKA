@@ -34,7 +34,7 @@ public class TestFordAndFulkerson {
 		graph = new AIGraph();
 	}
 	
-//	
+	
 //	@Test 
 //	public void graph8Test() {
 //		
@@ -42,7 +42,7 @@ public class TestFordAndFulkerson {
 //		 * Der Pfad, wo Ihre Textdatei mit den Graphen liegt
 //		 * Example: Pfrad -> c:\\graphen\\graph8
 //		 */
-//		String path = "c:\\users\\foxhound\\desktop\\graph8.txt";
+//		String path = "c:\\users\\dima\\desktop\\graph8.txt";
 //		
 //	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 //	 	
@@ -57,7 +57,7 @@ public class TestFordAndFulkerson {
 	
 	@Test
 	public void graph9Test() {
-		String path = "c:\\users\\foxhound\\desktop\\graph9.txt";
+		String path = "c:\\users\\dima\\desktop\\graph9.txt";
 		
 	 	graph_lib_extensions.Parser graphParser = new graph_lib_extensions.Parser(Paths.get(path));
 	 	
